@@ -26,8 +26,8 @@ timestep = int(robot.getBasicTimeStep())
 
 # initial each joints
 # left leg and sensor
-l_hip_roll = robot.getDevice('LHipRoll')
 l_hip_pitch = robot.getDevice('LHipPitch')
+l_hip_roll = robot.getDevice('LHipRoll')
 l_knee_pitch = robot.getDevice('LKneePitch')
 l_ankle_pitch = robot.getDevice('LAnklePitch')
 l_ankle_roll = robot.getDevice('LAnkleRoll')
@@ -37,6 +37,12 @@ l_hip_pitch_sensor = l_hip_pitch.getPositionSensor()
 l_knee_pitch_sensor = l_knee_pitch.getPositionSensor()
 l_ankle_pitch_sensor = l_ankle_pitch.getPositionSensor()
 l_ankle_roll_sensor = l_ankle_roll.getPositionSensor()
+
+l_hip_pitch_v = l_hip_pitch.getVelocity()
+l_hip_roll_v  = l_hip_roll.getVelocity()
+l_knee_pitch_v = l_knee_pitch.getVelocity()
+l_ankle_pitch_v = l_ankle_pitch.getVelocity()
+l_ankle_roll_v = l_ankle_roll.getVelocity()
 
 # right leg and sensor
 r_hip_roll = robot.getDevice('RHipRoll')
@@ -50,6 +56,12 @@ r_hip_pitch_sensor = r_hip_pitch.getPositionSensor()
 r_knee_pitch_sensor = r_knee_pitch.getPositionSensor()
 r_ankle_pitch_sensor = r_ankle_pitch.getPositionSensor()
 r_ankle_roll_sensor = r_ankle_roll.getPositionSensor()
+
+r_hip_pitch_v   = r_hip_pitch.getVelocity()
+r_hip_roll_v    = r_hip_roll.getVelocity()
+r_knee_pitch_v  = r_knee_pitch.getVelocity()
+r_ankle_pitch_v = r_ankle_pitch.getVelocity()
+r_ankle_roll_v  = r_ankle_roll.getVelocity()
 
 # left arm and sensor
 l_shoulder_pitch = robot.getDevice('LShoulderPitch')
@@ -65,7 +77,9 @@ l_elbow_yaw_sensor      = l_elbow_yaw.getPositionSensor()
 l_elbow_roll_sensor     = l_elbow_roll.getPositionSensor()
 
 l_shoulder_pitch_v = l_shoulder_pitch.getVelocity()
-l_shoulder_roll_v = l_shoulder_roll.getVelocity()
+l_shoulder_roll_v  = l_shoulder_roll.getVelocity()
+l_elbow_yaw_v      = l_elbow_yaw.getVelocity()
+l_elbow_roll_v     = l_elbow_roll.getVelocity()
 
 # right arm and sensor
 r_shoulder_pitch = robot.getDevice('RShoulderPitch')
@@ -79,6 +93,11 @@ r_shoulder_pitch_sensor = r_shoulder_pitch.getPositionSensor()
 r_shoulder_roll_sensor  = r_shoulder_roll.getPositionSensor()
 r_elbow_yaw_sensor      = r_elbow_yaw.getPositionSensor()
 r_elbow_roll_sensor     = r_elbow_roll.getPositionSensor()
+
+r_shoulder_pitch_v = r_shoulder_pitch.getVelocity()
+r_shoulder_roll_v  = r_shoulder_roll.getVelocity()
+r_elbow_yaw_v      = r_elbow_yaw.getVelocity()
+r_elbow_roll_v     = r_elbow_roll.getVelocity()
 
 # Enable
 l_hip_roll_sensor.enable(timestep)
@@ -154,7 +173,7 @@ class left_shoulder(move):
             if targets is self.__pitch_previous_target:
                 position = l_shoulder_pitch_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -166,7 +185,7 @@ class left_shoulder(move):
             if targets is self.__roll_previous_target:
                 position = l_shoulder_roll_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -186,7 +205,7 @@ class left_shoulder(move):
         if positions is None:
             print("\nYou do not set any positions")
             return
-        # print(f"\njoints: {joints}, positions: {positions}, moved: {self.moved}")
+        
         if joints == "LShoulderPitch":
             if positions > self.__max_shoulder_pitch_radian or positions < self.__min_shoulder_pitch_radian:
                 print(f"\nThe position you set is {positions}, is out of range in [{self.__max_shoulder_pitch_radian}, {self.__min_shoulder_pitch_radian}]")
@@ -322,7 +341,7 @@ class left_elbow(move):
             if targets is self.__yaw_previous_target:
                 position = l_elbow_yaw_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -334,7 +353,7 @@ class left_elbow(move):
             if targets is self.__roll_previous_target:
                 position = l_elbow_roll_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -468,7 +487,7 @@ class right_shoulder(move):
             if targets is self.__pitch_previous_target:
                 position = r_shoulder_pitch_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     return True
                 else:
@@ -479,7 +498,7 @@ class right_shoulder(move):
             if targets is self.__roll_previous_target:
                 position = r_shoulder_roll_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -499,7 +518,7 @@ class right_shoulder(move):
         if positions is None:
             print("\nYou do not set any positions")
             return
-        # print(f"\njoints: {joints}, positions: {positions}, moved: {self.moved}")
+        
         if joints == "RShoulderPitch":
             if positions > self.__max_shoulder_pitch_radian or positions < self.__min_shoulder_pitch_radian:
                 print(f"\nThe position you set is {positions}, is out of range in [{self.__max_shoulder_pitch_radian}, {self.__min_shoulder_pitch_radian}]")
@@ -590,6 +609,7 @@ class right_shoulder(move):
             print("\nCan not find any joints, please set again in set_position")
             return
         # print("End moved is", self.moved)
+
 class right_elbow(move):
     def __init__(self):
         move.__init__(self)
@@ -626,7 +646,7 @@ class right_elbow(move):
             if targets is self.__yaw_previous_target:
                 position = r_elbow_yaw_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -638,7 +658,7 @@ class right_elbow(move):
             if targets is self.__roll_previous_target:
                 position = r_elbow_roll_sensor.getValue()
                 passing = abs(abs(targets) - abs(position))
-                # print("\nabs is", passing)
+                # 
                 if passing <= self.__limitation :
                     # self.moved = False
                     return True
@@ -735,6 +755,692 @@ class right_elbow(move):
         else:
             print("\nCan not find any joints, please set again in set_position")
             return
+
+class left_leg(move):
+    def __init__(self):
+        move.__init__(self)
+    __hip_pitch_status   = move_status.INITIAL
+    __hip_roll_status    = move_status.INITIAL
+    __knee_pitch_status  = move_status.INITIAL
+    __ankle_pitch_status = move_status.INITIAL
+    __ankle_roll_status  = move_status.INITIAL
+
+    __limitation = 0.000001
+
+    __max_hip_pitch_radian = 0.484090
+    __min_hip_pitch_radian = -1.535889
+
+    __max_hip_roll_radian = 0.790477
+    __min_hip_roll_radian = -0.379472
+
+    __max_knee_pitch_radian = 2.112528
+    __min_knee_pitch_radian = -0.092346
+
+    __max_ankle_pitch_radian = 0.922747
+    __min_ankle_pitch_radian = -1.189516
+
+    __max_ankle_roll_radian = 0.769001
+    __min_ankle_roll_radian = -0.397880
+
+    __hip_pitch_previous_target   = None
+    __hip_roll_previous_target    = None
+    __knee_pitch_previous_target  = None
+    __ankle_pitch_previous_target = None
+    __ankle_roll_previous_target  = None
+
+    def get_velocity(self, joints):
+        velocity = None
+        if joints == "LHipPitch":
+            velocity = l_hip_pitch_v
+        elif joints == "LHipRoll":
+            velocity = l_hip_roll_v
+        elif joints == "LKneePitch":
+            velocity = l_knee_pitch_v
+        elif joints == "LAnklePitch":
+            velocity = l_ankle_pitch_v
+        elif joints == "LAnkleRoll":
+            velocity = l_ankle_roll_v
+        else:
+            print(f"\nCan not find any joints, please set again in get_velocity")
+            return
+        return velocity
+
+    def getJointsStatus(self, joints):
+        if joints == "LHipPitch":
+            return self.__hip_pitch_status
+        elif joints == "LHipRoll":
+            return self.__hip_roll_status
+        elif joints == "LKneePitch":
+            return self.__knee_pitch_status
+        elif joints == "LAnklePitch":
+            return self.__ankle_pitch_status
+        elif joints == "LAnkleRoll":
+            return self.__ankle_roll_status
+        else:
+            print(f"\n {joints} is not finding!")
+            return None
+    def position_is_arrive(self, joints="", targets=None):
+        if joints == "":
+            print("\nYou do not set any joints")
+            return
+
+        if targets is None:
+            print("\nYou do not set any positions")
+            return
+
+        if joints == "LHipPitch":
+            if targets is self.__hip_pitch_previous_target:
+                position = l_hip_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "LHipRoll":
+            if targets is self.__hip_roll_previous_target:
+                position = l_hip_roll_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "LKneePitch":
+            if targets is self.__knee_pitch_previous_target:
+                position = l_knee_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "LAnklePitch":
+            if targets is self.__ankle_pitch_previous_target:
+                position = l_ankle_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "LAnkleRoll":
+            if targets is self.__ankle_roll_previous_target:
+                position = l_ankle_roll_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        else:
+            print("\nCan not find any joints, please set again in position_is_arrive")
+            return
+
+    def set_position(self, joints="", positions=None):
+        if joints == "":
+            print("\nYou do not set any joints")
+            return
+
+        if positions is None:
+            print("\nYou do not set any positions")
+            return
+        
+        if joints == "LHipPitch":
+            if positions > self.__max_hip_pitch_radian or positions < self.__min_hip_pitch_radian:
+                print(f"\nThe position you set is {positions}, is out of range in [{self.__max_hip_pitch_radian}, {self.__min_hip_pitch_radian}]")
+                return
+            if self.__hip_pitch_status is move_status.INITIAL:
+                print(f"\n {joints} is in Initial")
+                self.__hip_pitch_previous_target = positions
+                self.__hip_pitch_status = move_status.PREPARE
+            elif self.__hip_pitch_status is move_status.PREPARE:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__hip_pitch_status = move_status.MOVING
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.MOVING:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Moving")
+                    l_hip_pitch.setPosition(positions)
+                    print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                    if self.position_is_arrive(joints, positions):
+                        self.__hip_pitch_status = move_status.FINISH
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.FINISH:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Finish")
+                    if self.position_is_arrive(joints, positions):
+                        self.__hip_pitch_status = move_status.END
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.END:
+                print(f"\n {joints} is in End")
+                if positions is not self.__hip_pitch_previous_target:
+                    self.__hip_pitch_status = move_status.INITIAL
+                else:
+                    return
+            else:
+                print(f"\n {joints} is in error status!")
+                return
+        elif joints == "LHipRoll":
+             if positions > self.__max_hip_roll_radian or positions < self.__min_hip_roll_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_hip_roll_radian}, {self.__min_hip_roll_radian}]")
+                    return
+             if self.__hip_roll_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__hip_roll_previous_target = positions
+                    self.__hip_roll_status = move_status.PREPARE
+             elif self.__hip_roll_status is move_status.PREPARE:
+                 if positions is self.__hip_roll_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__hip_roll_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__hip_roll_status is move_status.MOVING:
+                    if positions is self.__hip_roll_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        l_hip_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__hip_roll_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__hip_roll_status is move_status.FINISH:
+                    if positions is self.__hip_roll_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__hip_roll_status = move_status.END
+                    else:
+                        return
+             elif self.__hip_roll_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__hip_roll_previous_target:
+                        self.__hip_roll_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "LKneePitch":
+             if positions > self.__max_knee_pitch_radian or positions < self.__min_knee_pitch_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_knee_pitch_radian}, {self.__min_knee_pitch_radian}]")
+                    return
+             if self.__knee_pitch_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__knee_pitch_previous_target = positions
+                    self.__knee_pitch_status = move_status.PREPARE
+             elif self.__knee_pitch_status is move_status.PREPARE:
+                 if positions is self.__knee_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__knee_pitch_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__knee_pitch_status is move_status.MOVING:
+                    if positions is self.__knee_pitch_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        l_knee_pitch.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__knee_pitch_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__knee_pitch_status is move_status.FINISH:
+                    if positions is self.__knee_pitch_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__knee_pitch_status = move_status.END
+                    else:
+                        return
+             elif self.__knee_pitch_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__knee_pitch_previous_target:
+                        self.__knee_pitch_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "LAnklePitch":
+             if positions > self.__max_knee_pitch_radian or positions < self.__min_knee_pitch_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_knee_pitch_radian}, {self.__min_knee_pitch_radian}]")
+                    return
+             if self.__ankle_pitch_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__ankle_pitch_previous_target = positions
+                    self.__ankle_pitch_status = move_status.PREPARE
+             elif self.__ankle_pitch_status is move_status.PREPARE:
+                 if positions is self.__ankle_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__ankle_pitch_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__ankle_pitch_status is move_status.MOVING:
+                    if positions is self.__ankle_pitch_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        l_shoulder_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_pitch_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__ankle_pitch_status is move_status.FINISH:
+                    if positions is self.__ankle_pitch_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_pitch_status = move_status.END
+                    else:
+                        return
+             elif self.__ankle_pitch_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__ankle_pitch_previous_target:
+                        self.__ankle_pitch_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "LAnkleRoll":
+             if positions > self.__max_ankle_roll_radian or positions < self.__min_ankle_roll_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_ankle_roll_radian}, {self.__min_ankle_roll_radian}]")
+                    return
+             if self.__ankle_roll_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__ankle_roll_previous_target = positions
+                    self.__ankle_roll_status = move_status.PREPARE
+             elif self.__ankle_roll_status is move_status.PREPARE:
+                 if positions is self.__ankle_roll_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__ankle_roll_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__ankle_roll_status is move_status.MOVING:
+                    if positions is self.__ankle_roll_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        l_ankle_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_roll_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__ankle_roll_status is move_status.FINISH:
+                    if positions is self.__ankle_roll_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_roll_status = move_status.END
+                    else:
+                        return
+             elif self.__ankle_roll_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__ankle_roll_previous_target:
+                        self.__ankle_roll_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        else:
+            print("\nCan not find any joints, please set again in set_position")
+            return
+        # print("End moved is", self.moved)
+
+class right_leg(move):
+    def __init__(self):
+        move.__init__(self)
+    __hip_pitch_status   = move_status.INITIAL
+    __hip_roll_status    = move_status.INITIAL
+    __knee_pitch_status  = move_status.INITIAL
+    __ankle_pitch_status = move_status.INITIAL
+    __ankle_roll_status  = move_status.INITIAL
+
+    __limitation = 0.000001
+
+    __max_hip_pitch_radian = 0.484090
+    __min_hip_pitch_radian = -1.535889
+
+    __max_hip_roll_radian = 0.379472
+    __min_hip_roll_radian = -0.790477
+
+    __max_knee_pitch_radian = 2.120198
+    __min_knee_pitch_radian = -0.092346
+
+    __max_ankle_pitch_radian = 0.932056
+    __min_ankle_pitch_radian = -1.186448
+
+    __max_ankle_roll_radian = 0.397935
+    __min_ankle_roll_radian = -0.768992
+
+    __hip_pitch_previous_target   = None
+    __hip_roll_previous_target    = None
+    __knee_pitch_previous_target  = None
+    __ankle_pitch_previous_target = None
+    __ankle_roll_previous_target  = None
+
+    def get_velocity(self, joints):
+        velocity = None
+        if joints == "RHipPitch":
+            velocity = r_hip_pitch_v
+        elif joints == "RHipRoll":
+            velocity = r_hip_roll_v
+        elif joints == "RKneePitch":
+            velocity = r_knee_pitch_v
+        elif joints == "RAnklePitch":
+            velocity = r_ankle_pitch_v
+        elif joints == "RAnkleRoll":
+            velocity = r_ankle_roll_v
+        else:
+            print(f"\nCan not find any joints, please set again in get_velocity")
+            return
+        return velocity
+
+    def getJointsStatus(self, joints):
+        if joints == "RHipPitch":
+            return self.__hip_pitch_status
+        elif joints == "RHipRoll":
+            return self.__hip_roll_status
+        elif joints == "RKneePitch":
+            return self.__knee_pitch_status
+        elif joints == "RAnklePitch":
+            return self.__ankle_pitch_status
+        elif joints == "RAnkleRoll":
+            return self.__ankle_roll_status
+        else:
+            print(f"\n {joints} is not finding!")
+            return None
+    def position_is_arrive(self, joints="", targets=None):
+        if joints == "":
+            print("\nYou do not set any joints")
+            return
+
+        if targets is None:
+            print("\nYou do not set any positions")
+            return
+
+        if joints   == "RHipPitch":
+            if targets is self.__hip_pitch_previous_target:
+                position = r_hip_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "RHipRoll":
+            if targets is self.__hip_roll_previous_target:
+                position = r_hip_roll_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "RKneePitch":
+            if targets is self.__knee_pitch_previous_target:
+                position = r_knee_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "RAnklePitch":
+            if targets is self.__ankle_pitch_previous_target:
+                position = r_ankle_pitch_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        elif joints == "RAnkleRoll":
+            if targets is self.__ankle_roll_previous_target:
+                position = r_ankle_roll_sensor.getValue()
+                passing = abs(abs(targets) - abs(position))
+                # 
+                if passing <= self.__limitation :
+                    # self.moved = False
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        else:
+            print("\nCan not find any joints, please set again in position_is_arrive")
+            return
+
+    def set_position(self, joints="", positions=None):
+        if joints == "":
+            print("\nYou do not set any joints")
+            return
+
+        if positions is None:
+            print("\nYou do not set any positions")
+            return
+        
+        if joints == "RHipPitch":
+            if positions > self.__max_hip_pitch_radian or positions < self.__min_hip_pitch_radian:
+                print(f"\nThe position you set is {positions}, is out of range in [{self.__max_hip_pitch_radian}, {self.__min_hip_pitch_radian}]")
+                return
+            if self.__hip_pitch_status is move_status.INITIAL:
+                print(f"\n {joints} is in Initial")
+                self.__hip_pitch_previous_target = positions
+                self.__hip_pitch_status = move_status.PREPARE
+            elif self.__hip_pitch_status is move_status.PREPARE:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__hip_pitch_status = move_status.MOVING
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.MOVING:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Moving")
+                    r_hip_pitch.setPosition(positions)
+                    print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                    if self.position_is_arrive(joints, positions):
+                        self.__hip_pitch_status = move_status.FINISH
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.FINISH:
+                if positions is self.__hip_pitch_previous_target:
+                    print(f"\n {joints} is in Finish")
+                    if self.position_is_arrive(joints, positions):
+                        self.__hip_pitch_status = move_status.END
+                else:
+                    return
+            elif self.__hip_pitch_status is move_status.END:
+                print(f"\n {joints} is in End")
+                if positions is not self.__hip_pitch_previous_target:
+                    self.__hip_pitch_status = move_status.INITIAL
+                else:
+                    return
+            else:
+                print(f"\n {joints} is in error status!")
+                return
+        elif joints == "RHipRoll":
+             if positions > self.__max_hip_roll_radian or positions < self.__min_hip_roll_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_hip_roll_radian}, {self.__min_hip_roll_radian}]")
+                    return
+             if self.__hip_roll_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__hip_roll_previous_target = positions
+                    self.__hip_roll_status = move_status.PREPARE
+             elif self.__hip_roll_status is move_status.PREPARE:
+                 if positions is self.__hip_roll_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__hip_roll_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__hip_roll_status is move_status.MOVING:
+                    if positions is self.__hip_roll_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        r_hip_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__hip_roll_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__hip_roll_status is move_status.FINISH:
+                    if positions is self.__hip_roll_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__hip_roll_status = move_status.END
+                    else:
+                        return
+             elif self.__hip_roll_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__hip_roll_previous_target:
+                        self.__hip_roll_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "RKneePitch":
+             if positions > self.__max_knee_pitch_radian or positions < self.__min_knee_pitch_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_knee_pitch_radian}, {self.__min_knee_pitch_radian}]")
+                    return
+             if self.__knee_pitch_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__knee_pitch_previous_target = positions
+                    self.__knee_pitch_status = move_status.PREPARE
+             elif self.__knee_pitch_status is move_status.PREPARE:
+                 if positions is self.__knee_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__knee_pitch_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__knee_pitch_status is move_status.MOVING:
+                    if positions is self.__knee_pitch_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        r_knee_pitch.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__knee_pitch_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__knee_pitch_status is move_status.FINISH:
+                    if positions is self.__knee_pitch_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__knee_pitch_status = move_status.END
+                    else:
+                        return
+             elif self.__knee_pitch_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__knee_pitch_previous_target:
+                        self.__knee_pitch_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "RAnklePitch":
+             if positions > self.__max_knee_pitch_radian or positions < self.__min_knee_pitch_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_knee_pitch_radian}, {self.__min_knee_pitch_radian}]")
+                    return
+             if self.__ankle_pitch_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__ankle_pitch_previous_target = positions
+                    self.__ankle_pitch_status = move_status.PREPARE
+             elif self.__ankle_pitch_status is move_status.PREPARE:
+                 if positions is self.__ankle_pitch_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__ankle_pitch_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__ankle_pitch_status is move_status.MOVING:
+                    if positions is self.__ankle_pitch_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        r_shoulder_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_pitch_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__ankle_pitch_status is move_status.FINISH:
+                    if positions is self.__ankle_pitch_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_pitch_status = move_status.END
+                    else:
+                        return
+             elif self.__ankle_pitch_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__ankle_pitch_previous_target:
+                        self.__ankle_pitch_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        elif joints == "RAnkleRoll":
+             if positions > self.__max_ankle_roll_radian or positions < self.__min_ankle_roll_radian:
+                    print(f"\nThe position you set is {positions}, is out of range in [{self.__max_ankle_roll_radian}, {self.__min_ankle_roll_radian}]")
+                    return
+             if self.__ankle_roll_status is move_status.INITIAL:
+                    print(f"\n {joints} is in Initial")
+                    self.__ankle_roll_previous_target = positions
+                    self.__ankle_roll_status = move_status.PREPARE
+             elif self.__ankle_roll_status is move_status.PREPARE:
+                 if positions is self.__ankle_roll_previous_target:
+                    print(f"\n {joints} is in Prepare")
+                    self.__ankle_roll_status = move_status.MOVING
+                 else:
+                     return
+             elif self.__ankle_roll_status is move_status.MOVING:
+                    if positions is self.__ankle_roll_previous_target:
+                        print(f"\n {joints} is in Moving")
+                        r_ankle_roll.setPosition(positions)
+                        print(f"\n {joints}'s velocity is {self.get_velocity(joints)}")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_roll_status = move_status.FINISH
+                    else:
+                        return
+             elif self.__ankle_roll_status is move_status.FINISH:
+                    if positions is self.__ankle_roll_previous_target:
+                        print(f"\n {joints} is in Finish")
+                        if self.position_is_arrive(joints, positions):
+                            self.__ankle_roll_status = move_status.END
+                    else:
+                        return
+             elif self.__ankle_roll_status is move_status.END:
+                    print(f"\n {joints} is in End")
+                    if positions is not self.__ankle_roll_previous_target:
+                        self.__ankle_roll_status = move_status.INITIAL
+                    else:
+                        return
+             else:
+                    print(f"\n {joints} is in error status!")
+                    return
+        else:
+            print("\nCan not find any joints, please set again in set_position")
+            return
+        # print("End moved is", self.moved)
 
 class NAO_MOTION:
     def __init__(self):
