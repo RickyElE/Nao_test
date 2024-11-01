@@ -1,0 +1,20 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Webots Controller",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {
+                "WEBOTS_HOME": "/Applications/Webots.app/Contents",
+                "LD_LIBRARY_PATH": "/Applications/Webots.app/Contents/lib/controller",
+                "PYTHONPATH": "/Applications/Webots.app/Contents/lib/controller/python"
+            }
+        }
+    ]
+}

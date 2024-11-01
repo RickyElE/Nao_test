@@ -1,0 +1,7 @@
+{
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.autoComplete.extraPaths": [
+        "/Applications/Webots.app/Contents/lib/"
+    ],
+    
+}
