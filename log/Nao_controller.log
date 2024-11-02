@@ -1,0 +1,1346 @@
+[2024/11/02 12:57:23] [INFO] [Nao_controller.py:1469]: Init NAO_MOTION!
+[2024/11/02 12:57:23] [INFO] [Nao_controller.py:1480]: In SALUTE_MOTION.INITIAL
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:550]: RShoulderPitch is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:237]: LShoulderPitch is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:284]: LShoulderRoll is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:440]: LElbowRoll is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:555]: RShoulderPitch is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:242]: LShoulderPitch is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:289]: LShoulderRoll is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:444]: LElbowRoll is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:567]: RShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:575]: RShoulderPitch is in Finish
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:456]: LElbowRoll is in Finish
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:310]: LShoulderRoll is in Finish
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:263]: LShoulderPitch is in Finish
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:269]: LShoulderPitch is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:237]: LShoulderPitch is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:284]: LShoulderRoll is in Initial
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:242]: LShoulderPitch is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:289]: LShoulderRoll is in Prepare
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:24] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:310]: LShoulderRoll is in Finish
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:263]: LShoulderPitch is in Finish
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:25] [INFO] [Nao_controller.py:463]: LElbowRoll is in End
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:440]: LElbowRoll is in Initial
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:444]: LElbowRoll is in Prepare
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:26] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:456]: LElbowRoll is in Finish
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:463]: LElbowRoll is in End
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:440]: LElbowRoll is in Initial
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:444]: LElbowRoll is in Prepare
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:27] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:456]: LElbowRoll is in Finish
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1519]: In SALUTE_MOTION.FINISH
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1522]: In SALUTE_MOTION.END
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1480]: In SALUTE_MOTION.INITIAL
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:269]: LShoulderPitch is in End
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:237]: LShoulderPitch is in Initial
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:284]: LShoulderRoll is in Initial
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:242]: LShoulderPitch is in Prepare
+[2024/11/02 12:57:28] [INFO] [Nao_controller.py:289]: LShoulderRoll is in Prepare
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:29] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:310]: LShoulderRoll is in Finish
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:263]: LShoulderPitch is in Finish
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:269]: LShoulderPitch is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:237]: LShoulderPitch is in Initial
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:284]: LShoulderRoll is in Initial
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:242]: LShoulderPitch is in Prepare
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:289]: LShoulderRoll is in Prepare
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:30] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:310]: LShoulderRoll is in Finish
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1496]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:263]: LShoulderPitch is in Finish
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:31] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:463]: LElbowRoll is in End
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:440]: LElbowRoll is in Initial
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:444]: LElbowRoll is in Prepare
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:32] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1505]: In SALUTE_MOTION.SALUTE
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:456]: LElbowRoll is in Finish
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:463]: LElbowRoll is in End
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:440]: LElbowRoll is in Initial
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:444]: LElbowRoll is in Prepare
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:33] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:448]: LElbowRoll is in Moving
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1512]: In SALUTE_MOTION.RESET
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:456]: LElbowRoll is in Finish
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1519]: In SALUTE_MOTION.FINISH
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1522]: In SALUTE_MOTION.END
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1480]: In SALUTE_MOTION.INITIAL
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:269]: LShoulderPitch is in End
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:316]: LShoulderRoll is in End
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:237]: LShoulderPitch is in Initial
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:284]: LShoulderRoll is in Initial
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:242]: LShoulderPitch is in Prepare
+[2024/11/02 12:57:34] [INFO] [Nao_controller.py:289]: LShoulderRoll is in Prepare
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:1483]: In SALUTE_MOTION.PREPARE
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:581]: RShoulderPitch is in End
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:254]: LShoulderPitch is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:256]: LShoulderPitch's velocity is 8.26797
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:301]: LShoulderRoll is in Moving
+[2024/11/02 12:57:35] [INFO] [Nao_controller.py:303]: LShoulderRoll's velocity is 7.19407
