@@ -314,38 +314,6 @@ class NAO_Supervisor_Tracking(Supervisor):
         epsilon_ = 0.2
         robot_position = self.nao.getPosition()
         football_position = self.football.getPosition()
-        # yaw = np.rad2deg(self.inertialUnit.getRollPitchYaw()[2])
-        # yaw = np.rad2deg(self.nao.getField("rotation").getSFFloat()[3])
-        # x = robot_position[0] - football_position[0]
-        # y = robot_position[1] - football_position[1]
-        # distance = np.sqrt(x ** 2 + y ** 2)
-        # theta = np.rad2deg(np.arctan((y / x)))
-        # angle = 0.0
-        # if x < 0.0 and y < 0.0:
-        #     angle = yaw - theta
-        # elif x > 0.0 and y > 0.0:
-        #     angle = 180 + theta - yaw
-        # elif x > 0.0 and y < 0.0:
-        #     angle = 180 - theta - yaw
-        # elif x < 0.0 and y > 0.0:
-        #     angle = yaw + theta
-        # elif x == 0.0 and y < 0.0:
-        #     angle = yaw
-        # elif x == 0.0 and y > 0.0:
-        #     angle = -yaw
-        # elif y == 0.0 and x < 0.0:
-        #     angle = yaw - 90
-        # elif y == 0.0 and x > 0.0:
-        #     angle = yaw + 90
-        # x = football_position[0] - robot_position[0]
-        # y = football_position[1] - robot_position[1]
-        # distance = np.sqrt(x ** 2 + y ** 2)
-        # yaw = self.nao.getField("rotation").getSFFloat()[3]
-        # yaw = (np.arctan2(NaoSupervisor.nao.getOrientation()[2], NaoSupervisor.nao.getOrientation()[0]))
-        # theta = np.arctan2(y, x)
-        # angle = theta - yaw
-        # angle = (angle + np.pi) % (2 * np.pi) - np.pi
-        # angle = np.rad2deg(angle)
 
         # modified at 18/11 Mon
         dx = football_position[0] - robot_position[0]
@@ -364,6 +332,10 @@ class NAO_Supervisor_Tracking(Supervisor):
         if cross_product < 0:
             angle = -angle
         distance = np.sqrt(dx ** 2 + dy ** 2)
+        print(f"distance is {distance}")
+        print(f"angle is {angle}")
+        print(f"cross_product is {cross_product}")
+
         if self.tracking_stage == MOTION_PLAY.INITIAL:
             print("MOTION PLAY INITIAL")
             # L_pitch = self.sensors['LShoulderPitch'].getValue()
@@ -397,13 +369,9 @@ class NAO_Supervisor_Tracking(Supervisor):
                 return
         elif self.tracking_stage == MOTION_PLAY.PREPARE:
             print("MOTION PLAY PREPARE")
-            print(distance)
-            print(f"angle is {angle}")
-            # if  (      30.0 <= angle <= 50.0         or -50.0 <= angle <= -30.0
-            #         or 2 * 30.0 <= angle <= 2 * 50.0 or 2 * -50.0 <= angle <= 2 * -30.0
-            #         or 3 * 30.0 <= angle <= 3 * 50.0 or 3 * -50.0 <= angle <= 3 * -30.0
-            #         or 4 * 30.0 <= angle <= 160.0    or -160.0 <= angle <= 4 * -30.0):
-            if 90.0 >= angle >= 15.0 or -15.0 >= angle >= -90.0:
+
+            if 180.0 >= angle >= 15.0 or -15.0 >= angle >= -180.0:
+                self.__temp_angle = angle
                 self.tracking_stage = MOTION_PLAY.ADJUSTING_ANGLE
                 return
             else:
@@ -412,24 +380,9 @@ class NAO_Supervisor_Tracking(Supervisor):
 
         elif self.tracking_stage == MOTION_PLAY.ADJUSTING_ANGLE:
             print("MOTION PLAY ADJUSTING_ANGLE")
-            print(f"distance is {distance}")
-            print(f"angle is {angle}")
-            # if distance >= epsilon_:
-                # print("Distance is bigger than epsilon_")
-            # if (        30.0 <= angle <= 50.0
-            #         or 2 * 30.0 <= angle <= 2 * 50.0
-            #         or 3 * 30.0 <= angle <= 3 * 50.0
-            #         or 4 * 30.0 <= angle <= 160.0):
-            #     self.startMotion(self.turnleft40)
-            #
-            # elif (      -50.0 <= angle <= -30.0
-            #         or 2 * -50.0 <= angle <= 2 * -30.0
-            #         or 3 * -50.0 <= angle <= 3 * -30.0
-            #         or -160.0 <= angle <= 4 * -30.0):
-            #     self.startMotion(self.turnright40)
-            if 90.0 >= angle >= 15.0:
-                self.startMotion(self.turnleft40)
-            elif -15.0 >= angle >= -90.0:
+            if 180.0 >= self.__temp_angle >= 15.0:
+                self.startMotion(self.turnright40)
+            elif -15.0 >= self.__temp_angle >= -180.0:
                 self.startMotion(self.turnleft40)
 
             if np.abs(angle) <= 15.0:
@@ -454,66 +407,41 @@ class NAO_Supervisor_Tracking(Supervisor):
             print(f"distance in x : {dx} y: {dy}")
             print(f"angle is {angle}")
             if distance >= epsilon_:
-                self.startMotion(self.forwards)
+                if 180.0 >= angle >= 15.0 or -15.0 >= angle >= -180.0:
+                    self.__temp_angle = angle
+                    self.tracking_stage = MOTION_PLAY.ADJUSTING_ANGLE
+                else:
+                    self.startMotion(self.forwards)
                 return
             else:
                 self.stopMotion()
+                self.__temp_angle = angle
                 self.tracking_stage = MOTION_PLAY.SIDE_STEP_ADJUST
-                # if (np.abs(x) > 0.1 and np.abs(y) < 0.001) or (np.abs(y) > 0.1 and np.abs(x) < 0.001):
-                #     self.tracking_stage = MOTION_PLAY.ADJUSTING_ANGLE
-                # else:
-                #     if np.abs(angle) > 10:
-                #         self.tracking_stage = MOTION_PLAY.SIDE_STEP_ADJUST
-                #     else:
-                #         self.tracking_stage = MOTION_PLAY.FINISH
                 return
 
         elif self.tracking_stage == MOTION_PLAY.SIDE_STEP_ADJUST:
             print("MOTION PLAY SIDE_STEP_ADJUST")
             print(f"distance is {distance}")
             print(f"angle is {angle}")
-            # if 160 <= angle <= 180 or 0 <= angle <= 20 or -180 <= angle <= -160 or -20 <= angle <= 0:
-            #     pass
-            #     if 160 <= angle <= 180 or -20 <= angle <= 0:
-            #         self.startMotion(self.turnleft40)
-            #     else:
-            #         self.startMotion(self.turnright40)
-            #     if np.abs(angle) <= 6:
-            #         self.stopMotion()
-            #         self.tracking_stage = MOTION_PLAY.FINISH
-            #         return
-            #     else:
-            #         return
-            # else:
-            #     if 20 < angle <= 90 or -160 < angle <= -90:
-            #         self.startMotion(self.sidestepright)
-            #     else:
-            #         self.startMotion(self.sidestepleft)
-            #     if np.abs(angle) <= 10:
-            #         self.stopMotion()
-            #         self.tracking_stage = MOTION_PLAY.FINISH
-            #         return
-            #     else:
-            #         return
-            if 90.0 >= angle >= 70.0 or -70.0 >= angle >= -90.0:
-                if 90.0 >= angle >= 70.0:
-                    self.startMotion(self.turnleft40)
-
-                if -70.0 >= angle >= -90.0:
+            if 180.0 >= self.__temp_angle >= 60.0 or -60.0 >= self.__temp_angle >= -180.0:
+                if 90.0 >= self.__temp_angle >= 60.0:
                     self.startMotion(self.turnright40)
 
-            elif 70.0 > angle >= 15.0 or -15.0 >= angle > -70.0:
-                if 70.0 > angle >= 15.0:
-                    self.startMotion(self.sidestepleft)
+                if -60.0 >= self.__temp_angle >= -90.0:
+                    self.startMotion(self.turnleft40)
 
-                if -15.0 >= angle > -70.0:
+            if 60.0 > self.__temp_angle >= 15.0 or -15.0 >= self.__temp_angle > -60.0:
+                if 60.0 > self.__temp_angle >= 15.0:
                     self.startMotion(self.sidestepright)
+
+                if -15.0 >= self.__temp_angle > -60.0:
+                    self.startMotion(self.sidestepleft)
 
             else:
                 self.tracking_stage = MOTION_PLAY.FINISH
                 return
 
-            if np.abs(angle) <= 20:
+            if np.abs(angle) <= 15:
                 self.stopMotion()
                 self.tracking_stage = MOTION_PLAY.FINISH
                 return
@@ -667,18 +595,67 @@ class NAO_Supervisor_Tracking(Supervisor):
         else:
             print("KICK STAGE ERROR", flush=True)
 
+    def kick_motion(self):
+        if self.kick_stage is KICK_STAGE.INITIAL:
+            print("KICK INITIAL")
+            if self.is_balanced():
+                self.kick_stage = KICK_STAGE.PREPARE
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.PREPARE:
+            print('Stage 0: PREPARE', flush=True)
+            for name in self.motor_names:
+                if name in self.motors:
+                    self.setMotorPosition(name, 0.0)
+            all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
+            if all_in_end and self.is_balanced():
+                self.kick_stage = KICK_STAGE.KICK
+            return
+        elif self.kick_stage is KICK_STAGE.KICK:
+            print('Stage 1: KICK', flush=True)
+            self.startMotion(self.KICK)
+            gettime = self.currentlyPlaying.getTime()
+            if gettime == 2784: # the real time to stop
+                self.stopMotion()
+                self.kick_stage = KICK_STAGE.COMPLETE
+            return
+        elif self.kick_stage is KICK_STAGE.COMPLETE:
+            print('Stage 2: KICK complete', flush=True)
+            self.kick_stage = KICK_STAGE.IS_BALANCE
+            return
+        elif self.kick_stage is KICK_STAGE.IS_BALANCE:
+            print('Stage 3: KICK IS_BALANCE', flush=True)
+            if self.is_balanced():
+                self.kick_stage = KICK_STAGE.END
+            return
+        elif self.kick_stage is KICK_STAGE.END:
+            print('Stage 4: KICK END', flush=True)
+            return True
+        else:
+            print("KICK STAGE ERROR", flush=True)
+
 NaoSupervisor = NAO_Supervisor_Tracking()
 while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
     # NaoSupervisor.is_balanced()
     pass
     if NaoSupervisor.trackingBall():
-        if NaoSupervisor.kick_ball():
+        if NaoSupervisor.kick_motion():
             NaoSupervisor.set_stage(KICK_STAGE.INITIAL)
             NaoSupervisor.set_stage(MOTION_PLAY.INITIAL)
+
     # print(np.rad2deg(NaoSupervisor.inertialUnit.getRollPitchYaw()[2]))
     # print(np.rad2deg(NaoSupervisor.nao.getField("rotation").getSFFloat()[3]))
     # NaoSupervisor.startMotion(NaoSupervisor.turnright40)
 
+    # NaoSupervisor.startMotion(NaoSupervisor.KICK)
+    # duration = NaoSupervisor.currentlyPlaying.getDuration()
+    # gettime = NaoSupervisor.currentlyPlaying.getTime()
+    # play_over = NaoSupervisor.currentlyPlaying.isOver()
+    # print(f"duration{duration} gettime{gettime} play_over{play_over}")
+    # # print(play_over)
+    # if gettime == 2784:
+    #     break
     # robot_position = NaoSupervisor.nao.getPosition()
     # football_position = NaoSupervisor.football.getPosition()
     # dx = football_position[0] - robot_position[0]
