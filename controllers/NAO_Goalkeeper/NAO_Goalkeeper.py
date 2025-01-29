@@ -38,6 +38,16 @@ class DEFEND_STAGE(Enum):
     ADJUSTING_ANGLE = auto()
     SIDE_STEP_ADJUST = auto()
     BOUNDARY_ADJUST = auto()
+    BACK_TO_REGISTERED = auto()
+    FINISH = auto()
+    END = auto()
+
+class BACK_MIDDLE(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    ANGLE_ADJUSTING = auto()
+    FACING_TO_MIDDLE = auto()
+    MOVING = auto()
     FINISH = auto()
     END = auto()
 
@@ -49,14 +59,18 @@ class Nao_Goalkeeper(Robot):
         '''
         This Function mainly loads the motion files from libraries
         '''
-        self.forwards = Motion('libraries/Forwards.motion')
-        self.backwards = Motion('libraries/Backwards.motion')
-        self.shoot = Motion('libraries/Shoot.motion')
-        self.turnleft40 = Motion('libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('libraries/SideStepRight.motion')
-        self.KICK = Motion('libraries/KICK.motion')
+        self.forwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Forwards.motion')
+        self.backwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Backwards.motion')
+        self.shoot = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Shoot.motion')
+        self.turnleft40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnLeft40.motion')
+        self.turnright40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnRight40.motion')
+        self.sidestepleft = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepLeft.motion')
+        self.sidestepright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepRight.motion')
+        self.KICK = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/KICK.motion')
+        self.StandUpFromFront = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromFront.motion')
+        self.StandUpFromBack = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromBack.motion')
+        self.ReturnFromSide = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/ReturnFromSide.motion')
+        # self.Diveright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Diveright.motion')
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -304,6 +318,11 @@ class Nao_Goalkeeper(Robot):
             print("receiver not set")
 
         self.gk_stage = DEFEND_STAGE.INITIAL
+        self.b2mp_stage = BACK_MIDDLE.INITIAL
+        self.__robot_position = None
+        self.__football_position = None
+        self.__robot_orientation = None
+        self.__has_turn2correct_direction = False
 
     def set_stage(self, stage=None):
         '''
@@ -494,9 +513,9 @@ class Nao_Goalkeeper(Robot):
         vel = self.gyro.getValues()
         # print('angular velocity: [ x y ] = [%f %f]' % (vel[0], vel[1]))
         # print(vel[0], vel[1])
-        all_in_balance = float(vel[0]) == 0.0 and float(vel[1]) == 0.0
+        all_in_balance = np.round(np.float64(vel[0])) == 0.0 and np.round(np.float64(vel[1])) == 0.0
 
-        print(f"all_in_balance: {all_in_balance}")
+        # print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
 
     def position_refresh(self):
@@ -509,9 +528,15 @@ class Nao_Goalkeeper(Robot):
             football_position = np.float64(shared_info["football"]["position"])
 
             self.receiver.nextPacket()
-            return robot_position, robot_orientation, football_position
+            self.__robot_position = robot_position
+            self.__robot_orientation = robot_orientation
+            self.__football_position = football_position
+            # return robot_position, robot_orientation, football_position
         else:
-            return None, None, None
+            # return None, None, None
+            self.__robot_position = None
+            self.__robot_orientation = None
+            self.__football_position = None
 
     # Calculate the angle
     def angleCalculaor(self, football_position, robot_position, orientation):
@@ -531,19 +556,40 @@ class Nao_Goalkeeper(Robot):
         distance = np.sqrt(dx ** 2 + dy ** 2)
         return angle, distance
 
+    def goalkeeper_registered_check(self):
+        bitsOfRound = 2
+        limitationofdistance = 1.0
+        if (np.round(self.__robot_position[1],2) <= 1.05 + 0.25
+                and np.round(self.__robot_position[1],2) >= - (1.05 + 0.25)
+                and np.round(self.__robot_position[0],2) <= 3.90 + limitationofdistance
+                and np.round(self.__robot_position[0],2) >= 3.90 - limitationofdistance):
+            return True
+        else:
+            return False
+
     def defendingBall(self):
         limitationofdistance = 0.1
         bitsOfRound = 2
-        robot_position, robot_orientation, football_position = self.position_refresh()
-        if robot_position is None or robot_orientation is None or football_position is None:
+        # robot_position, robot_orientation, football_position = self.position_refresh()
+        if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
             print("robot_position or robot_orientation or football_position is None!")
             return
 
-        angle, distance = self.angleCalculaor(football_position, robot_position, robot_orientation)
+        angle, distance = self.angleCalculaor(self.__football_position, self.__robot_position, self.__robot_orientation)
         if angle is None or distance is None:
             print("angle is None or distance is None!")
             return
-        # print(f"angle is {angle}")
+        print(f"angle is {angle}")
+        print(f"distance is {distance}")
+        if self.__football_position[0] < 0:
+            # print("football position is negative")
+            return
+        print(self.goalkeeper_registered_check())
+        if (not self.goalkeeper_registered_check()
+                # and not self.__has_turn2correct_direction
+        ):
+            self.gk_stage = DEFEND_STAGE.BACK_TO_REGISTERED
+
         if self.gk_stage == DEFEND_STAGE.INITIAL:
             print("DEFEND INITIAL")
             self.setMotorPosition('LShoulderPitch', 1.49)
@@ -570,8 +616,8 @@ class Nao_Goalkeeper(Robot):
                 return
         elif self.gk_stage == DEFEND_STAGE.PREPARE:
             print("DEFEND PREPARE")
-            front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position,
-                                                              robot_orientation)
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,
+                                                              self.__robot_orientation)
             print("front_angle:", front_angle)
             print("front_distance:", front_distance)
 
@@ -590,10 +636,11 @@ class Nao_Goalkeeper(Robot):
                 self.gk_stage = DEFEND_STAGE.X_AXIS_ADJUST
                 return
 
-            if football_position[0] >= 0:
-                if (angle >= 15.0 and robot_position[1] >= -1.05) or (angle <= -15.0 and robot_position[1] <= 1.05):
+            if self.__football_position[0] >= 0:
+                if ((angle >= 15.0 and self.__robot_position[1] >= -1.05) or (angle <= -15.0 and self.__robot_position[1] <= 1.05)
+                    ):
                     self.__temp_angle = angle
-                    self.__temp_position = football_position
+                    self.__temp_position = self.__football_position
                     self.previous_stage = self.gk_stage
                     self.gk_stage = DEFEND_STAGE.ADJUSTING_ANGLE
                     return
@@ -607,7 +654,7 @@ class Nao_Goalkeeper(Robot):
                 return
         elif self.gk_stage == DEFEND_STAGE.ADJUSTING_ANGLE:
             print("DEFEND ADJUSTING_ANGLE")
-            front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position, robot_orientation)
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position, self.__robot_orientation)
             print(front_angle)
             if np.round(np.abs(front_angle),1) >= 15.0:
                 if ((180.0 >= np.round(front_angle,1) >= 15.0)
@@ -631,7 +678,7 @@ class Nao_Goalkeeper(Robot):
                         self.gk_stage = DEFEND_STAGE.X_AXIS_ADJUST
                 else:
                     self.__temp_angle = angle
-                    self.__temp_position = football_position
+                    self.__temp_position = self.__football_position
                     self.previous_stage = self.gk_stage
                     self.gk_stage = DEFEND_STAGE.SIDE_STEP_ADJUST
                 return
@@ -640,15 +687,15 @@ class Nao_Goalkeeper(Robot):
         elif self.gk_stage == DEFEND_STAGE.SIDE_STEP_ADJUST:
             print("DEFEND SIDE_STEP_ADJUST")
             print("__temp_angle", self.__temp_angle)
-            if self.__temp_angle >= 15.0 and robot_position[1] >= -1.05:
+            if self.__temp_angle >= 15.0 and self.__robot_position[1] >= -1.05:
                 self.startMotion(self.sidestepleft)
 
-            elif self.__temp_angle <= -15.0 and robot_position[1] <= 1.05:
+            elif self.__temp_angle <= -15.0 and self.__robot_position[1] <= 1.05:
                 self.startMotion(self.sidestepright)
 
-            self.__temp_angle, judge_distance = self.angleCalculaor(football_position, robot_position,
-                                                                    robot_orientation)
-            front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position,robot_orientation)
+            self.__temp_angle, judge_distance = self.angleCalculaor(self.__football_position, self.__robot_position,
+                                                                    self.__robot_orientation)
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,self.__robot_orientation)
             print("front_angle:", front_angle)
             print("front_distance:", front_distance)
             if (np.round(np.abs(front_angle),1) >= 15.0
@@ -668,8 +715,8 @@ class Nao_Goalkeeper(Robot):
                 self.gk_stage = DEFEND_STAGE.X_AXIS_ADJUST
                 return
 
-            if (not (self.__temp_angle >= 15.0 and robot_position[1] >= -1.05)
-                    and not (self.__temp_angle <= -15.0 and robot_position[1] <= 1.05)):
+            if (not (self.__temp_angle >= 15.0 and self.__robot_position[1] >= -1.05)
+                    and not (self.__temp_angle <= -15.0 and self.__robot_position[1] <= 1.05)):
                 # self.stopMotion()
                 # if (np.abs(self.__temp_angle) >= 15.0
                 #         and (robot_position[1] <= -1.05 or robot_position[1] >= 1.05)):
@@ -687,8 +734,35 @@ class Nao_Goalkeeper(Robot):
             #     return
             else:
                 return
+        elif self.gk_stage == DEFEND_STAGE.BACK_TO_REGISTERED:
+            print("DEFEND_STAGE BACK_TO_REGISTERED")
+            regis_angle, regis_distance = self.angleCalculaor([3.9, 0.0, 0.0], self.__robot_position,self.__robot_orientation)
+            print("regis_angle:", regis_angle)
+            print("regis_distance:", regis_distance)
+            if np.abs(regis_angle) <= 15.0:
+                self.startMotion(self.forwards)
+                if (1.05 >= self.__robot_position[0] >= -1.05 and 3.90 + 0.5 >=
+                        self.__robot_position[1] >= 3.90 - 0.5) or np.abs(regis_distance) <= 0.2:
+                    self.previous_stage = self.gk_stage
+                    self.gk_stage = DEFEND_STAGE.INITIAL
+                    # self.__has_turn2correct_direction = True
+                    return
+                else:
+                    return
+            else:
+            # if not (np.abs(regis_angle) <= 15.0 or np.isclose(np.abs(regis_distance),0.2,1e-1)):
+                if 180.0 >= regis_angle > 15.0:
+                    self.startMotion(self.turnleft40)
+                elif -15.0 > regis_angle >= -180.0:
+                    self.startMotion(self.turnright40)
+                return
+
+
         # elif self.gk_stage == DEFEND_STAGE.BOUNDARY_ADJUST:
         #     print("DEFEND BOUNDARY_ADJUST")
+        #     if ((4.555 > football_position[0] >= 3.950 and 3.000 >= football_position[1] > 1.2)
+        #         or (-3.950 > football_position[0] >=- 4.555 and -3.000 >= football_position[1] > -1.2)):
+        #         return
         #     front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position,
         #                                                       robot_orientation)
         #     if self.__temp_position[1] <= -1.05 or self.__temp_position[1] >= 1.05 or np.abs(front_angle) < 90.0:
@@ -718,7 +792,7 @@ class Nao_Goalkeeper(Robot):
         #         return
         elif self.gk_stage == DEFEND_STAGE.X_AXIS_ADJUST:
             print("DEFEND X_AXIS_ADJUST")
-            front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position,robot_orientation)
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,self.__robot_orientation)
             print("front_distance:", np.round(np.round(front_distance,bitsOfRound),2))
             if np.round(np.round(front_distance,bitsOfRound),1) > 3.90 + limitationofdistance:
                 print("Is adjusting forwards!")
@@ -745,9 +819,9 @@ class Nao_Goalkeeper(Robot):
                 return
         elif self.gk_stage == DEFEND_STAGE.FINISH:
             print("DEFEND FINISH")
-            front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position, robot_orientation)
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position, self.__robot_orientation)
             if self.is_balanced():
-                if (np.round(np.abs(front_angle),1) >= 15.0
+                if (np.round(np.abs(front_angle), 1) >= 15.0
                         # and self.previous_stage != DEFEND_STAGE.BOUNDARY_ADJUST
                 ):
                     self.previous_stage = self.gk_stage
@@ -758,16 +832,230 @@ class Nao_Goalkeeper(Robot):
             return
         elif self.gk_stage == DEFEND_STAGE.END:
             print("DEFEND END")
-            if ((angle >= 15.0 and robot_position[1] >= -1.05)
-                    or (angle <= -15.0 and robot_position[1] <= 1.05) and football_position[0] >= 0):
-                self.previous_stage = self.gk_stage
-                self.gk_stage = DEFEND_STAGE.INITIAL
+            if (self.is_balanced()):
+                if (
+                        (angle > 15.0 and np.round(self.__robot_position[1], bitsOfRound) < -1.05)
+                        or (angle < -15.0 and np.round(self.__robot_position[1], bitsOfRound) > 1.05)
+                        or ( 1.05 >= np.round(self.__robot_position[1],bitsOfRound) >= -1.05 and (angle > 15.0 or angle < -15.0))
+                        and self.__football_position[0] >= 0
+                ):
+                # if not (np.round(np.abs(angle), 1) <= 15.0
+                #      # and (-1.05 <= np.round(self.__robot_position[1], bitsOfRound) <= 1.05)
+                #         and self.__football_position[0] > 0):
+                    self.previous_stage = self.gk_stage
+                    self.gk_stage = DEFEND_STAGE.INITIAL
+                    # self.__has_turn2correct_direction = False
             return
         else:
             print("Unknown stage")
             return False
 
+    def standupIfnecessary(self):
+        Acc = self.accelerometer.getValues()
+        # print(f"Acc is {Acc}")
+        if Acc[2] < 5.0 and Acc[0] < -4.0:
+            self.startMotion(self.StandUpFromFront)
+            return True
+        elif Acc[2] < 5.0 and Acc[0] > 4.0:
+            self.startMotion(self.StandUpFromBack)
+            return True
+        elif Acc[2] < 5.0 and Acc[1] < -4.0:
+            self.startMotion(self.ReturnFromSide)
+            return True
+        elif Acc[2] < 5.0 and Acc[1] > 4.0:
+            self.startMotion(self.ReturnFromSide)
+            return True
+        else:
+            return False
+
+    def backtomiddlepoint(self):
+        limitationofdistance = 0.1
+        bitsOfRound = 2
+        if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
+            print("robot_position or robot_orientation or football_position is None!")
+            return
+
+        angle, distance = self.angleCalculaor([3.9, 0.0 ,0.0], self.__robot_position, self.__robot_orientation)
+        if angle is None or distance is None:
+            print("angle is None or distance is None!")
+            return
+
+        if self.__football_position[0] >= 0:
+            return
+        if self.b2mp_stage == BACK_MIDDLE.INITIAL:
+            print("Back to middlepoint Initial!")
+            self.setMotorPosition('LShoulderPitch', 1.49)
+            self.setMotorPosition('RShoulderPitch', 1.49)
+            self.setMotorPosition('LShoulderRoll', 0.000000086)
+            self.setMotorPosition('RShoulderRoll', -0.000000086)
+            self.setMotorPosition('LElbowRoll', -0.49)
+            self.setMotorPosition('RElbowRoll', 0.49)
+            self.setMotorPosition('LElbowYaw', 0.000000049)
+            self.setMotorPosition('RElbowYaw', -0.000000049)
+            # print(f"L Shoulder Roll is {self.sensors['LShoulderRoll'].getValue()}, LElbowRoll is {self.sensors['LElbowRoll'].getValue()}, "
+            #       f"LElbowYaw is {self.sensors['LElbowYaw'].getValue()}")
+            # print(
+            #     f"R Shoulder Roll is {self.sensors['RShoulderRoll'].getValue()}, RElbowRoll is {self.sensors['RElbowRoll'].getValue()}, "
+            #     f"RElbowYaw is {self.sensors['RElbowYaw'].getValue()}")
+            if (self.getMoveStage('LShoulderPitch') is move_status.END and
+                    self.getMoveStage('RShoulderPitch') is move_status.END and
+                    self.getMoveStage('LShoulderRoll') is move_status.END and
+                    self.getMoveStage('RShoulderRoll') is move_status.END and
+                    self.getMoveStage('LElbowRoll') is move_status.END and
+                    self.getMoveStage('RElbowRoll') is move_status.END and
+                    self.getMoveStage('LElbowYaw') is move_status.END and
+                    self.getMoveStage('RElbowYaw') is move_status.END):
+                self.b2mp_stage = BACK_MIDDLE.PREPARE
+                return
+            else:
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.PREPARE:
+            print("Back to middlepoint Prepare!")
+            if np.round(distance, bitsOfRound) >= 0.2 and (180.0 >= angle >= 15.0 or -15.0 >= angle >= -180.0):
+                self.__temp_angle = angle
+                self.b2mp_stage = BACK_MIDDLE.ANGLE_ADJUSTING
+                return
+            else:
+                self.b2mp_stage = BACK_MIDDLE.MOVING
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.ANGLE_ADJUSTING:
+            print("Back to middlepoint ANGLE_ADJUSTING!")
+            if 180.0 >= self.__temp_angle > 15.0:
+                self.startMotion(self.turnright40)
+            elif -15.0 >= self.__temp_angle > -180.0:
+                self.startMotion(self.turnleft40)
+
+            if np.abs(angle) <= 15.0:
+                self.stopMotion()
+                self.b2mp_stage = BACK_MIDDLE.MOVING
+                return
+            else:
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.MOVING:
+            print("Back to middlepoint Moving!")
+            print(f"distance: {distance}")
+            # print(np.round(distance, bitsOfRound) >= 0.2)
+            # print(self.b2mp_stage)
+            if np.round(distance, bitsOfRound) >= 0.2:
+                # print("Distance is over 0.2!")
+                if 180.0 >= angle > 15.0 or -15.0 > angle >= -180.0:
+                    self.__temp_angle = angle
+                    self.b2mp_stage = BACK_MIDDLE.ANGLE_ADJUSTING
+                    return
+                else:
+                    # print("Is moving forwards!")
+                    self.startMotion(self.forwards)
+                    # print("startMotion has been done!")
+                    return
+            else:
+                print("Has arrived to the middlepoint!")
+                # self.stopMotion()
+                self.__temp_angle = angle
+                self.b2mp_stage = BACK_MIDDLE.FACING_TO_MIDDLE
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.FACING_TO_MIDDLE:
+            print("Back to middlepoint FACING_TO_MIDDLE!")
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,
+                                                              self.__robot_orientation)
+            print(front_angle)
+            if np.round(np.abs(front_angle), 1) >= 15.0:
+                if ((180.0 >= np.round(front_angle, 1) >= 15.0)
+                        or (180.0 >= np.round(front_angle, 1) >= 15.0 and self.isTurningRight is None)
+                        or self.isTurningRight):
+                    self.startMotion(self.turnright40)
+                    self.isTurningRight = True
+                elif ((-180.0 <= np.round(front_angle, 1) <= -15.0)
+                      or (-180.0 <= np.round(front_angle, 1) <= -15.0 and self.isTurningRight is None)
+                      or not self.isTurningRight):
+                    self.startMotion(self.turnleft40)
+                    self.isTurningRight = False
+
+            if np.round(np.abs(front_angle), 1) < 15.0:
+                self.isTurningRight = None
+                self.b2mp_stage = BACK_MIDDLE.FINISH
+                return
+            else:
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.FINISH:
+            print("Back to middlepoint FINISH!")
+            # if np.round(distance, bitsOfRound) >= 0.2:
+            #     if angle < 0:
+            #         self.startMotion(self.forwards)
+            #     else:
+            #         self.startMotion(self.backwards)
+            #     return
+            # else:
+            self.b2mp_stage = BACK_MIDDLE.END
+            return
+        elif self.b2mp_stage == BACK_MIDDLE.END:
+            print("Back to middlepoint END!")
+            print(f"distance: {distance}")
+            front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0],
+                                                              self.__robot_position,
+                                                              self.__robot_orientation)
+            if self.is_balanced():
+                if (self.__football_position[0] < 0 and
+                        # np.round(distance, bitsOfRound) > 0.2
+                    not np.isclose(distance, 0.2, atol=1e-1)
+                ):
+                    self.b2mp_stage = BACK_MIDDLE.INITIAL
+            return
+        else:
+            print("Unknown Stage!")
+            return
+
+    # def defendingByballtrace(self):
+    #     pass
+    #     if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
+    #         print("robot_position or robot_orientation or football_position is None!")
+    #         return
+    #
+    #     angle, distance = self.angleCalculaor(self.__football_position, self.__robot_position, self.__robot_orientation)
+    #     if angle is None or distance is None:
+    #         print("angle is None or distance is None!")
+    #         return
+    #
+    #     if self.__football_position[0] <= 0:
+    #         return
+    #
+    #     if self.gk_stage == DEFEND_STAGE.INITIAL:
+    #         print("gk_stage is INITIAL!")
+    #         self.setMotorPosition('LShoulderPitch', 1.49)
+    #         self.setMotorPosition('RShoulderPitch', 1.49)
+    #         self.setMotorPosition('LShoulderRoll', 0.000000086)
+    #         self.setMotorPosition('RShoulderRoll', -0.000000086)
+    #         self.setMotorPosition('LElbowRoll', -0.49)
+    #         self.setMotorPosition('RElbowRoll', 0.49)
+    #         self.setMotorPosition('LElbowYaw', 0.000000049)
+    #         self.setMotorPosition('RElbowYaw', -0.000000049)
+    #
+    #         if (self.getMoveStage('LShoulderPitch') is move_status.END and
+    #                 self.getMoveStage('RShoulderPitch') is move_status.END and
+    #                 self.getMoveStage('LShoulderRoll') is move_status.END and
+    #                 self.getMoveStage('RShoulderRoll') is move_status.END and
+    #                 self.getMoveStage('LElbowRoll') is move_status.END and
+    #                 self.getMoveStage('RElbowRoll') is move_status.END and
+    #                 self.getMoveStage('LElbowYaw') is move_status.END and
+    #                 self.getMoveStage('RElbowYaw') is move_status.END):
+    #             self.gk_stage = DEFEND_STAGE.PREPARE
+    #             return
+    #         else:
+    #             return
+    #     elif self.gk_stage == DEFEND_STAGE.PREPARE:
+    #         print("gk_stage is PREPARE!")
+    #
+    #         self.gk_stage = DEFEND_STAGE.ADJUSTING_ANGLE
+
+
+
 goal_keeper = Nao_Goalkeeper()
+# times = 0
 while goal_keeper.step(goal_keeper.timeStep) != -1:
     pass
-    goal_keeper.defendingBall()
+    # if times < 1:
+    #     goal_keeper.startMotion(goal_keeper.Diveright)
+    #     times = 1
+    goal_keeper.position_refresh()
+    if not goal_keeper.standupIfnecessary():
+        goal_keeper.defendingBall()
+        goal_keeper.backtomiddlepoint()

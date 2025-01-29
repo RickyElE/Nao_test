@@ -83,6 +83,7 @@ def Refresh_Position():
         print(f"{i}: {nodeOrientation[i]}")
     shared_info = {
         "striker_red": {"position": nodePosition["striker_red"], "orientation": nodeOrientation["striker_red"]},
+        # "defender_right": {"position": nodePosition["defender_right"], "orientation": nodeOrientation["defender_right"], "isholdingball": 0},
         "football": {"position": nodePosition["football"], "orientation": nodeOrientation["football"]},
         "goalkeeper_red": {"position": nodePosition["goalkeeper_red"], "orientation": nodeOrientation["goalkeeper_red"]},
         "stadiumgoal_red": {"position": nodePosition["stadiumgoal_red"], "orientation": nodeOrientation["stadiumgoal_red"]},
