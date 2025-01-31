@@ -1,3 +1,5 @@
+import math
+
 from controller import Supervisor, Motion, motion
 import numpy as np
 from enum import Enum,auto,unique
@@ -47,6 +49,16 @@ class MOTION_PLAY(Enum):
     FINISH = auto()
     END = auto()
 
+class DRIBBLE(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    BALLFINDING = auto()
+    ADJUSTING_ANGLE = auto()
+    ADJUSTING_COORDINATE = auto()
+    DRIBBLING = auto()
+    FINISH = auto()
+    END = auto()
+
 class NAO_Supervisor_Tracking(Supervisor):
     PHALANX_MAX = 8
     kick_stage = KICK_STAGE.INITIAL
@@ -66,8 +78,8 @@ class NAO_Supervisor_Tracking(Supervisor):
 
     def startMotion(self, motion):
         # interrupt current motion
-        if self.currentlyPlaying:
-            self.currentlyPlaying.stop()
+        # if self.currentlyPlaying:
+        #     self.currentlyPlaying.stop()
 
         # start new motion
         motion.play()
@@ -224,21 +236,21 @@ class NAO_Supervisor_Tracking(Supervisor):
         for i in range(children.getCount()):
             node = children.getMFNode(i)
             # print(node.getDef())
-            if node.getDef() == 'STRIKER_RED':
+            if node.getDef() == 'RedTeam_Striker':
                 print('STRIKER_RED has been initialized')
                 striker_red = node
                 self.__node_sheet["striker_red"] = striker_red
                 self.__node_position   ["striker_red"] = None
                 self.__node_orientation["striker_red"] = None
 
-            if node.getDef() == 'FOOTBALL':
+            if node.getDef() == 'Soccerball':
                 print('FOOTBALL has been initialized')
                 football = node
                 self.__node_sheet["football"] = football
                 self.__node_position   ["football"] = None
                 self.__node_orientation["football"] = None
 
-            if node.getDef() == 'GOALKEEPER_RED':
+            if node.getDef() == 'RedTeam_Goalkeeper':
                 print('GOALKEEPER_RED has been initialized')
                 goalkeeper_red = node
                 self.__node_sheet["goalkeeper_red"] = goalkeeper_red
@@ -362,6 +374,10 @@ class NAO_Supervisor_Tracking(Supervisor):
 
         # self.initial_angle = np.rad2deg(self.nao.getField("rotation").getSFFloat()[3])
         # print("initial angle is ", self.initial_angle)
+
+        # Initializes the status value
+        self.dribbling_status = DRIBBLE.INITIAL
+
     def refresh_position(self):
         for i in self.__node_sheet.keys():
             self.__node_position[i] = self.__node_sheet[i].getPosition()
@@ -408,8 +424,8 @@ class NAO_Supervisor_Tracking(Supervisor):
         front_vector_normalized = [orientation[0] / front_magnitude, orientation[3] / front_magnitude]
         dot_product = sum(f * t for f, t in zip(front_vector_normalized, target_vector_normalized))
         angle = np.rad2deg(np.arccos(dot_product))
-        cross_product = front_vector_normalized[0] * target_vector_normalized[0] - \
-                        front_vector_normalized[1] * target_vector_normalized[1]
+        cross_product = front_vector_normalized[0] * target_vector_normalized[1] - \
+                        front_vector_normalized[1] * target_vector_normalized[0]
         if cross_product < 0:
             angle = -angle
         distance = np.sqrt(dx ** 2 + dy ** 2)
@@ -445,6 +461,10 @@ class NAO_Supervisor_Tracking(Supervisor):
         # print(f"angle is {angle}")
         # print(f"cross_product is {cross_product}")
         angle, distance = self.angleCalculaor(football_position, robot_position, orientation)
+        print(f"The angle is {angle}, and the distance is {distance}")
+        if angle is None or distance is None:
+            print("Angle or distance not calculated")
+            return
         if self.tracking_stage == MOTION_PLAY.INITIAL:
             print("MOTION PLAY INITIAL")
             # L_pitch = self.sensors['LShoulderPitch'].getValue()
@@ -565,6 +585,8 @@ class NAO_Supervisor_Tracking(Supervisor):
         elif self.tracking_stage == MOTION_PLAY.END:
             print("MOTION PLAY END")
             return True
+        else:
+            print("UNKNOWN MOTION PLAY STATUS!")
 
     def prepare_kick(self):
         print("Prepare to kick...", flush=True)
@@ -744,16 +766,212 @@ class NAO_Supervisor_Tracking(Supervisor):
         else:
             print("KICK STAGE ERROR", flush=True)
 
+    def standupIfnecessary(self):
+        Acc = self.accelerometer.getValues()
+        # print(f"Acc is {Acc}")
+        if Acc[2] < 5.0 and Acc[0] < -4.0:
+            self.startMotion(self.StandUpFromFront)
+            return True
+        elif Acc[2] < 5.0 and Acc[0] > 4.0:
+            self.startMotion(self.StandUpFromBack)
+            return True
+        elif Acc[2] < 5.0 and Acc[1] < -4.0:
+            self.startMotion(self.ReturnFromSide)
+            return True
+        elif Acc[2] < 5.0 and Acc[1] > 4.0:
+            self.startMotion(self.ReturnFromSide)
+            return True
+        else:
+            return False
+
+    def ballisonline(self):
+        robot_position = self.__shared_info["striker_red"]["position"]
+        stadium_position = self.__shared_info["stadiumgoal_red"]["position"]
+        football_position = self.__shared_info["football"]["position"]
+        robot_orientation = self.__shared_info["striker_red"]["orientation"]
+        angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
+        angbetball, disbetball = self.angleCalculaor(football_position, robot_position, robot_orientation)
+        print(f"angbetsta is {angbetsta}")
+        print(f"angbetball is {angbetball}")
+        # print(f"lfootrbumper is {self.lfootlbumper.getValue()},{self.lfootrbumper.getValue()},"
+        #       f"rfootrbumper is {self.rfootlbumper.getValue()},{self.rfootrbumper.getValue()}")
+        # dx_stadium2bot = stadium_position[0] - robot_position[0]
+        # dy_stadium2bot = stadium_position[1] - robot_position[1]
+        # dist_stadium2bot = np.sqrt(dx_stadium2bot ** 2 + dy_stadium2bot ** 2)
+        #
+        # k = dy_stadium2bot / dx_stadium2bot
+        # b = robot_position[1] -  k * robot_position[0]
+        # result = k * football_position[0] + b
+        if self.__isonline(robot_position, stadium_position, football_position):
+            print("Is online!")
+        else:
+            print("Is offline!")
+
+    def __isonline(self, pos_1, pos_2, object):
+        dx = pos_2[0] - pos_1[0]
+        dy = pos_2[1] - pos_1[1]
+        if np.isclose(dx, 0.0, atol=0.1) and np.isclose(object[0], dx, atol=0.1):
+            return True
+        k = dy / dx
+        b = pos_2[1] - k * pos_2[0]
+        # check the object is on line of y=kx+b
+        result = k * object[0] + b
+        # print(f"result is {result}")
+        # print(f"object position is {object[1]}")
+        # print(f"dist is {object[1] - result}")
+        if np.isclose(object[1], result, atol=0.1):
+            return True
+        else:
+            return False
+
+    def dribble2stadium(self):
+        pass
+        robot_position = self.__shared_info['striker_red']['position']
+        robot_orientation = self.__shared_info['striker_red']['orientation']
+        football_position = self.__shared_info['football']['position']
+        stadium_position = self.__shared_info['stadiumgoal_red']['position']
+        angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
+        angbetball, disbetball= self.angleCalculaor(football_position, robot_position, robot_orientation)
+        print(f"angbetsta is {angbetsta}, distbetsta is {distbetsta}")
+        print(f"angbetball is {angbetball}, disbetball is {disbetball}")
+
+
+        if self.dribbling_status == DRIBBLE.INITIAL:
+            print("DRIBBLE INITIAL")
+            self.setMotorPosition('LShoulderPitch', 1.49)
+            self.setMotorPosition('RShoulderPitch', 1.49)
+            self.setMotorPosition('LShoulderRoll', 0.000000086)
+            self.setMotorPosition('RShoulderRoll', -0.000000086)
+            self.setMotorPosition('LElbowRoll', -0.49)
+            self.setMotorPosition('RElbowRoll', 0.49)
+            self.setMotorPosition('LElbowYaw', 0.000000049)
+            self.setMotorPosition('RElbowYaw', -0.000000049)
+            if (self.getMoveStage('LShoulderPitch') is move_status.END and
+                    self.getMoveStage('RShoulderPitch') is move_status.END and
+                    self.getMoveStage('LShoulderRoll') is move_status.END and
+                    self.getMoveStage('RShoulderRoll') is move_status.END and
+                    self.getMoveStage('LElbowRoll') is move_status.END and
+                    self.getMoveStage('RElbowRoll') is move_status.END and
+                    self.getMoveStage('LElbowYaw') is move_status.END and
+                    self.getMoveStage('RElbowYaw') is move_status.END):
+                self.dribbling_status = DRIBBLE.PREPARE
+                return
+            else:
+                return
+        elif self.dribbling_status == DRIBBLE.PREPARE:
+            print("DRIBBLE PREPARE")
+            # dx_stadium2bot = stadium_position[0] - robot_position[0]
+            # dy_stadium2bot = stadium_position[1] - robot_position[1]
+            # dist_stadium2bot = np.sqrt(dx_stadium2bot ** 2 + dy_stadium2bot ** 2)
+            # k = dy_stadium2bot / dx_stadium2bot
+            # b = robot_position[1] - k * robot_position[0]
+            # result = k * football_position[0] + b
+            # if np.isclose(football_position[1], result, atol=0.1):
+            #     self.dribbling_status = DRIBBLE.ADJUSTING_ANGLE
+            #     return
+            # else:
+            #     self.dribbling_status = DRIBBLE.BALLFINDING
+            #     return
+            if self.__isonline(robot_position, stadium_position, football_position) and np.isclose(disbetball, 0.2, atol=0.1):
+                self.dribbling_status = DRIBBLE.ADJUSTING_ANGLE
+                return
+            else:
+                self.dribbling_status = DRIBBLE.BALLFINDING
+                return
+        elif self.dribbling_status == DRIBBLE.BALLFINDING:
+            print("DRIBBLE BALLFINDING")
+            if np.abs(angbetball) <= 15.0:
+                self.startMotion(self.forwards)
+                if np.isclose(disbetball, 0.2, atol=0.1):
+                    if self.__isonline(robot_position, stadium_position, football_position):
+                        self.dribbling_status = DRIBBLE.DRIBBLING
+                    else:
+                        self.dribbling_status = DRIBBLE.ADJUSTING_ANGLE
+                    return
+                else:
+                    return
+            else:
+                if 180.0 >= angbetball > 15.0:
+                    self.startMotion(self.turnleft40)
+                elif -180 <= angbetball < -15.0:
+                    self.startMotion(self.turnright40)
+                return
+
+        elif self.dribbling_status == DRIBBLE.ADJUSTING_ANGLE:
+            print("DRIBBLE ADJUSTING_ANGLE")
+            if 0 <= np.abs(angbetsta) < 5:
+                self.__temp_pos = robot_position
+                self.dribbling_status = DRIBBLE.ADJUSTING_COORDINATE
+                return
+            else:
+                if angbetsta < 0:
+                    self.startMotion(self.turnright40)
+                else:
+                    self.startMotion(self.turnleft40)
+
+        elif self.dribbling_status == DRIBBLE.ADJUSTING_COORDINATE:
+            print("DRIBBLE ADJUSTING_COORDINATE")
+            if not self.__isonline(football_position, self.__temp_pos, robot_position):
+                if self.__isonline(robot_position, stadium_position, football_position):
+                    self.stopMotion()
+                    self.dribbling_status = DRIBBLE.DRIBBLING
+                    return
+                else:
+                    if angbetball < 0:
+                        self.startMotion(self.sidestepright)
+                        return
+                    elif angbetball > 0:
+                        self.startMotion(self.sidestepleft)
+                        return
+            else:
+                self.startMotion(self.backwards)
+                return
+
+        elif self.dribbling_status == DRIBBLE.DRIBBLING:
+            print("DRIBBLE DRIBBLING")
+            if np.isclose(distbetsta, 1.60, atol=0.1):
+                self.dribbling_status = DRIBBLE.FINISH
+                return
+            else:
+                if np.abs(angbetball) > 15:
+                    if 180.0 >= angbetball > 15.0:
+                        self.startMotion(self.sidestepleft)
+                    elif -180 <= angbetball < -15.0:
+                        self.startMotion(self.sidestepright)
+                    # self.dribbling_status = DRIBBLE.BALLFINDING
+                    return
+                else:
+                    self.startMotion(self.forwards)
+                    return
+        elif self.dribbling_status == DRIBBLE.FINISH:
+            print("DRIBBLE FINISH")
+            self.dribbling_status = DRIBBLE.END
+            return
+        elif self.dribbling_status == DRIBBLE.END:
+            print("DRIBBLE END")
+            return True
+        else:
+            print("UNKNOWN DRIBBLE STATUS!")
+
+
 NaoSupervisor = NAO_Supervisor_Tracking()
 while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
     # NaoSupervisor.is_balanced()
     pass
     if NaoSupervisor.has_initial:
         NaoSupervisor.refresh_position()
-        if NaoSupervisor.trackingBall():
-            if NaoSupervisor.kick_motion():
-                NaoSupervisor.set_stage(KICK_STAGE.INITIAL)
-                NaoSupervisor.set_stage(MOTION_PLAY.INITIAL)
+        if not NaoSupervisor.standupIfnecessary():
+            if NaoSupervisor.dribble2stadium():
+                if NaoSupervisor.kick_motion():
+                    pass
+        else:
+            print("Is falling!")
+        # NaoSupervisor.ballisonline()
+        # if NaoSupervisor.trackingBall():
+        #     pass
+            # if NaoSupervisor.kick_motion():
+            #     NaoSupervisor.set_stage(KICK_STAGE.INITIAL)
+            #     NaoSupervisor.set_stage(MOTION_PLAY.INITIAL)
 
     # print(np.rad2deg(NaoSupervisor.inertialUnit.getRollPitchYaw()[2]))
     # print(np.rad2deg(NaoSupervisor.nao.getField("rotation").getSFFloat()[3]))
