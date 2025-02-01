@@ -39,6 +39,7 @@ class DEFEND_STAGE(Enum):
     SIDE_STEP_ADJUST = auto()
     BOUNDARY_ADJUST = auto()
     BACK_TO_REGISTERED = auto()
+    HUSTLE = auto()
     FINISH = auto()
     END = auto()
 
@@ -48,6 +49,33 @@ class BACK_MIDDLE(Enum):
     ANGLE_ADJUSTING = auto()
     FACING_TO_MIDDLE = auto()
     MOVING = auto()
+    FINISH = auto()
+    END = auto()
+
+class HUSTLE(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    HUSTLE_LEFT = auto()
+    HUSTLE_RIGHT = auto()
+    FINISH = auto()
+    END = auto()
+
+class GOAL_KEEPER(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    DEFEND = auto()
+    HUSTLE = auto()
+    STAND_UP = auto()
+    KICK_OUT = auto()
+    BACK_TO_MIDDLE = auto()
+    FINISH = auto()
+    END = auto()
+
+class STAND_UP(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    FROM_FRONT = auto()
+    FROM_BACK = auto()
     FINISH = auto()
     END = auto()
 
@@ -213,8 +241,10 @@ class Nao_Goalkeeper(Robot):
         if joints in self.motor_names:
             position = self.sensors[joints].getValue()
             passing = np.abs(np.abs(targets) - np.abs(position))
-            if passing <= self.__threshold:
+            if np.isclose(passing, self.__threshold, atol=0.1):
                 return True
+            # if passing <= self.__threshold:
+            #     return True
             else:
                 return False
 
@@ -322,7 +352,16 @@ class Nao_Goalkeeper(Robot):
         self.__robot_position = None
         self.__football_position = None
         self.__robot_orientation = None
+        self.__stadiumgoal_red_position = None
+        self.__stadiumgoal_red_orientation = None
+
         self.__has_turn2correct_direction = False
+        self.hustle_status = HUSTLE.INITIAL
+        self.__is_hustle = False
+        self.__is_standup = False
+        self.run_stage = GOAL_KEEPER.INITIAL
+        self.__standup_stage = STAND_UP.INITIAL
+        self.__pre_run_stage = GOAL_KEEPER.INITIAL
 
     def set_stage(self, stage=None):
         '''
@@ -339,6 +378,16 @@ class Nao_Goalkeeper(Robot):
             self.tracking_stage = stage
         elif isinstance(stage, KICK_STAGE):
             self.kick_stage = stage
+        elif isinstance(stage, HUSTLE):
+            self.hustle_status = stage
+        elif isinstance(stage, DEFEND_STAGE):
+            self.gk_stage = stage
+        elif isinstance(stage, BACK_MIDDLE):
+            self.b2mp_stage = stage
+        elif isinstance(stage, GOAL_KEEPER):
+            self.run_stage = stage
+        elif isinstance(stage, STAND_UP):
+            self.__standup_stage = stage
         else:
             print(f"Stage {stage} not supported")
         return
@@ -354,39 +403,14 @@ class Nao_Goalkeeper(Robot):
         :return:
         '''
         epsilon_ = 0.2
-        robot_position = None
-        football_position = None
-        orientation = None
-        if self.receiver.getQueueLength() > 0:
-            data = self.receiver.getString()
-            shared_info = json.loads(data)
-            # print("shared_info:", shared_info)
-            robot_position = float(shared_info["goalkeeper_red"]["position"])
-            football_position = float(shared_info["football"]["position"])
-            orientation = float(shared_info["goalkeeper_red"]["orientation"])
-            print(robot_position)
-            print(orientation)
-            self.receiver.nextPacket()
-        # modified at 18/11 Mon
-        dx = football_position[0] - robot_position[0]
-        dy = football_position[1] - robot_position[1]
-        # target_vector = [dx, dy]
-        target_magnitude = np.sqrt(dx ** 2 + dy ** 2)
-        target_vector_normalized = [dx / target_magnitude, dy / target_magnitude]
+        if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
+            print("robot_position or robot_orientation or football_position is None!")
+            return
 
-        # front_vector = [orientation[0], orientation[3]]
-        front_magnitude = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
-        front_vector_normalized = [orientation[0] / front_magnitude, orientation[3] / front_magnitude]
-        dot_product = sum(f * t for f, t in zip(front_vector_normalized, target_vector_normalized))
-        angle = np.rad2deg(np.arccos(dot_product))
-        cross_product = front_vector_normalized[0] * target_vector_normalized[0] - \
-                        front_vector_normalized[1] * target_vector_normalized[1]
-        if cross_product < 0:
-            angle = -angle
-        distance = np.sqrt(dx ** 2 + dy ** 2)
-        print(f"distance is {distance}")
-        print(f"angle is {angle}")
-        print(f"cross_product is {cross_product}")
+        angle, distance = self.angleCalculaor(self.__football_position, self.__robot_position, self.__robot_orientation)
+        if angle is None or distance is None:
+            print("angle is None or distance is None!")
+            return
 
         if self.tracking_stage == MOTION_PLAY.INITIAL:
             print("MOTION PLAY INITIAL")
@@ -454,10 +478,6 @@ class Nao_Goalkeeper(Robot):
             #         self.tracking_stage = MOTION_PLAY.FINISH
             #     return
         elif self.tracking_stage == MOTION_PLAY.PLAYING:
-            print("MOTION PLAY PLAYING")
-            print(f"distance is {distance}")
-            print(f"distance in x : {dx} y: {dy}")
-            print(f"angle is {angle}")
             if distance >= epsilon_:
                 if 180.0 >= angle >= 15.0 or -15.0 >= angle >= -180.0:
                     self.__temp_angle = angle
@@ -513,10 +533,139 @@ class Nao_Goalkeeper(Robot):
         vel = self.gyro.getValues()
         # print('angular velocity: [ x y ] = [%f %f]' % (vel[0], vel[1]))
         # print(vel[0], vel[1])
-        all_in_balance = np.round(np.float64(vel[0])) == 0.0 and np.round(np.float64(vel[1])) == 0.0
-
+        # all_in_balance = np.round(np.float64(vel[0])) == 0.0 and np.round(np.float64(vel[1])) == 0.0
+        all_in_balance = np.isclose(np.float64(vel[0]),0.0, atol=0.1) and np.isclose(np.float64(vel[1]),0.0, atol=0.1)
         # print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
+
+    def prepare_kick(self):
+        print("Prepare to kick...", flush=True)
+        initial_positions = {
+            'LHipYawPitch': 0.0,
+            'LHipRoll': 0.1,
+            'LHipPitch': -0.4,  # -22.93
+            'LKneePitch': 0.7,  # 40.127  #0.7
+            'LAnklePitch': -0.3,
+            'LAnkleRoll': -0.1,
+            'RHipYawPitch': 0.0,
+            'RHipRoll': -0.1,
+            'RHipPitch': -0.4,
+            'RKneePitch': 0.7,
+            'RAnklePitch': -0.3,  # -17.197
+            'RAnkleRoll': 0.1,
+            # hand
+            'LShoulderPitch': 1.57,
+            'LShoulderRoll': 0.3,
+            'LElbowYaw': -1.0,
+            'LElbowRoll': -0.5,
+            'RShoulderPitch': 1.57,
+            'RShoulderRoll': -0.3,
+            'RElbowYaw': 1.0,
+            'RElbowRoll': 0.5
+        }
+        for name, position in initial_positions.items():
+            if name in self.motors:
+                self.setMotorPosition(name, position)
+
+        all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
+        if all_in_end:
+            return True
+        else:
+            return False
+
+    def kick_ball(self):
+        if self.kick_stage is KICK_STAGE.INITIAL:
+            print("KICK INITIAL")
+            for name in self.motor_names:
+                if name in self.motors:
+                    self.setMotorPosition(name, 0.0)
+            all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
+            if all_in_end and self.is_balanced():
+                self.kick_stage = KICK_STAGE.PREPARE
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.PREPARE:
+            print('Stage 0: PREPARE', flush=True)
+            if self.prepare_kick() :
+                self.kick_stage = KICK_STAGE.WEIGHT_SHIFT
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.WEIGHT_SHIFT:
+            print('Stage 1: Weight shift', flush=True)
+            self.setMotorPosition('LHipRoll',0.3) # 8.59
+            self.setMotorPosition('RHipRoll',0.2)
+            self.setMotorPosition('LAnkleRoll',-0.2)
+            self.setMotorPosition('RAnkleRoll',-0.2)
+
+            if (self.getMoveStage('LHipRoll') is move_status.END and
+                    self.getMoveStage('RHipRoll') is move_status.END and
+                    self.getMoveStage('LAnkleRoll') is move_status.END and
+                    self.getMoveStage('RAnkleRoll') is move_status.END):
+                self.kick_stage = KICK_STAGE.BEND_LEFT_LEG
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.BEND_LEFT_LEG:
+            print('Stage 2: bend the left leg', flush=True)
+            self.setMotorPosition('LKneePitch',2.1)
+            self.setMotorPosition('LHipPitch',0.17) # 9.75
+            self.setMotorPosition('LAnklePitch',-1.0)
+            self.setMotorPosition('RShoulderRoll',-0.26)
+            self.setMotorPosition('LShoulderRoll',-0.26)
+
+            if (self.getMoveStage('LKneePitch') is move_status.END and
+                self.getMoveStage('LHipPitch') is move_status.END and
+                self.getMoveStage('LAnklePitch') is move_status.END and
+                self.getMoveStage('RShoulderRoll') is move_status.END and
+                self.getMoveStage('LShoulderRoll') is move_status.END):
+                self.kick_stage = KICK_STAGE.KICK
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.KICK:
+            print('Stage 3: Kick', flush=True)
+            self.setMotorPosition('LHipPitch', -1.22)
+            self.setMotorPosition('LAnklePitch', -0.3)
+            if (self.getMoveStage('LHipPitch') is move_status.END and
+                self.getMoveStage('LAnklePitch') is move_status.END):
+                self.kick_stage = KICK_STAGE.LEG_IN
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.LEG_IN:
+            print('Stage 4: LEG_IN', flush=True)
+            self.setMotorPosition('LKneePitch', -0.09)
+            if (self.getMoveStage('LKneePitch') is move_status.END):
+                self.kick_stage = KICK_STAGE.COMPLETE
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.COMPLETE:
+            print('Stage 5: Kick complete', flush=True)
+            for name in self.motor_names:
+                if name in self.motors:
+                    self.setMotorPosition(name,0.0)
+
+            all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
+            if all_in_end:
+                self.kick_stage = KICK_STAGE.IS_BALANCE
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.IS_BALANCE:
+            print('Stage 6: Is balance', flush=True)
+            if self.is_balanced():
+                self.kick_stage = KICK_STAGE.END
+                return
+            else:
+                return
+        elif self.kick_stage is KICK_STAGE.END:
+            print('Stage 7: Kick end', flush=True)
+            return True
+        else:
+            print("KICK STAGE ERROR", flush=True)
 
     def position_refresh(self):
         if self.receiver.getQueueLength() > 0:
@@ -526,11 +675,15 @@ class Nao_Goalkeeper(Robot):
             robot_position = np.float64(shared_info["goalkeeper_red"]["position"])
             robot_orientation = np.float64(shared_info["goalkeeper_red"]["orientation"])
             football_position = np.float64(shared_info["football"]["position"])
+            stadiumgoal_red_position = np.float64(shared_info["stadiumgoal_red"]["position"])
+            stadiumgoal_red_orientation = np.float64(shared_info["stadiumgoal_red"]["orientation"])
 
             self.receiver.nextPacket()
             self.__robot_position = robot_position
             self.__robot_orientation = robot_orientation
             self.__football_position = football_position
+            self.__stadiumgoal_red_position = stadiumgoal_red_position
+            self.__stadiumgoal_red_orientation = stadiumgoal_red_orientation
             # return robot_position, robot_orientation, football_position
         else:
             # return None, None, None
@@ -539,20 +692,23 @@ class Nao_Goalkeeper(Robot):
             self.__football_position = None
 
     # Calculate the angle
-    def angleCalculaor(self, football_position, robot_position, orientation):
+    def angleCalculaor(self, football_position, robot_position, orientation = None):
         dx = football_position[0] - robot_position[0]
         dy = football_position[1] - robot_position[1]
         target_magnitude = np.sqrt(dx ** 2 + dy ** 2)
         target_vector_normalized = [dx / target_magnitude, dy / target_magnitude]
-        front_magnitude = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
-        front_vector_normalized = [orientation[0] / front_magnitude, orientation[3] / front_magnitude]
-        dot_product = sum(f * t for f, t in zip(front_vector_normalized, target_vector_normalized))
-        angle = np.rad2deg(np.arccos(dot_product))
-        cross_product = front_vector_normalized[0] * target_vector_normalized[1] - \
+        if orientation is not None:
+            front_magnitude = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
+            front_vector_normalized = [orientation[0] / front_magnitude, orientation[3] / front_magnitude]
+            dot_product = sum(f * t for f, t in zip(front_vector_normalized, target_vector_normalized))
+            angle = np.rad2deg(np.arccos(dot_product))
+            cross_product = front_vector_normalized[0] * target_vector_normalized[1] - \
                         front_vector_normalized[1] * target_vector_normalized[0]
         # print(f"cross_product: {cross_product}")
-        if cross_product < 0:
-            angle = -angle
+            if cross_product < 0:
+                angle = -angle
+        else:
+            angle = np.rad2deg(np.arctan2(dy, dx))
         distance = np.sqrt(dx ** 2 + dy ** 2)
         return angle, distance
 
@@ -584,6 +740,9 @@ class Nao_Goalkeeper(Robot):
         if self.__football_position[0] < 0:
             # print("football position is negative")
             return
+        # if (3.90 - self.__football_position[0]) <= 0.5 and not self.__is_hustle:
+        #     self.gk_stage = DEFEND_STAGE.HUSTLE
+        #     self.stopMotion()
         print(self.goalkeeper_registered_check())
         if (not self.goalkeeper_registered_check()
                 # and not self.__has_turn2correct_direction
@@ -757,7 +916,15 @@ class Nao_Goalkeeper(Robot):
                     self.startMotion(self.turnright40)
                 return
 
-
+        # elif self.gk_stage == DEFEND_STAGE.HUSTLE:
+        #     print("DEFEND_STAGE HUSTLE")
+        #     self.hustle()
+        #     if self.hustle_status == HUSTLE.END:
+        #         self.hustle_status = HUSTLE.INITIAL
+        #         self.gk_stage = DEFEND_STAGE.END
+        #         return
+        #     else:
+        #         return
         # elif self.gk_stage == DEFEND_STAGE.BOUNDARY_ADJUST:
         #     print("DEFEND BOUNDARY_ADJUST")
         #     if ((4.555 > football_position[0] >= 3.950 and 3.000 >= football_position[1] > 1.2)
@@ -853,20 +1020,83 @@ class Nao_Goalkeeper(Robot):
     def standupIfnecessary(self):
         Acc = self.accelerometer.getValues()
         # print(f"Acc is {Acc}")
-        if Acc[2] < 5.0 and Acc[0] < -4.0:
-            self.startMotion(self.StandUpFromFront)
-            return True
-        elif Acc[2] < 5.0 and Acc[0] > 4.0:
-            self.startMotion(self.StandUpFromBack)
-            return True
-        elif Acc[2] < 5.0 and Acc[1] < -4.0:
-            self.startMotion(self.ReturnFromSide)
-            return True
-        elif Acc[2] < 5.0 and Acc[1] > 4.0:
-            self.startMotion(self.ReturnFromSide)
+        if (
+            (Acc[2] < 5.0 and Acc[0] < -4.0)
+            or (Acc[2] < 5.0 and Acc[0] > 4.0)
+            or (Acc[2] < 5.0 and Acc[1] < -4.0)
+            or (Acc[2] < 5.0 and Acc[1] > 4.0)
+        ):
             return True
         else:
             return False
+        # if Acc[2] < 5.0 and Acc[0] < -4.0:
+        #     self.startMotion(self.StandUpFromFront)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[0] > 4.0:
+        #     self.startMotion(self.StandUpFromBack)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[1] < -4.0:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[1] > 4.0:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # else:
+        #     self.__is_standup = False
+        #     return False
+        # roll, pitch, _ = self.inertialUnit.getRollPitchYaw()
+        # if np.rad2deg(roll) < -120 and np.rad2deg(pitch) > 0:
+        #     self.startMotion(self.StandUpFromFront)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) < -120 and np.rad2deg(pitch) < 0:
+        #     self.startMotion(self.StandUpFromBack)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) > 80 and 0 < np.rad2deg(pitch) < 45:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) > 170 and 0 < np.rad2deg(pitch) < 5:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # else:
+        #     self.__is_standup = False
+        #     return False
+
+    def is_standup(self):
+        pass
+        if self.__standup_stage == STAND_UP.INITIAL:
+            print("Stand-Up INITIAL")
+            self.__standup_stage = STAND_UP.PREPARE
+            return
+        elif self.__standup_stage == STAND_UP.PREPARE:
+            print("Stand-Up PREPARE")
+            self.__standup_stage = STAND_UP.FROM_BACK
+            return
+        elif self.__standup_stage == STAND_UP.FROM_FRONT:
+            print("Stand-Up From FRONT")
+            return
+        elif self.__standup_stage == STAND_UP.FROM_BACK:
+            print("Stand-Up From BACK")
+            self.startMotion(self.StandUpFromBack)
+            if self.is_balanced():
+                self.__standup_stage = STAND_UP.FINISH
+            return
+        elif self.__standup_stage == STAND_UP.FINISH:
+            print("Stand-Up FINISH")
+            self.__standup_stage = STAND_UP.END
+            return
+        elif self.__standup_stage == STAND_UP.END:
+            print("Stand-Up END")
+            return
+        else:
+            print("Unknown stand-up stage")
 
     def backtomiddlepoint(self):
         limitationofdistance = 0.1
@@ -880,8 +1110,8 @@ class Nao_Goalkeeper(Robot):
             print("angle is None or distance is None!")
             return
 
-        if self.__football_position[0] >= 0:
-            return
+        # if self.__football_position[0] >= 0:
+        #     return
         if self.b2mp_stage == BACK_MIDDLE.INITIAL:
             print("Back to middlepoint Initial!")
             self.setMotorPosition('LShoulderPitch', 1.49)
@@ -1004,58 +1234,270 @@ class Nao_Goalkeeper(Robot):
             print("Unknown Stage!")
             return
 
-    # def defendingByballtrace(self):
-    #     pass
-    #     if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
-    #         print("robot_position or robot_orientation or football_position is None!")
-    #         return
-    #
-    #     angle, distance = self.angleCalculaor(self.__football_position, self.__robot_position, self.__robot_orientation)
-    #     if angle is None or distance is None:
-    #         print("angle is None or distance is None!")
-    #         return
-    #
-    #     if self.__football_position[0] <= 0:
-    #         return
-    #
-    #     if self.gk_stage == DEFEND_STAGE.INITIAL:
-    #         print("gk_stage is INITIAL!")
-    #         self.setMotorPosition('LShoulderPitch', 1.49)
-    #         self.setMotorPosition('RShoulderPitch', 1.49)
-    #         self.setMotorPosition('LShoulderRoll', 0.000000086)
-    #         self.setMotorPosition('RShoulderRoll', -0.000000086)
-    #         self.setMotorPosition('LElbowRoll', -0.49)
-    #         self.setMotorPosition('RElbowRoll', 0.49)
-    #         self.setMotorPosition('LElbowYaw', 0.000000049)
-    #         self.setMotorPosition('RElbowYaw', -0.000000049)
-    #
-    #         if (self.getMoveStage('LShoulderPitch') is move_status.END and
-    #                 self.getMoveStage('RShoulderPitch') is move_status.END and
-    #                 self.getMoveStage('LShoulderRoll') is move_status.END and
-    #                 self.getMoveStage('RShoulderRoll') is move_status.END and
-    #                 self.getMoveStage('LElbowRoll') is move_status.END and
-    #                 self.getMoveStage('RElbowRoll') is move_status.END and
-    #                 self.getMoveStage('LElbowYaw') is move_status.END and
-    #                 self.getMoveStage('RElbowYaw') is move_status.END):
-    #             self.gk_stage = DEFEND_STAGE.PREPARE
-    #             return
-    #         else:
-    #             return
-    #     elif self.gk_stage == DEFEND_STAGE.PREPARE:
-    #         print("gk_stage is PREPARE!")
-    #
-    #         self.gk_stage = DEFEND_STAGE.ADJUSTING_ANGLE
+    def __initialize_hustle(self):
+        print("Initializing Hustle!")
+        motor_names = [
+            'LShoulderPitch', 'LShoulderRoll', 'LElbowYaw', 'LElbowRoll',
+            'RShoulderPitch', 'RShoulderRoll', 'RElbowYaw', 'RElbowRoll',
+            'LHipYawPitch', 'LHipRoll', 'LHipPitch', 'LKneePitch', 'LAnklePitch', 'LAnkleRoll',
+            'RHipYawPitch', 'RHipRoll', 'RHipPitch', 'RKneePitch', 'RAnklePitch', 'RAnkleRoll'
+        ]
+        for name in motor_names:
+            if name in self.motors:
+                self.setMotorPosition(name, 0.0)
+        all_in_end = all(self.getMoveStage(n) is move_status.END for n in motor_names)
+        return all_in_end
 
+    def __pre_hustle(self):
+        pass
+        print("Prepare to hustle!")
+        hus_position = {
+            #hand
+            'LShoulderPitch': 1.49,
+            'LShoulderRoll': 0.000000086,
+            'LElbowYaw': 0.000000049,
+            'LElbowRoll': -0.49,
+            'RShoulderPitch': 1.49,
+            'RShoulderRoll': -0.000000086,
+            'RElbowYaw': 0.000000049,
+            'RElbowRoll': 0.49
+        }
+        for name, position in hus_position.items():
+            if name in self.motors:
+                self.setMotorPosition(name, position)
 
+        all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
+        if all_in_end and self.is_balanced():
+            return True
+        else:
+            return False
+
+    def hustle(self):
+        pass
+
+        if self.__robot_position is None or self.__robot_orientation is None or self.__football_position is None:
+            print("robot_position or robot_orientation or football_position is None!")
+            return
+
+        angle, distance = self.angleCalculaor(self.__football_position, self.__robot_position, self.__robot_orientation)
+        if angle is None or distance is None:
+            print("angle is None or distance is None!")
+            return
+        angbetballstadium, distbetballstadium = self.angleCalculaor(self.__football_position, self.__stadiumgoal_red_position,
+                                              self.__stadiumgoal_red_orientation)
+        if angbetballstadium is None and distbetballstadium is None:
+            print("angle is None or distance is None!")
+            return
+        # if (3.90 - self.__football_position[0]) > 0.40:
+        #     return
+        if self.hustle_status == HUSTLE.INITIAL:
+            print("Hustle initiated!")
+            # self.setMotorPosition('LShoulderPitch', 1.49)
+            # self.setMotorPosition('RShoulderPitch', 1.49)
+            # self.setMotorPosition('LShoulderRoll', 0.000000086)
+            # self.setMotorPosition('RShoulderRoll', -0.000000086)
+            # self.setMotorPosition('LElbowRoll', -0.49)
+            # self.setMotorPosition('RElbowRoll', 0.49)
+            # self.setMotorPosition('LElbowYaw', 0.000000049)
+            # self.setMotorPosition('RElbowYaw', -0.000000049)
+            # self.setMotorPosition('LKneePitch', 0.0000020595)
+            # self.setMotorPosition('RKneePitch', 0.0000023045)
+            # if (self.getMoveStage('LShoulderPitch') is move_status.END and
+            #         self.getMoveStage('RShoulderPitch') is move_status.END and
+            #         self.getMoveStage('LShoulderRoll') is move_status.END and
+            #         self.getMoveStage('RShoulderRoll') is move_status.END and
+            #         self.getMoveStage('LElbowRoll') is move_status.END and
+            #         self.getMoveStage('RElbowRoll') is move_status.END and
+            #         self.getMoveStage('LElbowYaw') is move_status.END and
+            #         self.getMoveStage('RElbowYaw') is move_status.END and
+            #         self.getMoveStage('LKneePitch') is move_status.END and
+            #         self.getMoveStage('RKneePitch') is move_status.END
+            #         ):
+            #     self.hustle_status = HUSTLE.PREPARE
+            #     return
+            # else:
+            #     return
+            if self.__initialize_hustle() :
+                self.__is_hustle = True
+                self.hustle_status = HUSTLE.PREPARE
+                return
+            else:
+                return
+        elif self.hustle_status == HUSTLE.PREPARE:
+            print("Hustle prepared!")
+            if self.__pre_hustle():
+                if angbetballstadium < 0:
+                    if angle < 0:
+                        self.hustle_status = HUSTLE.HUSTLE_RIGHT
+                        return
+                    else:
+                        self.hustle_status = HUSTLE.HUSTLE_LEFT
+                        return
+                else:
+                    if angle < 0:
+                        self.hustle_status = HUSTLE.HUSTLE_RIGHT
+                        return
+                    else:
+                        self.hustle_status = HUSTLE.HUSTLE_LEFT
+                        return
+            return
+        elif self.hustle_status == HUSTLE.HUSTLE_RIGHT:
+            print("Hustle hustle_right!")
+            self.setMotorPosition("RShoulderRoll", -1.326)
+            self.setMotorPosition("RShoulderPitch", -2.08)
+            self.setMotorPosition("RElbowYaw", 0.0)
+            self.setMotorPosition("RElbowRoll", 0.0)
+            # self.setMotorPosition("RWristYaw", 1.82)
+            self.setMotorPosition("RHipRoll", 0.379)
+            self.setMotorPosition("LHipRoll", 0.379)
+            if (self.getMoveStage('RShoulderRoll') is move_status.END
+                and self.getMoveStage("RShoulderPitch") is move_status.END
+                and self.getMoveStage('RElbowYaw') is move_status.END
+                and self.getMoveStage("RElbowRoll") is move_status.END
+                and self.getMoveStage("LHipRoll") is move_status.END
+            ):
+                self.hustle_status = HUSTLE.FINISH
+                return
+            else:
+                return
+        elif self.hustle_status == HUSTLE.HUSTLE_LEFT:
+            print("Hustle hustle_left!")
+            # Hustle Left
+            self.setMotorPosition("LShoulderRoll", 1.326)
+            self.setMotorPosition("LShoulderPitch", 2.08)
+            self.setMotorPosition("LElbowYaw", 0.0)
+            self.setMotorPosition("LElbowRoll", 0.0)
+            self.setMotorPosition("LHipRoll", -0.379)
+            self.setMotorPosition("RHipRoll", -0.379)
+            if (self.getMoveStage('LShoulderRoll') is move_status.END
+                and self.getMoveStage("LShoulderPitch") is move_status.END
+                and self.getMoveStage('LElbowYaw') is move_status.END
+                and self.getMoveStage("LElbowRoll") is move_status.END
+                and self.getMoveStage("LHipRoll") is move_status.END
+                and self.getMoveStage("RHipRoll") is move_status.END
+                ):
+                self.hustle_status = HUSTLE.FINISH
+                return
+            else:
+                return
+        elif self.hustle_status == HUSTLE.FINISH:
+            print("Hustle finished!")
+            self.hustle_status = HUSTLE.END
+            return
+        elif self.hustle_status == HUSTLE.END:
+            print("Hustle ended!")
+            # self.__is_hustle = False
+            # self.hustle_status = HUSTLE.INITIAL
+            return
+        else:
+            print("Unknown Hustle status!")
+
+    def run(self):
+        if self.run_stage == GOAL_KEEPER.INITIAL:
+            print("Run Initial!")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+            else:
+                self.run_stage = GOAL_KEEPER.PREPARE
+            return
+        elif self.run_stage == GOAL_KEEPER.PREPARE:
+            print("Run Prepare!")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+            else:
+                self.__pre_run_stage = self.run_stage
+                self.run_stage = GOAL_KEEPER.DEFEND
+            return
+        elif self.run_stage == GOAL_KEEPER.DEFEND:
+            print("Run Defend!")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+                return
+            elif (3.90 - self.__football_position[0]) <= 0.5:
+                self.__pre_run_stage = self.run_stage
+                self.run_stage = GOAL_KEEPER.HUSTLE
+                return
+            else:
+                self.defendingBall()
+                return
+        elif self.run_stage == GOAL_KEEPER.HUSTLE:
+            print("Run Hustle!")
+            self.hustle()
+            if self.hustle_status == HUSTLE.END:
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+            return
+        elif self.run_stage == GOAL_KEEPER.STAND_UP:
+            print("Run Stand Up!")
+            self.is_standup()
+            if self.__standup_stage == STAND_UP.END:
+                if self.__pre_run_stage == GOAL_KEEPER.HUSTLE:
+                    self.__pre_run_stage = self.run_stage
+                    self.run_stage = GOAL_KEEPER.KICK_OUT
+                else:
+                    self.__pre_run_stage = self.run_stage
+                    self.run_stage = GOAL_KEEPER.DEFEND
+            return
+        elif self.run_stage == GOAL_KEEPER.KICK_OUT:
+            print("Run Kick Out!")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+                return
+            if self.trackingBall():
+                if self.kick_ball():
+                    self.__pre_run_stage = self.run_stage
+                    self.run_stage = GOAL_KEEPER.BACK_TO_MIDDLE
+                    return
+            return
+        elif self.run_stage == GOAL_KEEPER.BACK_TO_MIDDLE:
+            print("Run Back to Middle!")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.run_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.run_stage = GOAL_KEEPER.STAND_UP
+                return
+            self.backtomiddlepoint()
+            if self.b2mp_stage == BACK_MIDDLE.END:
+                self.__pre_run_stage = self.run_stage
+                self.run_stage = GOAL_KEEPER.DEFEND
+                return
+            else:
+                return
+        elif self.run_stage == GOAL_KEEPER.FINISH:
+            print("Run Finish!")
+            self.run_stage = GOAL_KEEPER.END
+            return
+        elif self.run_stage == GOAL_KEEPER.END:
+            print("Run End!")
+            return
+        else:
+            print("Unknown run stage!")
 
 goal_keeper = Nao_Goalkeeper()
-# times = 0
 while goal_keeper.step(goal_keeper.timeStep) != -1:
     pass
-    # if times < 1:
-    #     goal_keeper.startMotion(goal_keeper.Diveright)
-    #     times = 1
     goal_keeper.position_refresh()
-    if not goal_keeper.standupIfnecessary():
-        goal_keeper.defendingBall()
-        goal_keeper.backtomiddlepoint()
+    goal_keeper.run()
+
+    # goal_keeper.startMotion(goal_keeper.StandUpFromBack)
+    # # # goal_keeper.hustle()
+    # if not goal_keeper.standupIfnecessary():
+    #     # goal_keeper.hustle()
+    #     goal_keeper.defendingBall()
+    #     goal_keeper.backtomiddlepoint()
+    # print(f"prediction is {goal_keeper.ball_dir_calculator()}")
+    # print("L Knee pitch is ",format(goal_keeper.sensors["LKneePitch"].getValue(),'.10f'))
+    # print("R Knee pitch is ",format(goal_keeper.sensors["RKneePitch"].getValue(),'.10f'))
+    # goal_keeper.setMotorPosition("RElbowYaw", 2.08)
+    # print(goal_keeper.gyro.getValues())
+    # roll, pitch, _ = goal_keeper.inertialUnit.getRollPitchYaw()
+    # print(np.rad2deg(roll), np.rad2deg(pitch))

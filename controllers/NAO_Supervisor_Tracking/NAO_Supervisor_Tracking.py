@@ -291,8 +291,10 @@ class NAO_Supervisor_Tracking(Supervisor):
         if joints in self.motor_names:
             position = self.sensors[joints].getValue()
             passing = np.abs(np.abs(targets) - np.abs(position))
-            if passing <= self.__threshold:
+            if np.isclose(passing, self.__threshold, atol=0.01):
                 return True
+            # if passing <= self.__threshold:
+            #     return True
             else:
                 return False
 
@@ -627,9 +629,9 @@ class NAO_Supervisor_Tracking(Supervisor):
         vel = self.gyro.getValues()
         # print('angular velocity: [ x y ] = [%f %f]' % (vel[0], vel[1]))
         # print(vel[0], vel[1])
-        all_in_balance = float(vel[0]) == 0.0 and float(vel[1]) == 0.0
+        all_in_balance = np.round(np.float64(vel[0])) == 0.0 and np.round(np.float64(vel[1])) == 0.0
 
-        print(f"all_in_balance: {all_in_balance}")
+        # print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
 
     def kick_ball(self):
@@ -958,14 +960,32 @@ NaoSupervisor = NAO_Supervisor_Tracking()
 while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
     # NaoSupervisor.is_balanced()
     pass
+    # NaoSupervisor.setMotorPosition("RShoulderRoll", -1.326)
+    # NaoSupervisor.setMotorPosition("RShoulderPitch", -2.08)
+    # NaoSupervisor.setMotorPosition("RHipRoll", 0.379)
+    # NaoSupervisor.setMotorPosition("LHipRoll", 0.379)
+
+    # NaoSupervisor.setMotorPosition("LShoulderRoll", 1.326)
+    # NaoSupervisor.setMotorPosition("LShoulderPitch",-2.08)
+    # NaoSupervisor.setMotorPosition("LHipRoll", -0.379)
+    # NaoSupervisor.setMotorPosition("RHipRoll", -0.379)
+
+    # NaoSupervisor.setMotorPosition("LShoulderRoll", 1.3265)
+    # NaoSupervisor.setMotorPosition("RShoulderPitch",-2.08)
+    # # NaoSupervisor.setMotorPosition("LElbowRoll",-0.03)
+    # # NaoSupervisor.setMotorPosition("LHipRoll", -0.3794)
+    # NaoSupervisor.setMotorPosition("RHipRoll", -0.738)
+    # NaoSupervisor.setMotorPosition("LAnkleRoll",-0.39)
+    # NaoSupervisor.setMotorPosition("RAnkleRoll", -0.76)
+
     if NaoSupervisor.has_initial:
         NaoSupervisor.refresh_position()
         if not NaoSupervisor.standupIfnecessary():
             if NaoSupervisor.dribble2stadium():
-                if NaoSupervisor.kick_motion():
+                if NaoSupervisor.kick_ball():
                     pass
-        else:
-            print("Is falling!")
+        # else:
+        #     print("Is falling!")
         # NaoSupervisor.ballisonline()
         # if NaoSupervisor.trackingBall():
         #     pass
