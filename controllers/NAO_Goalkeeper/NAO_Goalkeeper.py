@@ -2,6 +2,7 @@ from controller import Supervisor, Robot, Motion, motion
 import json
 from enum import Enum,auto,unique
 import numpy as np
+import os
 
 @unique
 class KICK_STAGE(Enum):
@@ -57,6 +58,7 @@ class HUSTLE(Enum):
     PREPARE = auto()
     HUSTLE_LEFT = auto()
     HUSTLE_RIGHT = auto()
+    WAITING = auto()
     FINISH = auto()
     END = auto()
 
@@ -87,18 +89,21 @@ class Nao_Goalkeeper(Robot):
         '''
         This Function mainly loads the motion files from libraries
         '''
-        self.forwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Forwards.motion')
-        self.backwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Backwards.motion')
-        self.shoot = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Shoot.motion')
-        self.turnleft40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepRight.motion')
-        self.KICK = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/KICK.motion')
-        self.StandUpFromFront = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromFront.motion')
-        self.StandUpFromBack = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromBack.motion')
-        self.ReturnFromSide = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/ReturnFromSide.motion')
-        # self.Diveright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Diveright.motion')
+        current_path = os.path.abspath(__file__)
+        current_folder_path = os.path.dirname(current_path)
+        pre_folder_path = os.path.dirname(current_folder_path)
+        pre_pre_folder_path = os.path.dirname(pre_folder_path)
+        self.forwards = Motion(os.path.join(pre_pre_folder_path, 'libraries/Forwards.motion'))
+        self.backwards = Motion(os.path.join(pre_pre_folder_path, 'libraries/Backwards.motion'))
+        self.shoot = Motion(os.path.join(pre_pre_folder_path, 'libraries/Shoot.motion'))
+        self.turnleft40 = Motion(os.path.join(pre_pre_folder_path, 'libraries/TurnLeft40.motion'))
+        self.turnright40 = Motion(os.path.join(pre_pre_folder_path, 'libraries/TurnRight40.motion'))
+        self.sidestepleft = Motion(os.path.join(pre_pre_folder_path, 'libraries/SideStepLeft.motion'))
+        self.sidestepright = Motion(os.path.join(pre_pre_folder_path, 'libraries/SideStepRight.motion'))
+        self.KICK = Motion(os.path.join(pre_pre_folder_path, 'libraries/KICK.motion'))
+        self.StandUpFromFront = Motion(os.path.join(pre_pre_folder_path, 'libraries/StandUpFromFront.motion'))
+        self.StandUpFromBack = Motion(os.path.join(pre_pre_folder_path, 'libraries/StandUpFromBack.motion'))
+        self.ReturnFromSide = Motion(os.path.join(pre_pre_folder_path, 'libraries/ReturnFromSide.motion'))
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -362,6 +367,10 @@ class Nao_Goalkeeper(Robot):
         self.run_stage = GOAL_KEEPER.INITIAL
         self.__standup_stage = STAND_UP.INITIAL
         self.__pre_run_stage = GOAL_KEEPER.INITIAL
+        self.__temp_time = 0
+
+        self.__goalkeeper_name = self.getName()
+        self.__goalkeeper_list = ["RedTeam_GoalKeeper", "BlueTeam_GoalKeeper"]
 
     def set_stage(self, stage=None):
         '''
@@ -1376,6 +1385,15 @@ class Nao_Goalkeeper(Robot):
                 and self.getMoveStage("LHipRoll") is move_status.END
                 and self.getMoveStage("RHipRoll") is move_status.END
                 ):
+                self.__temp_time = self.getTime()
+                self.hustle_status = HUSTLE.WAITING
+                return
+            else:
+                return
+        elif self.hustle_status == HUSTLE.WAITING:
+            print("Hustle waiting!")
+            time = self.getTime()
+            if time - self.__temp_time > 20:
                 self.hustle_status = HUSTLE.FINISH
                 return
             else:

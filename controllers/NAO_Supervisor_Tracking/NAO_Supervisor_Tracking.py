@@ -1,9 +1,11 @@
 import math
+import typing
 
 from controller import Supervisor, Motion, motion
 import numpy as np
 from enum import Enum,auto,unique
 import json
+import os
 import logging.config
 from pathlib import Path
 
@@ -56,6 +58,34 @@ class DRIBBLE(Enum):
     ADJUSTING_ANGLE = auto()
     ADJUSTING_COORDINATE = auto()
     DRIBBLING = auto()
+    CHECK_SHOOT = auto()
+    FINISH = auto()
+    END = auto()
+
+class STRIKER(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    DRIBBLE = auto()
+    KICK = auto()
+    BACK2MIDLINE = auto()
+    STAND_UP = auto()
+    FINISH = auto()
+    END = auto()
+
+class STAND_UP(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    FROM_FRONT = auto()
+    FROM_BACK = auto()
+    FINISH = auto()
+    END = auto()
+
+class BACK_MIDDLE(Enum):
+    INITIAL = auto()
+    PREPARE = auto()
+    ANGLE_ADJUSTING = auto()
+    FACING_TO_MIDDLE = auto()
+    MOVING = auto()
     FINISH = auto()
     END = auto()
 
@@ -63,18 +93,23 @@ class NAO_Supervisor_Tracking(Supervisor):
     PHALANX_MAX = 8
     kick_stage = KICK_STAGE.INITIAL
 
+
     def loadMotionFiles(self):
-        self.forwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Forwards.motion')
-        self.backwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Backwards.motion')
-        self.shoot = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Shoot.motion')
-        self.turnleft40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepRight.motion')
-        self.KICK = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/KICK.motion')
-        self.StandUpFromFront = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromFront.motion')
-        self.StandUpFromBack = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromBack.motion')
-        self.ReturnFromSide = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/ReturnFromSide.motion')
+        current_path = os.path.abspath(__file__)
+        current_folder_path = os.path.dirname(current_path)
+        pre_folder_path = os.path.dirname(current_folder_path)
+        pre_pre_folder_path = os.path.dirname(pre_folder_path)
+        self.forwards = Motion(os.path.join(pre_pre_folder_path,'libraries/Forwards.motion'))
+        self.backwards = Motion(os.path.join(pre_pre_folder_path,'libraries/Backwards.motion'))
+        self.shoot = Motion(os.path.join(pre_pre_folder_path,'libraries/Shoot.motion'))
+        self.turnleft40 = Motion(os.path.join(pre_pre_folder_path,'libraries/TurnLeft40.motion'))
+        self.turnright40 = Motion(os.path.join(pre_pre_folder_path,'libraries/TurnRight40.motion'))
+        self.sidestepleft = Motion(os.path.join(pre_pre_folder_path,'libraries/SideStepLeft.motion'))
+        self.sidestepright = Motion(os.path.join(pre_pre_folder_path,'libraries/SideStepRight.motion'))
+        self.KICK = Motion(os.path.join(pre_pre_folder_path,'libraries/KICK.motion'))
+        self.StandUpFromFront = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromFront.motion'))
+        self.StandUpFromBack = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromBack.motion'))
+        self.ReturnFromSide = Motion(os.path.join(pre_pre_folder_path,'libraries/ReturnFromSide.motion'))
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -270,6 +305,14 @@ class NAO_Supervisor_Tracking(Supervisor):
                 self.__node_sheet["stadiumgoal_blue"] = stadiumgoal_blue
                 self.__node_position   ["stadiumgoal_blue"] = None
                 self.__node_orientation["stadiumgoal_blue"] = None
+
+            if node.getDef() == 'BlueTeam_Striker':
+                print('STRIKER_BLUE has been initialized')
+                striker_blue = node
+                self.__node_sheet["striker_blue"] = striker_blue
+                self.__node_position["striker_blue"] = None
+                self.__node_orientation["striker_blue"] = None
+
         # print(temp_nodeSheet)
         for j in self.__node_sheet.keys():
             if self.__node_sheet[j] is None:
@@ -291,7 +334,7 @@ class NAO_Supervisor_Tracking(Supervisor):
         if joints in self.motor_names:
             position = self.sensors[joints].getValue()
             passing = np.abs(np.abs(targets) - np.abs(position))
-            if np.isclose(passing, self.__threshold, atol=0.01):
+            if np.isclose(passing, self.__threshold, atol=0.1):
                 return True
             # if passing <= self.__threshold:
             #     return True
@@ -379,6 +422,10 @@ class NAO_Supervisor_Tracking(Supervisor):
 
         # Initializes the status value
         self.dribbling_status = DRIBBLE.INITIAL
+        self.striker_stage = STRIKER.INITIAL
+        self.__standup_stage = STAND_UP.INITIAL
+        self.__pre_run_stage = STRIKER.INITIAL
+        self.b2mp_stage = BACK_MIDDLE.INITIAL
 
     def refresh_position(self):
         for i in self.__node_sheet.keys():
@@ -388,6 +435,7 @@ class NAO_Supervisor_Tracking(Supervisor):
         self.__shared_info = {
             "striker_red": {"position": self.__node_position["striker_red"], "orientation": self.__node_orientation["striker_red"]},
             # "defender_right": {"position": nodePosition["defender_right"], "orientation": nodeOrientation["defender_right"], "isholdingball": 0},
+            "striker_blue": {"position": self.__node_position["striker_blue"], "orientation": self.__node_orientation["striker_blue"]},
             "football": {"position": self.__node_position["football"], "orientation": self.__node_orientation["football"]},
             "goalkeeper_red": {"position": self.__node_position["goalkeeper_red"],
                                "orientation": self.__node_orientation["goalkeeper_red"]},
@@ -396,6 +444,7 @@ class NAO_Supervisor_Tracking(Supervisor):
             "stadiumgoal_blue": {"position": self.__node_position["stadiumgoal_blue"],
                                  "orientation": self.__node_orientation["stadiumgoal_blue"]},
         }
+        # print(self.__shared_info)
         temp = json.dumps(self.__shared_info).encode("utf-8")
         self.emitter.send(temp)
 
@@ -408,6 +457,14 @@ class NAO_Supervisor_Tracking(Supervisor):
             self.tracking_stage = stage
         elif isinstance(stage, KICK_STAGE):
             self.kick_stage = stage
+        elif isinstance(stage, DRIBBLE):
+            self.dribbling_status = stage
+        elif isinstance(stage, STRIKER):
+            self.striker_stage = stage
+        elif isinstance(stage, STAND_UP):
+            self.__standup_stage = stage
+        elif isinstance(stage, BACK_MIDDLE):
+            self.b2mp_stage = stage
         else:
             print(f"Stage {stage} not supported")
         return
@@ -420,7 +477,6 @@ class NAO_Supervisor_Tracking(Supervisor):
         # target_vector = [dx, dy]
         target_magnitude = np.sqrt(dx ** 2 + dy ** 2)
         target_vector_normalized = [dx / target_magnitude, dy / target_magnitude]
-        orientation = self.__shared_info["striker_red"]["orientation"]
         # front_vector = [orientation[0], orientation[3]]
         front_magnitude = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
         front_vector_normalized = [orientation[0] / front_magnitude, orientation[3] / front_magnitude]
@@ -629,7 +685,7 @@ class NAO_Supervisor_Tracking(Supervisor):
         vel = self.gyro.getValues()
         # print('angular velocity: [ x y ] = [%f %f]' % (vel[0], vel[1]))
         # print(vel[0], vel[1])
-        all_in_balance = np.round(np.float64(vel[0])) == 0.0 and np.round(np.float64(vel[1])) == 0.0
+        all_in_balance = np.isclose(np.float64(vel[0]),0.0, atol=0.1) and np.isclose(np.float64(vel[1]),0.0, atol=0.1)
 
         # print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
@@ -771,26 +827,89 @@ class NAO_Supervisor_Tracking(Supervisor):
     def standupIfnecessary(self):
         Acc = self.accelerometer.getValues()
         # print(f"Acc is {Acc}")
-        if Acc[2] < 5.0 and Acc[0] < -4.0:
-            self.startMotion(self.StandUpFromFront)
-            return True
-        elif Acc[2] < 5.0 and Acc[0] > 4.0:
-            self.startMotion(self.StandUpFromBack)
-            return True
-        elif Acc[2] < 5.0 and Acc[1] < -4.0:
-            self.startMotion(self.ReturnFromSide)
-            return True
-        elif Acc[2] < 5.0 and Acc[1] > 4.0:
-            self.startMotion(self.ReturnFromSide)
+        if (
+                (Acc[2] < 5.0 and Acc[0] < -4.0)
+                or (Acc[2] < 5.0 and Acc[0] > 4.0)
+                or (Acc[2] < 5.0 and Acc[1] < -4.0)
+                or (Acc[2] < 5.0 and Acc[1] > 4.0)
+        ):
             return True
         else:
             return False
+        # if Acc[2] < 5.0 and Acc[0] < -4.0:
+        #     self.startMotion(self.StandUpFromFront)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[0] > 4.0:
+        #     self.startMotion(self.StandUpFromBack)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[1] < -4.0:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # elif Acc[2] < 5.0 and Acc[1] > 4.0:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # else:
+        #     self.__is_standup = False
+        #     return False
+        # roll, pitch, _ = self.inertialUnit.getRollPitchYaw()
+        # if np.rad2deg(roll) < -120 and np.rad2deg(pitch) > 0:
+        #     self.startMotion(self.StandUpFromFront)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) < -120 and np.rad2deg(pitch) < 0:
+        #     self.startMotion(self.StandUpFromBack)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) > 80 and 0 < np.rad2deg(pitch) < 45:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # elif np.rad2deg(roll) > 170 and 0 < np.rad2deg(pitch) < 5:
+        #     self.startMotion(self.ReturnFromSide)
+        #     self.__is_standup = True
+        #     return True
+        # else:
+        #     self.__is_standup = False
+        #     return False
+
+    def is_standup(self):
+        pass
+        if self.__standup_stage == STAND_UP.INITIAL:
+            print("Stand-Up INITIAL")
+            self.__standup_stage = STAND_UP.PREPARE
+            return
+        elif self.__standup_stage == STAND_UP.PREPARE:
+            print("Stand-Up PREPARE")
+            self.__standup_stage = STAND_UP.FROM_BACK
+            return
+        elif self.__standup_stage == STAND_UP.FROM_FRONT:
+            print("Stand-Up From FRONT")
+            return
+        elif self.__standup_stage == STAND_UP.FROM_BACK:
+            print("Stand-Up From BACK")
+            self.startMotion(self.StandUpFromBack)
+            if self.is_balanced():
+                self.__standup_stage = STAND_UP.FINISH
+            return
+        elif self.__standup_stage == STAND_UP.FINISH:
+            print("Stand-Up FINISH")
+            self.__standup_stage = STAND_UP.END
+            return
+        elif self.__standup_stage == STAND_UP.END:
+            print("Stand-Up END")
+            return
+        else:
+            print("Unknown stand-up stage")
 
     def ballisonline(self):
-        robot_position = self.__shared_info["striker_red"]["position"]
+        robot_position = self.__shared_info["striker_blue"]["position"]
         stadium_position = self.__shared_info["stadiumgoal_red"]["position"]
         football_position = self.__shared_info["football"]["position"]
-        robot_orientation = self.__shared_info["striker_red"]["orientation"]
+        robot_orientation = self.__shared_info["striker_blue"]["orientation"]
         angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
         angbetball, disbetball = self.angleCalculaor(football_position, robot_position, robot_orientation)
         print(f"angbetsta is {angbetsta}")
@@ -828,8 +947,8 @@ class NAO_Supervisor_Tracking(Supervisor):
 
     def dribble2stadium(self):
         pass
-        robot_position = self.__shared_info['striker_red']['position']
-        robot_orientation = self.__shared_info['striker_red']['orientation']
+        robot_position = self.__shared_info['striker_blue']['position']
+        robot_orientation = self.__shared_info['striker_blue']['orientation']
         football_position = self.__shared_info['football']['position']
         stadium_position = self.__shared_info['stadiumgoal_red']['position']
         angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
@@ -906,10 +1025,11 @@ class NAO_Supervisor_Tracking(Supervisor):
                 self.dribbling_status = DRIBBLE.ADJUSTING_COORDINATE
                 return
             else:
-                if angbetsta < 0:
+                if angbetsta < 0 and self.currentlyPlaying.isOver():
                     self.startMotion(self.turnright40)
                 else:
-                    self.startMotion(self.turnleft40)
+                    if self.currentlyPlaying.isOver():
+                        self.startMotion(self.turnleft40)
 
         elif self.dribbling_status == DRIBBLE.ADJUSTING_COORDINATE:
             print("DRIBBLE ADJUSTING_COORDINATE")
@@ -932,19 +1052,40 @@ class NAO_Supervisor_Tracking(Supervisor):
         elif self.dribbling_status == DRIBBLE.DRIBBLING:
             print("DRIBBLE DRIBBLING")
             if np.isclose(distbetsta, 1.60, atol=0.1):
-                self.dribbling_status = DRIBBLE.FINISH
+                self.dribbling_status = DRIBBLE.CHECK_SHOOT
                 return
             else:
                 if np.abs(angbetball) > 15:
-                    if 180.0 >= angbetball > 15.0:
+                    if 180.0 >= angbetball > 15.0 and self.currentlyPlaying.isOver():
                         self.startMotion(self.sidestepleft)
-                    elif -180 <= angbetball < -15.0:
+                    elif -180 <= angbetball < -15.0 and self.currentlyPlaying.isOver():
                         self.startMotion(self.sidestepright)
                     # self.dribbling_status = DRIBBLE.BALLFINDING
                     return
                 else:
                     self.startMotion(self.forwards)
+                    if angbetsta < 0 and self.currentlyPlaying.isOver():
+                        self.startMotion(self.turnright40)
+                    else:
+                        if self.currentlyPlaying.isOver():
+                            self.startMotion(self.turnleft40)
                     return
+        elif self.dribbling_status == DRIBBLE.CHECK_SHOOT:
+            print("DRIBBLING CHECK_SHOOT")
+            if 15 <= angbetball <= 20:
+                self.startMotion(self.forwards)
+                if np.isclose(disbetball, 0.2, atol=0.01):
+                    self.stopMotion()
+                    self.dribbling_status = DRIBBLE.FINISH
+                    return
+                else:
+                    return
+            else:
+                if angbetball < 0 or 0 <= angbetball < 15:
+                    self.startMotion(self.sidestepright)
+                elif angbetball > 20:
+                    self.startMotion(self.sidestepleft)
+                return
         elif self.dribbling_status == DRIBBLE.FINISH:
             print("DRIBBLE FINISH")
             self.dribbling_status = DRIBBLE.END
@@ -955,6 +1096,191 @@ class NAO_Supervisor_Tracking(Supervisor):
         else:
             print("UNKNOWN DRIBBLE STATUS!")
 
+    def backtomiddlepoint(self):
+        limitationofdistance = 0.1
+        bitsOfRound = 2
+        robot_position = self.__shared_info['striker_blue']['position']
+        robot_orientation = self.__shared_info['striker_blue']['orientation']
+        football_position = self.__shared_info['football']['position']
+        if robot_position is None or robot_orientation is None or football_position is None:
+            print("robot_position or robot_orientation or football_position is None!")
+            return
+
+        angle, distance = self.angleCalculaor([0.0, 0.0 ,0.0], robot_position, robot_orientation)
+        if angle is None or distance is None:
+            print("angle is None or distance is None!")
+            return
+        print(f"original point angle: {angle}, distance: {distance}")
+
+        # if self.__football_position[0] >= 0:
+        #     return
+        if self.b2mp_stage == BACK_MIDDLE.INITIAL:
+            print("Back to middlepoint Initial!")
+            self.setMotorPosition('LShoulderPitch', 1.49)
+            self.setMotorPosition('RShoulderPitch', 1.49)
+            self.setMotorPosition('LShoulderRoll', 0.000000086)
+            self.setMotorPosition('RShoulderRoll', -0.000000086)
+            self.setMotorPosition('LElbowRoll', -0.49)
+            self.setMotorPosition('RElbowRoll', 0.49)
+            self.setMotorPosition('LElbowYaw', 0.000000049)
+            self.setMotorPosition('RElbowYaw', -0.000000049)
+            # print(f"L Shoulder Roll is {self.sensors['LShoulderRoll'].getValue()}, LElbowRoll is {self.sensors['LElbowRoll'].getValue()}, "
+            #       f"LElbowYaw is {self.sensors['LElbowYaw'].getValue()}")
+            # print(
+            #     f"R Shoulder Roll is {self.sensors['RShoulderRoll'].getValue()}, RElbowRoll is {self.sensors['RElbowRoll'].getValue()}, "
+            #     f"RElbowYaw is {self.sensors['RElbowYaw'].getValue()}")
+            if (self.getMoveStage('LShoulderPitch') is move_status.END and
+                    self.getMoveStage('RShoulderPitch') is move_status.END and
+                    self.getMoveStage('LShoulderRoll') is move_status.END and
+                    self.getMoveStage('RShoulderRoll') is move_status.END and
+                    self.getMoveStage('LElbowRoll') is move_status.END and
+                    self.getMoveStage('RElbowRoll') is move_status.END and
+                    self.getMoveStage('LElbowYaw') is move_status.END and
+                    self.getMoveStage('RElbowYaw') is move_status.END):
+                self.b2mp_stage = BACK_MIDDLE.PREPARE
+                return
+            else:
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.PREPARE:
+            print("Back to middlepoint Prepare!")
+            if np.round(distance, bitsOfRound) >= 0.2 and (180.0 >= angle >= 15.0 or -15.0 >= angle >= -180.0):
+                self.__temp_angle = angle
+                self.b2mp_stage = BACK_MIDDLE.ANGLE_ADJUSTING
+                return
+            else:
+                self.b2mp_stage = BACK_MIDDLE.MOVING
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.ANGLE_ADJUSTING:
+            print("Back to middlepoint ANGLE_ADJUSTING!")
+            if 180.0 >= self.__temp_angle > 15.0:
+                self.startMotion(self.turnright40)
+            elif -15.0 >= self.__temp_angle > -180.0:
+                self.startMotion(self.turnleft40)
+
+            if np.abs(angle) <= 15.0:
+                self.stopMotion()
+                self.b2mp_stage = BACK_MIDDLE.MOVING
+                return
+            else:
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.MOVING:
+            print("Back to middlepoint Moving!")
+            print(f"distance: {distance}")
+            # print(np.round(distance, bitsOfRound) >= 0.2)
+            # print(self.b2mp_stage)
+            if np.round(distance, bitsOfRound) >= 0.2:
+                # print("Distance is over 0.2!")
+                if 180.0 >= angle > 15.0 or -15.0 > angle >= -180.0:
+                    self.__temp_angle = angle
+                    self.b2mp_stage = BACK_MIDDLE.ANGLE_ADJUSTING
+                    return
+                else:
+                    # print("Is moving forwards!")
+                    self.startMotion(self.forwards)
+                    # print("startMotion has been done!")
+                    return
+            else:
+                print("Has arrived to the middlepoint!")
+                # self.stopMotion()
+                self.__temp_angle = angle
+                self.b2mp_stage = BACK_MIDDLE.FINISH
+                return
+        elif self.b2mp_stage == BACK_MIDDLE.FINISH:
+            print("Back to middlepoint FINISH!")
+            # if np.round(distance, bitsOfRound) >= 0.2:
+            #     if angle < 0:
+            #         self.startMotion(self.forwards)
+            #     else:
+            #         self.startMotion(self.backwards)
+            #     return
+            # else:
+            self.b2mp_stage = BACK_MIDDLE.END
+            return
+        elif self.b2mp_stage == BACK_MIDDLE.END:
+            print("Back to middlepoint END!")
+            return
+        else:
+            print("Unknown Stage!")
+            return
+
+    def run(self):
+        if self.striker_stage == STRIKER.INITIAL:
+            print("STRIKER INITIAL")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.striker_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.striker_stage = STRIKER.STAND_UP
+                return
+            else:
+                self.striker_stage = STRIKER.PREPARE
+            return
+        elif self.striker_stage == STRIKER.PREPARE:
+            print("STRIKER PREPARE")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.striker_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.striker_stage = STRIKER.STAND_UP
+                return
+            self.striker_stage = STRIKER.DRIBBLE
+            return
+        elif self.striker_stage == STRIKER.DRIBBLE:
+            print("STRIKER DRIBBLE")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.striker_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.striker_stage = STRIKER.STAND_UP
+                return
+            self.dribble2stadium()
+            if self.dribbling_status == DRIBBLE.END and self.is_balanced():
+                self.striker_stage = STRIKER.KICK
+                return
+            else:
+                return
+        elif self.striker_stage == STRIKER.KICK:
+            print("STRIKER KICK")
+            if self.standupIfnecessary():
+                self.__pre_run_stage = self.striker_stage
+                self.set_stage(STAND_UP.INITIAL)
+                self.striker_stage = STRIKER.STAND_UP
+                return
+            self.kick_motion()
+            if self.kick_stage == KICK_STAGE.END:
+                self.striker_stage = STRIKER.BACK2MIDLINE
+                return
+            else:
+                return
+        elif self.striker_stage == STRIKER.STAND_UP:
+            print("STRIKER STAND_UP")
+            self.is_standup()
+            if self.__standup_stage == STAND_UP.END and self.is_balanced():
+                self.striker_stage = STRIKER.DRIBBLE
+                self.set_stage(DRIBBLE.INITIAL)
+                return
+            else:
+                return
+        elif self.striker_stage == STRIKER.BACK2MIDLINE:
+            print("STRIKER BACK2MIDLINE")
+            self.backtomiddlepoint()
+            if self.b2mp_stage == BACK_MIDDLE.END:
+                self.striker_stage = STRIKER.FINISH
+        elif self.striker_stage == STRIKER.FINISH:
+            print("STRIKER FINISH")
+            self.striker_stage = STRIKER.END
+            return
+        elif self.striker_stage == STRIKER.END:
+            print("STRIKER END")
+            return
+        else:
+            print("UNKNOWN STRIKER STATUS!")
+    def test_module(self):
+        robot_position = self.__shared_info['striker_blue']['position']
+        robot_orientation = self.__shared_info['striker_blue']['orientation']
+        football_position = self.__shared_info['football']['position']
+        stadium_position = self.__shared_info['stadiumgoal_red']['position']
+        angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
+        angbetball, disbetball = self.angleCalculaor(football_position, robot_position, robot_orientation)
+        print(f"angbetsta is {angbetsta}, distbetsta is {distbetsta}")
+        print(f"angbetball is {angbetball}, disbetball is {disbetball}")
 
 NaoSupervisor = NAO_Supervisor_Tracking()
 while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
@@ -980,10 +1306,13 @@ while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
 
     if NaoSupervisor.has_initial:
         NaoSupervisor.refresh_position()
-        if not NaoSupervisor.standupIfnecessary():
-            if NaoSupervisor.dribble2stadium():
-                if NaoSupervisor.kick_ball():
-                    pass
+        # print(NaoSupervisor.getTime())
+        # NaoSupervisor.test_module()
+        NaoSupervisor.run()
+        # if not NaoSupervisor.standupIfnecessary():
+        #     if NaoSupervisor.dribble2stadium():
+        #         if NaoSupervisor.kick_ball():
+        #             pass
         # else:
         #     print("Is falling!")
         # NaoSupervisor.ballisonline()
