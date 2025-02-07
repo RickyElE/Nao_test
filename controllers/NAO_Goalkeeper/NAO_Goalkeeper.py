@@ -87,7 +87,6 @@ class GOAL_KEEPER_ROLE(Enum):
 
 class Nao_Goalkeeper(Robot):
     PHALANX_MAX = 8
-    kick_stage = KICK_STAGE.INITIAL
 
     def loadMotionFiles(self):
         '''
@@ -358,6 +357,7 @@ class Nao_Goalkeeper(Robot):
 
         self.gk_stage = DEFEND_STAGE.INITIAL
         self.b2mp_stage = BACK_MIDDLE.INITIAL
+        self.kick_stage = KICK_STAGE.INITIAL
         self.__robot_position = None
         self.__football_position = None
         self.__robot_orientation = None
@@ -370,11 +370,20 @@ class Nao_Goalkeeper(Robot):
         self.__is_standup = False
         self.run_stage = GOAL_KEEPER.INITIAL
         self.__standup_stage = STAND_UP.INITIAL
-        self.__pre_run_stage = GOAL_KEEPER.INITIAL
+
         self.__temp_time = 0
 
         self.__goalkeeper_name = self.getName()
         self.__goalkeeper_list = ["RedTeam_GoalKeeper", "BlueTeam_GoalKeeper"]
+        self.__count_time = 0
+
+        """Previous Stage"""
+        self.__pre_kick_stage = KICK_STAGE.INITIAL
+        self.__pre_gk_stage = DEFEND_STAGE.INITIAL
+        self.__pre_b2mp_stage = BACK_MIDDLE.INITIAL
+        self.__pre_hustle_stage = HUSTLE.INITIAL
+        self.__pre_run_stage = GOAL_KEEPER.INITIAL
+        self.__pre_standup_stage = STAND_UP.INITIAL
 
     def set_stage(self, stage=None):
         '''
@@ -390,16 +399,22 @@ class Nao_Goalkeeper(Robot):
         if isinstance(stage, MOTION_PLAY):
             self.tracking_stage = stage
         elif isinstance(stage, KICK_STAGE):
+            self.__pre_kick_stage = self.kick_stage
             self.kick_stage = stage
         elif isinstance(stage, HUSTLE):
+            self.__pre_hustle_stage = self.hustle_status
             self.hustle_status = stage
         elif isinstance(stage, DEFEND_STAGE):
+            self.__pre_gk_stage = self.gk_stage
             self.gk_stage = stage
         elif isinstance(stage, BACK_MIDDLE):
+            self.__pre_b2mp_stage = BACK_MIDDLE
             self.b2mp_stage = stage
         elif isinstance(stage, GOAL_KEEPER):
+            self.__pre_run_stage = self.run_stage
             self.run_stage = stage
         elif isinstance(stage, STAND_UP):
+            self.__pre_standup_stage = self.__standup_stage
             self.__standup_stage = stage
         else:
             print(f"Stage {stage} not supported")
@@ -705,12 +720,14 @@ class Nao_Goalkeeper(Robot):
             self.__football_position = football_position
             self.__stadiumgoal_red_position = stadiumgoal_red_position
             self.__stadiumgoal_red_orientation = stadiumgoal_red_orientation
+            return True
             # return robot_position, robot_orientation, football_position
         else:
             # return None, None, None
             self.__robot_position = None
             self.__robot_orientation = None
             self.__football_position = None
+            return False
 
     # Calculate the angle
     def angleCalculaor(self, football_position, robot_position, orientation = None):
@@ -1115,13 +1132,15 @@ class Nao_Goalkeeper(Robot):
         elif self.__standup_stage == STAND_UP.PREPARE:
             print("Stand-Up PREPARE")
             self.__standup_stage = STAND_UP.FROM_BACK
+            self.__count_time = self.getTime()
             return
         elif self.__standup_stage == STAND_UP.FROM_FRONT:
             print("Stand-Up From FRONT")
             return
         elif self.__standup_stage == STAND_UP.FROM_BACK:
             print("Stand-Up From BACK")
-            self.startMotion(self.StandUpFromBack)
+            if (self.currentlyPlaying is not self.StandUpFromBack or self.currentlyPlaying.isOver()):
+                self.startMotion(self.StandUpFromBack)
             if self.is_balanced():
                 self.__standup_stage = STAND_UP.FINISH
             return
@@ -1449,35 +1468,30 @@ class Nao_Goalkeeper(Robot):
         if self.run_stage == GOAL_KEEPER.INITIAL:
             print("Run Initial!")
             if self.standupIfnecessary():
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
             else:
-                self.run_stage = GOAL_KEEPER.PREPARE
+                self.set_stage(GOAL_KEEPER.PREPARE)
             return
         elif self.run_stage == GOAL_KEEPER.PREPARE:
             print("Run Prepare!")
             if self.standupIfnecessary():
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
             else:
-                self.__pre_run_stage = self.run_stage
-                self.run_stage = GOAL_KEEPER.DEFEND
+                self.set_stage(GOAL_KEEPER.DEFEND)
             return
         elif self.run_stage == GOAL_KEEPER.DEFEND:
             print("Run Defend!")
             if self.standupIfnecessary():
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
                 return
             elif ((self.__goalkeeper_name == GOAL_KEEPER_ROLE.REDTEAM_GOALKEEPER.value
                   and (3.90 - self.__football_position[0]) <= 0.5)
                 or (self.__goalkeeper_name == GOAL_KEEPER_ROLE.BLUETEAM_GOALKEEPER.value
                   and (-3.90 - self.__football_position[0]) >= -0.5)):
-                self.__pre_run_stage = self.run_stage
-                self.run_stage = GOAL_KEEPER.HUSTLE
+                self.set_stage(GOAL_KEEPER.HUSTLE)
                 return
             else:
                 self.defendingBall()
@@ -1486,54 +1500,48 @@ class Nao_Goalkeeper(Robot):
             print("Run Hustle!")
             self.hustle()
             if self.hustle_status == HUSTLE.END:
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
             return
         elif self.run_stage == GOAL_KEEPER.STAND_UP:
             print("Run Stand Up!")
             self.is_standup()
             if self.__standup_stage == STAND_UP.END:
                 if self.__pre_run_stage == GOAL_KEEPER.HUSTLE:
-                    self.__pre_run_stage = self.run_stage
-                    self.run_stage = GOAL_KEEPER.KICK_OUT
+                    self.set_stage(GOAL_KEEPER.KICK_OUT)
                 else:
-                    self.__pre_run_stage = self.run_stage
-                    self.run_stage = GOAL_KEEPER.DEFEND
+                    self.set_stage(GOAL_KEEPER.DEFEND)
             return
         elif self.run_stage == GOAL_KEEPER.KICK_OUT:
             print("Run Kick Out!")
             if self.standupIfnecessary():
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
                 return
             if self.trackingBall():
                 if self.kick_ball():
-                    self.__pre_run_stage = self.run_stage
-                    self.run_stage = GOAL_KEEPER.BACK_TO_MIDDLE
+                    self.set_stage(GOAL_KEEPER.BACK_TO_MIDDLE)
                     return
             return
         elif self.run_stage == GOAL_KEEPER.BACK_TO_MIDDLE:
             print("Run Back to Middle!")
             if self.standupIfnecessary():
-                self.__pre_run_stage = self.run_stage
                 self.set_stage(STAND_UP.INITIAL)
-                self.run_stage = GOAL_KEEPER.STAND_UP
+                self.set_stage(GOAL_KEEPER.STAND_UP)
                 return
             self.backtomiddlepoint()
             if self.b2mp_stage == BACK_MIDDLE.END:
-                self.__pre_run_stage = self.run_stage
-                self.run_stage = GOAL_KEEPER.DEFEND
+                self.set_stage(GOAL_KEEPER.DEFEND)
                 return
             else:
                 return
         elif self.run_stage == GOAL_KEEPER.FINISH:
             print("Run Finish!")
-            self.run_stage = GOAL_KEEPER.END
+            self.set_stage(GOAL_KEEPER.END)
             return
         elif self.run_stage == GOAL_KEEPER.END:
             print("Run End!")
+            self.set_stage(GOAL_KEEPER.INITIAL)
             return
         else:
             print("Unknown run stage!")
@@ -1541,8 +1549,8 @@ class Nao_Goalkeeper(Robot):
 goal_keeper = Nao_Goalkeeper()
 while goal_keeper.step(goal_keeper.timeStep) != -1:
     pass
-    goal_keeper.position_refresh()
-    goal_keeper.run()
+    if goal_keeper.position_refresh():
+        goal_keeper.run()
 
     # goal_keeper.startMotion(goal_keeper.StandUpFromBack)
     # # # goal_keeper.hustle()

@@ -89,7 +89,7 @@ class BACK_MIDDLE(Enum):
     FINISH = auto()
     END = auto()
 
-class NAO_BlueTeam_Striker(Robot):
+class NAO_RedTeam_Striker(Robot):
     PHALANX_MAX = 8
     kick_stage = KICK_STAGE.INITIAL
 
@@ -343,6 +343,9 @@ class NAO_BlueTeam_Striker(Robot):
         self.__standup_stage = STAND_UP.INITIAL
         self.__pre_run_stage = STRIKER.INITIAL
         self.b2mp_stage = BACK_MIDDLE.INITIAL
+        self.__pre_dribble_stage = DRIBBLE.INITIAL
+        self.__side_count = 0
+        self.__temp_angle = 0
 
     def position_refresh(self):
         if self.receiver.getQueueLength() > 0:
@@ -903,35 +906,47 @@ class NAO_BlueTeam_Striker(Robot):
                 return
         elif self.dribbling_status == DRIBBLE.BALLFINDING:
             print("DRIBBLE BALLFINDING")
-            if np.abs(angbetball) <= 15.0:
+            if np.abs(angbetball) <= 5.0:
                 self.startMotion(self.forwards)
                 if np.isclose(disbetball, 0.2, atol=0.1):
-                    if self.__isonline(self.__robot_position, self.__stadiumgoal_blue_position, self.__football_position):
+                    if (self.__isonline(self.__robot_position, self.__stadiumgoal_blue_position, self.__football_position)
+                        and np.abs(angbetsta) <= 30):
+                        ''' If striker is facing to the opposite stadium goal and the ball is online, it can dribble the ball'''
                         self.dribbling_status = DRIBBLE.DRIBBLING
                     else:
+                        self.__temp_angle = angbetsta
                         self.dribbling_status = DRIBBLE.ADJUSTING_ANGLE
                     return
                 else:
                     return
             else:
-                if 180.0 >= angbetball > 15.0:
+                if 180.0 >= angbetball > 5.0 and self.is_balanced():
                     self.startMotion(self.turnleft40)
-                elif -180 <= angbetball < -15.0:
+                elif -180 <= angbetball < -5.0 and self.is_balanced():
                     self.startMotion(self.turnright40)
                 return
 
         elif self.dribbling_status == DRIBBLE.ADJUSTING_ANGLE:
             print("DRIBBLE ADJUSTING_ANGLE")
-            if 0 <= np.abs(angbetsta) < 5:
-                self.__temp_pos = self.__robot_position
-                self.dribbling_status = DRIBBLE.ADJUSTING_COORDINATE
-                return
-            else:
-                if angbetsta < 0 and self.currentlyPlaying.isOver():
-                    self.startMotion(self.turnright40)
+            if self.__temp_angle <= 30:
+                if 0 <= np.abs(angbetsta) < 5:
+                    self.__temp_pos = self.__robot_position
+                    self.dribbling_status = DRIBBLE.ADJUSTING_COORDINATE
+                    return
                 else:
-                    if self.currentlyPlaying.isOver():
-                        self.startMotion(self.turnleft40)
+                    if isinstance(self.currentlyPlaying, bool):
+                        self.startMotion(self.turnright40)
+                    if angbetsta < 0 and self.currentlyPlaying.isOver() and self.is_balanced():
+                        self.startMotion(self.turnright40)
+                    else:
+                        if self.currentlyPlaying.isOver() and self.is_balanced():
+                            self.startMotion(self.turnleft40)
+            else:
+                if 0 <= np.abs(angbetsta) < 5:
+                    self.dribbling_status = DRIBBLE.DRIBBLING
+                    return
+                else:
+                    self.counterclockwise_winding(disbetball)
 
         elif self.dribbling_status == DRIBBLE.ADJUSTING_COORDINATE:
             print("DRIBBLE ADJUSTING_COORDINATE")
@@ -957,20 +972,29 @@ class NAO_BlueTeam_Striker(Robot):
                 self.dribbling_status = DRIBBLE.CHECK_SHOOT
                 return
             else:
-                if np.abs(angbetball) > 15:
-                    if 180.0 >= angbetball > 15.0 and self.currentlyPlaying.isOver():
-                        self.startMotion(self.sidestepleft)
-                    elif -180 <= angbetball < -15.0 and self.currentlyPlaying.isOver():
-                        self.startMotion(self.sidestepright)
+                if np.abs(angbetball) > 90:
+                    pass
+                    # self.__pre_dribble_stage = self.dribbling_status
+                    self.dribbling_status = DRIBBLE.BALLFINDING
                     return
                 else:
-                    self.startMotion(self.forwards)
-                    if angbetsta < 0 and self.currentlyPlaying.isOver():
-                        self.startMotion(self.turnright40)
+                    if np.abs(angbetball) > 15:
+                        if 180.0 >= angbetball > 15.0 and self.currentlyPlaying.isOver() and self.is_balanced():
+                            self.startMotion(self.sidestepleft)
+                        elif -180 <= angbetball < -15.0 and self.currentlyPlaying.isOver() and self.is_balanced():
+                            self.startMotion(self.sidestepright)
+                        # self.dribbling_status = DRIBBLE.BALLFINDING
+                        return
                     else:
-                        if self.currentlyPlaying.isOver():
-                            self.startMotion(self.turnleft40)
-                    return
+                        if np.abs(angbetsta) > 5:
+                            pass
+                            if angbetsta < -5 and self.currentlyPlaying.isOver() and self.is_balanced():
+                                self.startMotion(self.turnright40)
+                            elif angbetsta > 5 and self.currentlyPlaying.isOver() and self.is_balanced():
+                                self.startMotion(self.turnleft40)
+                        else:
+                            self.startMotion(self.forwards)
+                        return
         elif self.dribbling_status == DRIBBLE.CHECK_SHOOT:
             print("DRIBBLING CHECK_SHOOT")
             if 15 <= angbetball <= 20:
@@ -1101,6 +1125,44 @@ class NAO_BlueTeam_Striker(Robot):
             print("Unknown Stage!")
             return
 
+    def counterclockwise_winding(self, distance):
+        if self.currentlyPlaying.isOver() and distance <= 0.2:
+            self.startMotion(self.backwards)
+            return
+        else:
+            if isinstance(self.currentlyPlaying, bool):
+                self.startMotion(self.turnleft40)
+                self.__side_count = 0
+                return
+            else:
+                if self.currentlyPlaying.isOver() and self.__side_count < 2:
+                    self.startMotion(self.sidestepright)
+                    self.__side_count += 1
+                    return
+                if self.currentlyPlaying.isOver() and self.__side_count >= 2:
+                    self.startMotion(self.turnleft40)
+                    self.__side_count = 0
+                    return
+
+    def clockwise_winding(self, distance):
+        if self.currentlyPlaying.isOver() and distance <= 0.2:
+            self.startMotion(self.backwards)
+            return
+        else:
+            if isinstance(self.currentlyPlaying, bool):
+                self.startMotion(self.turnright40)
+                self.__side_count = 0
+                return
+            else:
+                if self.currentlyPlaying.isOver() and self.__side_count < 2:
+                    self.startMotion(self.sidestepleft)
+                    self.__side_count += 1
+                    return
+                if self.currentlyPlaying.isOver() and self.__side_count >= 2:
+                    self.startMotion(self.turnright40)
+                    self.__side_count = 0
+                    return
+
     def run(self):
         if self.striker_stage == STRIKER.INITIAL:
             print("STRIKER INITIAL")
@@ -1180,8 +1242,8 @@ class NAO_BlueTeam_Striker(Robot):
     #     print(f"angbetsta is {angbetsta}, distbetsta is {distbetsta}")
     #     print(f"angbetball is {angbetball}, disbetball is {disbetball}")
 
-blueteam_striker = NAO_BlueTeam_Striker()
-while blueteam_striker.step(blueteam_striker.timeStep) != -1:
+redteam_striker = NAO_RedTeam_Striker()
+while redteam_striker.step(redteam_striker.timeStep) != -1:
     pass
-    blueteam_striker.position_refresh()
-    blueteam_striker.run()
+    redteam_striker.position_refresh()
+    redteam_striker.run()

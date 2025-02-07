@@ -20,10 +20,6 @@ TexturedBackgroundLight {
 RobotstadiumSoccerField {
 }
 DEF BlueTeam_DefenderLeft Nao {
-  hidden rotation_23 0 1 0 0.9599999999182978
-  hidden rotation_26 0 1 0 0.9599999999182699
-  hidden rotation_35 0 1 0 0.9599999999182631
-  hidden rotation_38 0 1 0 0.9599999999182631
   translation -1.4591458809019873 1.5936899995009073 0.33264206191612333
   rotation 5.8500596866555965e-06 0.9999999999828884 -5.129948693152298e-10 0.00025528479964937107
   name "BlueTeam_DefenderLeft"
@@ -33,21 +29,13 @@ DEF BlueTeam_DefenderLeft Nao {
   controller "<none>"
 }
 DEF RedTeam_Striker Nao {
-  hidden rotation_23 0 0.9999999999999999 0 0.9599999999182776
-  hidden rotation_26 0 1 0 0.9599999999182621
-  hidden rotation_35 0 1 0 0.9599999999182669
-  hidden rotation_38 0 1 0 0.9599999999182631
   translation 0.742104 -0.511326 0.332642
   rotation -0.00012764239886906028 1.0239179507722827e-07 0.9999999918537036 3.1400000000128494
   name "RedTeam_Striker"
-  controller "<extern>"
+  controller "<none>"
   channel 1
 }
 DEF RedTeam_DefenderLeft Nao {
-  hidden rotation_23 0 1 0 0.95999999991829
-  hidden rotation_26 0 0.9999999999999999 0 0.9599999999182823
-  hidden rotation_35 0 1 0 0.959999999918266
-  hidden rotation_38 0 1 0 0.9599999999182737
   translation 1.5004858809019919 -1.4183199992776934 0.332642061916124
   rotation -0.00012764239946607767 9.160624491220317e-10 0.9999999918537089 3.1415899999998875
   name "RedTeam_DefenderLeft"
@@ -55,10 +43,6 @@ DEF RedTeam_DefenderLeft Nao {
   channel 1
 }
 DEF BlueTeam_DefenderRight Nao {
-  hidden rotation_23 0 1 0 0.9599999999182766
-  hidden rotation_26 0 1 0 0.9599999999182641
-  hidden rotation_35 0 1 0 0.9599999999182689
-  hidden rotation_38 0 1 0 0.9599999999182891
   translation -1.5892735761914987 -1.4816200163126687 0.332642050313803
   rotation 5.953061295714034e-06 0.9999996730176178 -0.0008086589011038573 0.0002552893705015588
   name "BlueTeam_DefenderRight"
@@ -68,10 +52,6 @@ DEF BlueTeam_DefenderRight Nao {
   controller "<none>"
 }
 DEF RedTeam_DefenderRight Nao {
-  hidden rotation_23 0 1 0 0.9599999999182978
-  hidden rotation_26 0 1 0 0.9599999999182757
-  hidden rotation_35 0 1 0 0.9599999999182814
-  hidden rotation_38 0 1 0 0.9599999999182602
   translation 1.5130758809019906 1.5796300007223076 0.3326420619161236
   rotation -0.00012764239947192862 9.160728174726134e-10 0.9999999918537089 3.1415899999998955
   name "RedTeam_DefenderRight"
@@ -84,10 +64,6 @@ DEF Soccerball RobocupSoccerBall {
   name "FOOTBALL"
 }
 DEF RedTeam_Goalkeeper Nao {
-  hidden rotation_23 0 1 0 0.9599999999182784
-  hidden rotation_26 0 1 0 0.9599999999182631
-  hidden rotation_35 0 1 0 0.9599999999182592
-  hidden rotation_38 0 1 0 0.9599999999182525
   translation 3.8987079765169494 -1.9250671745332123e-05 0.33264205046526135
   rotation -0.00012716793407202442 -4.098916415040428e-07 0.9999999919140744 -3.135129616894062
   name "RedTeam_Goalkeeper"
@@ -97,10 +73,6 @@ DEF RedTeam_Goalkeeper Nao {
   channel 1
 }
 DEF BlueTeam_Goalkeeper Nao {
-  hidden rotation_23 0 1 0 0.9599999999182862
-  hidden rotation_26 0 1 0 0.9599999999182592
-  hidden rotation_35 0 0.9999999999999999 0 0.9599999999182804
-  hidden rotation_38 0 1 0 0.9599999999182776
   translation -3.8999158809019905 -4.990891771281426e-10 0.3326420619161232
   rotation 5.8500008016913955e-06 0.9999999999828888 -5.912006866947226e-10 0.00025528479962235075
   name "BlueTeam_Goalkeeper"
@@ -128,7 +100,7 @@ DEF BlueTeam_Striker Nao {
   customColor [
     0 0 1
   ]
-  controller "NAO_BlueTeamStriker_Supervisor"
+  controller "<extern>"
   supervisor TRUE
   channel 1
 }
