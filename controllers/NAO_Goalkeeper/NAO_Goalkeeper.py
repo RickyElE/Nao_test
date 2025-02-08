@@ -57,6 +57,7 @@ class HUSTLE(Enum):
     PREPARE = auto()
     HUSTLE_LEFT = auto()
     HUSTLE_RIGHT = auto()
+    WAITING = auto()
     FINISH = auto()
     END = auto()
 
@@ -87,18 +88,18 @@ class Nao_Goalkeeper(Robot):
         '''
         This Function mainly loads the motion files from libraries
         '''
-        self.forwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Forwards.motion')
-        self.backwards = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Backwards.motion')
-        self.shoot = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Shoot.motion')
-        self.turnleft40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/SideStepRight.motion')
-        self.KICK = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/KICK.motion')
-        self.StandUpFromFront = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromFront.motion')
-        self.StandUpFromBack = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/StandUpFromBack.motion')
-        self.ReturnFromSide = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/ReturnFromSide.motion')
-        # self.Diveright = Motion('/Users/xuzhihong/Desktop/Nao_test/libraries/Diveright.motion')
+        self.forwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Forwards.motion')
+        self.backwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Backwards.motion')
+        self.shoot = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Shoot.motion')
+        self.turnleft40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnLeft40.motion')
+        self.turnright40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnRight40.motion')
+        self.sidestepleft = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepLeft.motion')
+        self.sidestepright = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepRight.motion')
+        self.KICK = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/KICK.motion')
+        self.StandUpFromFront = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/StandUpFromFront.motion')
+        self.StandUpFromBack = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/StandUpFromBack.motion')
+        self.ReturnFromSide = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/ReturnFromSide.motion')
+        # self.Diveright = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Diveright.motion')
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -362,6 +363,7 @@ class Nao_Goalkeeper(Robot):
         self.run_stage = GOAL_KEEPER.INITIAL
         self.__standup_stage = STAND_UP.INITIAL
         self.__pre_run_stage = GOAL_KEEPER.INITIAL
+        self.__temp_time = 0
 
     def set_stage(self, stage=None):
         '''
@@ -1376,6 +1378,15 @@ class Nao_Goalkeeper(Robot):
                 and self.getMoveStage("LHipRoll") is move_status.END
                 and self.getMoveStage("RHipRoll") is move_status.END
                 ):
+                self.__temp_time = self.getTime()
+                self.hustle_status = HUSTLE.WAITING
+                return
+            else:
+                return
+        elif self.hustle_status == HUSTLE.WAITING:
+            print("Hustle waiting!")
+            time = self.getTime()
+            if time - self.__temp_time > 20:
                 self.hustle_status = HUSTLE.FINISH
                 return
             else:
