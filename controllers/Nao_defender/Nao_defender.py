@@ -1268,8 +1268,12 @@ class Nao_Defender(Robot):
     def vice_solving(self,robot_position, orientation):
         """将待命位置放在主防守者后侧方"""
         """calculate the waiting point"""
-        new_intercept_position_l = self.mate_position[0:2] + [0.7,-0.3]
-        new_intercept_position_r = self.mate_position[0:2] + [0.7,+0.3]
+        if "red" in self.myName:
+            vice_position_x = 0.7
+        else:
+            vice_position_x = -0.7
+        new_intercept_position_l = self.mate_position[0:2] + [vice_position_x,-0.3]
+        new_intercept_position_r = self.mate_position[0:2] + [vice_position_x,+0.3]
         distance2pl = np.linalg.norm(robot_position[0:2] - new_intercept_position_l)
         distance2pr = np.linalg.norm(robot_position[0:2] - new_intercept_position_r)
         if distance2pl <= distance2pr:
@@ -1369,22 +1373,19 @@ class Nao_Defender(Robot):
         limitationofdistance2 = 0.13
         alert_range_mate = 1
         bitsOfRound = 2
-        goal_red = [4.5,0]
         """get this robot position,direction, and football position"""
         """in every time step"""
         robot_position, robot_orientation, football_position = self.position_refresh()
         if robot_position is None or robot_orientation is None or football_position is None:
             print("robot_position or robot_orientation or football_position is None!")
             return
-        intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, goal_red,robot_orientation)
-        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, goal_red,self.mate_orientation)
+        intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, self.goal_position,robot_orientation)
+        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, self.goal_position,self.mate_orientation)
         angle2mate, distance2mate = self.angleCalculaor(self.mate_position, robot_position, robot_orientation)
         angle, distance2ball = self.angleCalculaor(football_position, robot_position, robot_orientation)
         angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)
         angle_oppo_striker,distance2oppo_striker = self.angleCalculaor(self.oppo_striker_position, robot_position, robot_orientation)
-        if ((football_position[0] > 0 and "Blue" in self.myName)
-                or (football_position[0] < 0 and "Red" in self.myName)):
-            return
+
         """initialize joints"""
         if self.df_stage == DEFENDER_STAGE.INITIAL:
             if self.standupIfnecessary():
@@ -1462,8 +1463,12 @@ class Nao_Defender(Robot):
 
             # logic to change to vice defender
         if distance2mate < alert_range_mate:
-            if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
-                self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+            if "Red" in self.myName:
+                if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
+                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+            elif "Blue" in self.myName:
+                if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
+                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
 
             '''turn to intercept direction'''
         if self.df_stage == DEFENDER_STAGE.ADJUSTING_ANGLE:
@@ -1709,7 +1714,7 @@ class Nao_Defender(Robot):
         elif self.df_stage == DEFENDER_STAGE.STAND_UP:
             print("Stand Up!")
             self.is_standup()
-            if self.__standup_stage == STAND_UP.END:
+            if self.__standup_stage == STAND_UP.END and self.is_balanced():
                 self.df_stage = self.previous_stage
             return
         else:
