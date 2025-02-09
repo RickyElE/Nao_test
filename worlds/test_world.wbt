@@ -26,13 +26,14 @@ DEF BlueTeam_DefenderLeft Nao {
   customColor [
     0 0 1
   ]
-  controller "<none>"
+  controller "Nao_defender"
+  channel 1
 }
 DEF RedTeam_Striker Nao {
-  translation 0.742104 -0.511326 0.332642
+  translation 0.742104 0 0.332642
   rotation -0.00012764239886906028 1.0239179507722827e-07 0.9999999918537036 3.1400000000128494
   name "RedTeam_Striker"
-  controller "<none>"
+  controller "NAO_RedTeamStriker"
   channel 1
 }
 DEF RedTeam_DefenderLeft Nao {
@@ -49,7 +50,8 @@ DEF BlueTeam_DefenderRight Nao {
   customColor [
     0 0 1
   ]
-  controller "<none>"
+  controller "Nao_defender"
+  channel 1
 }
 DEF RedTeam_DefenderRight Nao {
   translation 1.5130758809019906 1.5796300007223076 0.3326420619161236

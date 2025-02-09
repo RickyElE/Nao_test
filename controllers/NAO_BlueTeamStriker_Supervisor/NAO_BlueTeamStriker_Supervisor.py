@@ -312,6 +312,42 @@ class NAO_Supervisor_Tracking(Supervisor):
                 self.__node_position["striker_blue"] = None
                 self.__node_orientation["striker_blue"] = None
 
+            if node.getDef() == 'BlueTeam_Goalkeeper':
+                print('GOALKEEPER_BLUE has been initialized')
+                goalkeeper_blue = node
+                self.__node_sheet["goalkeeper_blue"] = goalkeeper_blue
+                self.__node_position["goalkeeper_blue"] = None
+                self.__node_orientation["goalkeeper_blue"] = None
+
+            if node.getDef() == 'RedTeam_DefenderLeft':
+                print('REDTEAM_DEFENDER_LEFT has been initialized')
+                RedTeam_DefenderLeft = node
+                self.__node_sheet["RedTeam_DefenderLeft"] = RedTeam_DefenderLeft
+                self.__node_position["RedTeam_DefenderLeft"] = None
+                self.__node_orientation["RedTeam_DefenderLeft"] = None
+
+            if node.getDef() == 'RedTeam_DefenderRight':
+                print('REDTEAM_DEFENDER_RIGHT has been initialized')
+                RedTeam_DefenderRight = node
+                self.__node_sheet["RedTeam_DefenderRight"] = RedTeam_DefenderRight
+                self.__node_position["RedTeam_DefenderRight"] = None
+                self.__node_orientation["RedTeam_DefenderRight"] = None
+
+            if node.getDef() == 'BlueTeam_DefenderLeft':
+                print('BLUETEAM_DEFENDER_LEFT has been initialized')
+                BlueTeam_DefenderLeft = node
+                self.__node_sheet["BlueTeam_DefenderLeft"] = BlueTeam_DefenderLeft
+                self.__node_position["BlueTeam_DefenderLeft"] = None
+                self.__node_orientation["BlueTeam_DefenderLeft"] = None
+
+            if node.getDef() == 'BlueTeam_DefenderRight':
+                print('BLUETEAM_DEFENDER_RIGHT has been initialized')
+                BlueTeam_DefenderRight = node
+                self.__node_sheet["BlueTeam_DefenderRight"] = BlueTeam_DefenderRight
+                self.__node_position["BlueTeam_DefenderRight"] = None
+                self.__node_orientation["BlueTeam_DefenderRight"] = None
+
+
         # print(temp_nodeSheet)
         for j in self.__node_sheet.keys():
             if self.__node_sheet[j] is None:
@@ -441,6 +477,14 @@ class NAO_Supervisor_Tracking(Supervisor):
             "football": {"position": self.__node_position["football"], "orientation": self.__node_orientation["football"]},
             "goalkeeper_red": {"position": self.__node_position["goalkeeper_red"],
                                "orientation": self.__node_orientation["goalkeeper_red"]},
+            "goalkeeper_blue": {"position": self.__node_position["goalkeeper_blue"],
+                               "orientation": self.__node_orientation["goalkeeper_blue"]},
+            "RedTeam_DefenderLeft": {"position": self.__node_position["RedTeam_DefenderLeft"],"orientation": self.__node_orientation["RedTeam_DefenderLeft"]},
+            "RedTeam_DefenderRight": {"position": self.__node_position["RedTeam_DefenderRight"],"orientation": self.__node_orientation["RedTeam_DefenderRight"]},
+            "BlueTeam_DefenderLeft": {"position": self.__node_position["BlueTeam_DefenderLeft"],
+                                     "orientation": self.__node_orientation["BlueTeam_DefenderLeft"]},
+            "BlueTeam_DefenderRight": {"position": self.__node_position["BlueTeam_DefenderRight"],
+                                      "orientation": self.__node_orientation["BlueTeam_DefenderRight"]},
             "stadiumgoal_red": {"position": self.__node_position["stadiumgoal_red"],
                                 "orientation": self.__node_orientation["stadiumgoal_red"]},
             "stadiumgoal_blue": {"position": self.__node_position["stadiumgoal_blue"],
