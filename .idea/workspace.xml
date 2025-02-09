@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2094a66-a1de-420e-b3da-53270d53cee3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Nao_test.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/NAO_Goalkeeper/NAO_Goalkeeper.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/NAO_Goalkeeper/NAO_Goalkeeper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking/NAO_Supervisor_Tracking.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking/NAO_Supervisor_Tracking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/Backwards.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/Backwards.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/Forwards.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/Forwards.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/Forwards50.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/Forwards50.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/Shoot.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/Shoot.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/SideStepLeft.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/SideStepLeft.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/SideStepRight.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/SideStepRight.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/StandUpFromBack.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/StandUpFromBack.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/StandUpFromFront.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/StandUpFromFront.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/TurnLeft180.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/TurnLeft180.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/TurnLeft40.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/TurnLeft40.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/TurnLeft60.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/TurnLeft60.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/TurnRight40.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/TurnRight40.motion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libraries/TurnRight60.motion" beforeDir="false" afterPath="$PROJECT_DIR$/libraries/TurnRight60.motion" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/Nao_defender/Nao_defender.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Nao_defender/Nao_defender.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worlds/.test_world.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/.test_world.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worlds/.test_world.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/.test_world.wbproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worlds/test_world.wbt" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/test_world.wbt" afterDir="false" />
@@ -45,23 +28,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.NAO_Supervisor_Tracking.executor": "Run",
-    "Python.Nao_defender.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Goalkeeper",
-    "last_opened_file_path": "C:/Users/10132/AppData/Local/Programs/Webots/lib/controller/python",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.NAO_Supervisor_Tracking.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Nao_defender.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Defender&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Mrobotic/TDP/Nao_test&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.Nao_defender">
     <configuration name="NAO_Supervisor_Tracking" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Nao_test_keeperAndDefender" />
@@ -135,6 +118,9 @@
       <workItem from="1738678597189" duration="826000" />
       <workItem from="1738700414012" duration="327000" />
       <workItem from="1738706881773" duration="2375000" />
+      <workItem from="1739032917355" duration="96000" />
+      <workItem from="1739119783488" duration="3119000" />
+      <workItem from="1739136281643" duration="3127000" />
     </task>
     <servers />
   </component>
@@ -143,6 +129,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Nao_test_keeperAndDefender$NAO_Supervisor_Tracking.coverage" NAME="NAO_Supervisor_Tracking Coverage Results" MODIFIED="1738707721450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking" />
-    <SUITE FILE_PATH="coverage/Nao_test_keeperAndDefender$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1738709262087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
+    <SUITE FILE_PATH="coverage/Nao_test_keeperAndDefender$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1739120667183" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
+    <SUITE FILE_PATH="coverage/Nao_defender_py$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1739141700772" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
   </component>
 </project>

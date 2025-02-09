@@ -461,8 +461,8 @@ class NAO_Supervisor_Tracking(Supervisor):
         for i in self.__node_sheet.keys():
             self.__node_position[i] = self.__node_sheet[i].getPosition()
             self.__node_orientation[i] = self.__node_sheet[i].getOrientation()
-            # nodePosition_round = [round(k, 1) for k in self.__node_position[i]] #简约到1位小数
-            # print(f"{i}: {nodePosition_round}")
+            nodePosition_round = [round(k, 1) for k in self.__node_position[i]] #简约到1位小数
+            print(f"{i}: {nodePosition_round}")
 
         self.__shared_info = {
             "striker_red": {"position": self.__node_position["striker_red"], "orientation": self.__node_orientation["striker_red"]},

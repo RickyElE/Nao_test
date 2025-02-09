@@ -1163,26 +1163,29 @@ class Nao_Defender(Robot):
 
         """计算禁区边缘和地方半场"""
         """constrain of panalty zone and oppo zone"""
-        penalty_x_max = self.goal_position[0]+1
-        penalty_x_min = self.goal_position[0]-1
-        penalty_y_max = self.goal_position[1]+0.8
-        penalty_y_min = self.goal_position[1]-0.8
+        penalty_bounds = np.array([
+            self.goal_position[0] - 1.2,  # x_min
+            self.goal_position[0] + 1.2,  # x_max
+            self.goal_position[1] - 0.8,  # y_min
+            self.goal_position[1] + 0.8  # y_max
+        ])
+        # 检查点是否在禁区内
+        if penalty_bounds[0] <= intercept_position[0] <= penalty_bounds[1] and \
+                penalty_bounds[2] <= intercept_position[1] <= penalty_bounds[3]:
 
-        """penalty zone check and correct"""
-        if penalty_x_min<=intercept_position[0]<=penalty_x_max and penalty_y_min<=intercept_position[1]<=penalty_y_max:
-            x_min = np.abs(intercept_position[0]-penalty_x_min)
-            x_max = np.abs(intercept_position[0]-penalty_x_max)
-            y_min = np.abs(intercept_position[1]-penalty_y_min)
-            y_max = np.abs(intercept_position[1]-penalty_y_max)
-            closest_edge = min(x_min, x_max, y_min, y_max)
-            if closest_edge==penalty_x_min:
-                intercept_position[0] = penalty_x_min
-            if closest_edge==penalty_x_max:
-                intercept_position[0] = penalty_x_max
-            if closest_edge==penalty_y_min:
-                intercept_position[1] = penalty_y_min
-            if closest_edge==penalty_y_max:
-                intercept_position[1] = penalty_y_max
+            distances = np.abs(np.array([
+                intercept_position[0] - penalty_bounds[0],  # 距离 x_min
+                intercept_position[0] - penalty_bounds[1],  # 距离 x_max
+                intercept_position[1] - penalty_bounds[2],  # 距离 y_min
+                intercept_position[1] - penalty_bounds[3]  # 距离 y_max
+            ]))
+            # 计算最近的边
+            closest_edge_idx = np.argmin(distances)
+            # 更新点位置
+            if closest_edge_idx < 2:
+                intercept_position[0] = penalty_bounds[closest_edge_idx]
+            else:
+                intercept_position[1] = penalty_bounds[closest_edge_idx]
         if "Red" in self.myName:
             if intercept_position[0] <1.3:
                 intercept_position[0] = 1.3
@@ -1205,20 +1208,23 @@ class Nao_Defender(Robot):
         if dot_product <=0.8:
             new_intercept_position = football_position + np.append(intercept_distance*vector_ball2goal_normalized,0)
                 #penalty zone check and correct
-            if penalty_x_min<=intercept_position[0]<=penalty_x_max and penalty_y_min<=intercept_position[1]<=penalty_y_max:
-                x_min = np.abs(intercept_position[0]-penalty_x_min)
-                x_max = np.abs(intercept_position[0]-penalty_x_max)
-                y_min = np.abs(intercept_position[1]-penalty_y_min)
-                y_max = np.abs(intercept_position[1]-penalty_y_max)
-                closest_edge = min(x_min, x_max, y_min, y_max)
-                if closest_edge==penalty_x_min:
-                    intercept_position[0] = penalty_x_min
-                if closest_edge==penalty_x_max:
-                    intercept_position[0] = penalty_x_max
-                if closest_edge==penalty_y_min:
-                    intercept_position[1] = penalty_y_min
-                if closest_edge==penalty_y_max:
-                    intercept_position[1] = penalty_y_max
+            # 检查点是否在禁区内
+            if penalty_bounds[0] <= intercept_position[0] <= penalty_bounds[1] and \
+                    penalty_bounds[2] <= intercept_position[1] <= penalty_bounds[3]:
+
+                distances = np.abs(np.array([
+                    intercept_position[0] - penalty_bounds[0],  # 距离 x_min
+                    intercept_position[0] - penalty_bounds[1],  # 距离 x_max
+                    intercept_position[1] - penalty_bounds[2],  # 距离 y_min
+                    intercept_position[1] - penalty_bounds[3]  # 距离 y_max
+                ]))
+                # 计算最近的边
+                closest_edge_idx = np.argmin(distances)
+                # 更新点位置
+                if closest_edge_idx < 2:
+                    intercept_position[0] = penalty_bounds[closest_edge_idx]
+                else:
+                    intercept_position[1] = penalty_bounds[closest_edge_idx]
             if "red" in self.myName:
                 if intercept_position[0] <0:
                     intercept_position[0] = 0
@@ -1369,15 +1375,14 @@ class Nao_Defender(Robot):
         limitationofdistance2 = 0.13
         alert_range_mate = 1
         bitsOfRound = 2
-        goal_red = [4.5,0]
         """get this robot position,direction, and football position"""
         """in every time step"""
         robot_position, robot_orientation, football_position = self.position_refresh()
         if robot_position is None or robot_orientation is None or football_position is None:
             print("robot_position or robot_orientation or football_position is None!")
             return
-        intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, goal_red,robot_orientation)
-        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, goal_red,self.mate_orientation)
+        intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, self.goal_position,robot_orientation)
+        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, self.goal_position,self.mate_orientation)
         angle2mate, distance2mate = self.angleCalculaor(self.mate_position, robot_position, robot_orientation)
         angle, distance2ball = self.angleCalculaor(football_position, robot_position, robot_orientation)
         angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)
@@ -1460,8 +1465,12 @@ class Nao_Defender(Robot):
 
             # logic to change to vice defender
         if distance2mate < alert_range_mate:
-            if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
-                self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+            if "Red" in self.myName:
+                if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
+                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+            elif "Blue" in self.myName:
+                if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
+                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
 
             '''turn to intercept direction'''
         if self.df_stage == DEFENDER_STAGE.ADJUSTING_ANGLE:
@@ -1707,7 +1716,7 @@ class Nao_Defender(Robot):
         elif self.df_stage == DEFENDER_STAGE.STAND_UP:
             print("Stand Up!")
             self.is_standup()
-            if self.__standup_stage == STAND_UP.END:
+            if self.__standup_stage == STAND_UP.END and self.is_balanced():
                 self.df_stage = self.previous_stage
             return
         else:
