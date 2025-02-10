@@ -2,6 +2,7 @@ from controller import Supervisor, Robot, Motion, motion
 import json
 from enum import Enum,auto,unique
 import numpy as np
+import os
 
 @unique
 class KICK_STAGE(Enum):
@@ -795,17 +796,21 @@ class Nao_Defender(Robot):
         '''
         This Function mainly loads the motion files from libraries
         '''
-        self.forwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Forwards.motion')
-        self.backwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Backwards.motion')
-        self.shoot = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Shoot.motion')
-        self.turnleft40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepRight.motion')
-        self.KICK = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/KICK.motion')
-        self.StandUpFromFront = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/StandUpFromFront.motion')
-        self.StandUpFromBack = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/StandUpFromBack.motion')
-        self.ReturnFromSide = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/ReturnFromSide.motion')
+        current_path = os.path.abspath(__file__)
+        current_folder_path = os.path.dirname(current_path)
+        pre_folder_path = os.path.dirname(current_folder_path)
+        pre_pre_folder_path = os.path.dirname(pre_folder_path)
+        self.forwards = Motion(os.path.join(pre_pre_folder_path, 'libraries/Forwards.motion'))
+        self.backwards = Motion(os.path.join(pre_pre_folder_path, 'libraries/Backwards.motion'))
+        self.shoot = Motion(os.path.join(pre_pre_folder_path, 'libraries/Shoot.motion'))
+        self.turnleft40 = Motion(os.path.join(pre_pre_folder_path, 'libraries/TurnLeft40.motion'))
+        self.turnright40 = Motion(os.path.join(pre_pre_folder_path, 'libraries/TurnRight40.motion'))
+        self.sidestepleft = Motion(os.path.join(pre_pre_folder_path, 'libraries/SideStepLeft.motion'))
+        self.sidestepright = Motion(os.path.join(pre_pre_folder_path, 'libraries/SideStepRight.motion'))
+        self.KICK = Motion(os.path.join(pre_pre_folder_path, 'libraries/KICK.motion'))
+        self.StandUpFromFront = Motion(os.path.join(pre_pre_folder_path, 'libraries/StandUpFromFront.motion'))
+        self.StandUpFromBack = Motion(os.path.join(pre_pre_folder_path, 'libraries/StandUpFromBack.motion'))
+        self.ReturnFromSide = Motion(os.path.join(pre_pre_folder_path, 'libraries/ReturnFromSide.motion'))
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -1059,6 +1064,7 @@ class Nao_Defender(Robot):
         self.loadMotionFiles()
         self.myName = Robot.getName(self)
         if "Red" in self.myName:
+            self.striker = "striker_red"
             self.oppo_striker = "striker_blue"
             self.oppo_defender_l = "BlueTeam_DefenderLeft"
             self.oppo_defender_r = "BlueTeam_DefenderRight"
@@ -1069,6 +1075,7 @@ class Nao_Defender(Robot):
             else:
                 self.mateName = "RedTeam_DefenderLeft"
         elif "Blue" in self.myName:
+            self.striker = "striker_blue"
             self.oppo_striker = "striker_red"
             self.oppo_defender_l = "RedTeam_DefenderLeft"
             self.oppo_defender_r = "RedTeam_DefenderRight"
@@ -1134,6 +1141,7 @@ class Nao_Defender(Robot):
             football_position = np.float64(shared_info["football"]["position"])
             self.mate_position = np.float64(shared_info[self.mateName]["position"])
             self.mate_orientation = np.float64(shared_info[self.mateName]["orientation"])
+            self.striker_position = np.float64(shared_info[self.striker]["position"])
             self.goal_position = np.float64(shared_info[self.goal]["position"])
 
             self.oppo_striker_position = np.float64(shared_info[self.oppo_striker]["position"])
@@ -1146,6 +1154,77 @@ class Nao_Defender(Robot):
             return robot_position, robot_orientation, football_position
         else:
             return None, None, None
+
+    def over_range_detect(self,position):
+        """计算禁区边缘和地方半场"""
+        """constrain of panalty zone and oppo zone"""
+        penalty_bounds = np.array([
+            self.goal_position[0] - 1.4,  # x_min
+            self.goal_position[0] + 1.4,  # x_max
+            self.goal_position[1] - 1,  # y_min
+            self.goal_position[1] + 1  # y_max
+        ])
+        # 检查点是否在禁区内
+        if penalty_bounds[0] <= position[0] <= penalty_bounds[1] and \
+                penalty_bounds[2] <= position[1] <= penalty_bounds[3]:
+
+            distances = np.abs(np.array([
+                position[0] - penalty_bounds[0],  # 距离 x_min
+                position[0] - penalty_bounds[1],  # 距离 x_max
+                position[1] - penalty_bounds[2],  # 距离 y_min
+                position[1] - penalty_bounds[3]  # 距离 y_max
+            ]))
+            # 计算最近的边
+            closest_edge_idx = np.argmin(distances)
+            # 更新点位置
+            if closest_edge_idx < 2:
+                position[0] = penalty_bounds[closest_edge_idx]
+            else:
+                position[1] = penalty_bounds[closest_edge_idx]
+        if "Red" in self.myName:
+            if position[0] < 1.3:
+                position[0] = 1.3
+        elif "Blue" in self.myName:
+            if position[0] > -1.3:
+                position[0] = -1.3
+        return position
+
+    def calculate_navigation_vector(self,defender_pos, intercept_pos, avoid_objects, avoid_radius=0.8):
+        """
+        计算带避让功能的导航向量
+
+        """
+        repulse_factor = 2
+
+        # 计算吸引力（指向拦截点）
+        vector_to_intercept = intercept_pos - defender_pos[0:2]
+        distance_to_intercept = np.linalg.norm(vector_to_intercept)
+        force_attract = vector_to_intercept / (distance_to_intercept + 1e-6)  # 避免除零
+
+        # 计算斥力（避让所有障碍物）
+        total_repulse_force = np.array([0.0, 0.0])
+
+        def compute_repulsive_force(obstacle_pos):
+            vector_to_obstacle = defender_pos[0:2] - obstacle_pos[0:2]
+            distance_to_obstacle = np.linalg.norm(vector_to_obstacle)
+
+            if distance_to_obstacle < avoid_radius:
+                # 斥力 = repulse_factor * log(1 + (R - d) / R)，避免剧烈跳变
+                repulse_strength = repulse_factor * np.log(1 + (avoid_radius - distance_to_obstacle) / avoid_radius)
+                force = repulse_strength * (vector_to_obstacle / distance_to_obstacle)
+            else:
+                force = np.array([0.0, 0.0])  # 超过避让范围不施加力
+
+            return force
+
+        for obstacle in avoid_objects:
+            total_repulse_force += compute_repulsive_force(obstacle[0:2])
+
+        # 合力 = 吸引力 + 总斥力
+        navigation_vector = force_attract + total_repulse_force
+        navigation_vector = navigation_vector / (np.linalg.norm(navigation_vector) + 1e-6)  # 归一化
+        print(f"navigation_vector:{navigation_vector}")
+        return navigation_vector
 
     def intercept_solving(self, football_position, robot_position, goal_position, orientation):
         """calculate the vector football to goal, and the distance between robot and best intercept position"""
@@ -1163,35 +1242,7 @@ class Nao_Defender(Robot):
 
         """计算禁区边缘和地方半场"""
         """constrain of panalty zone and oppo zone"""
-        penalty_bounds = np.array([
-            self.goal_position[0] - 1.2,  # x_min
-            self.goal_position[0] + 1.2,  # x_max
-            self.goal_position[1] - 0.8,  # y_min
-            self.goal_position[1] + 0.8  # y_max
-        ])
-        # 检查点是否在禁区内
-        if penalty_bounds[0] <= intercept_position[0] <= penalty_bounds[1] and \
-                penalty_bounds[2] <= intercept_position[1] <= penalty_bounds[3]:
-
-            distances = np.abs(np.array([
-                intercept_position[0] - penalty_bounds[0],  # 距离 x_min
-                intercept_position[0] - penalty_bounds[1],  # 距离 x_max
-                intercept_position[1] - penalty_bounds[2],  # 距离 y_min
-                intercept_position[1] - penalty_bounds[3]  # 距离 y_max
-            ]))
-            # 计算最近的边
-            closest_edge_idx = np.argmin(distances)
-            # 更新点位置
-            if closest_edge_idx < 2:
-                intercept_position[0] = penalty_bounds[closest_edge_idx]
-            else:
-                intercept_position[1] = penalty_bounds[closest_edge_idx]
-        if "Red" in self.myName:
-            if intercept_position[0] <1.3:
-                intercept_position[0] = 1.3
-        elif "Blue" in self.myName:
-            if intercept_position[0] >-1.3:
-                intercept_position[0] = -1.3
+        intercept_position = self.over_range_detect(intercept_position)
 
         """refresh intercept vector"""
         vector_intercept = intercept_position - robot_position[0:2]
@@ -1199,7 +1250,7 @@ class Nao_Defender(Robot):
 
         """calculate the intercept point, to see if it is too late to intercept"""
         """if impossible,choose the point at the front of the ball to intercept"""
-        intercept_distance = 0.4
+        intercept_distance = 0.6
         amplitude_vector_ball2goal = np.linalg.norm(vector_ball2goal)
         vector_ball2goal_normalized = vector_ball2goal/amplitude_vector_ball2goal
 
@@ -1209,45 +1260,31 @@ class Nao_Defender(Robot):
             new_intercept_position = football_position + np.append(intercept_distance*vector_ball2goal_normalized,0)
                 #penalty zone check and correct
             # 检查点是否在禁区内
-            if penalty_bounds[0] <= intercept_position[0] <= penalty_bounds[1] and \
-                    penalty_bounds[2] <= intercept_position[1] <= penalty_bounds[3]:
-
-                distances = np.abs(np.array([
-                    intercept_position[0] - penalty_bounds[0],  # 距离 x_min
-                    intercept_position[0] - penalty_bounds[1],  # 距离 x_max
-                    intercept_position[1] - penalty_bounds[2],  # 距离 y_min
-                    intercept_position[1] - penalty_bounds[3]  # 距离 y_max
-                ]))
-                # 计算最近的边
-                closest_edge_idx = np.argmin(distances)
-                # 更新点位置
-                if closest_edge_idx < 2:
-                    intercept_position[0] = penalty_bounds[closest_edge_idx]
-                else:
-                    intercept_position[1] = penalty_bounds[closest_edge_idx]
-            if "red" in self.myName:
-                if intercept_position[0] <0:
-                    intercept_position[0] = 0
-            if "blue" in self.myName:
-                if intercept_position[0] >0:
-                    intercept_position[0] = 0
+            new_intercept_position = self.over_range_detect(new_intercept_position)
             # print(new_intercept_position)
             # print(football_position)
             angle, distance = self.angleCalculaor(new_intercept_position, robot_position, orientation)
 
             return angle,distance
 
-        """below is calculating angle need to turn"""
-        vector_intercept_normalized = vector_intercept/distance
-        amplitude_orientation = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
-        vector_heading_normalized = [orientation[0]/amplitude_orientation, orientation[3]/amplitude_orientation]
-        dot_product = np.dot(vector_intercept_normalized, vector_heading_normalized)
-        intercept_angle = np.rad2deg(np.arccos(dot_product))
-        cross_product = vector_intercept_normalized[0] * vector_heading_normalized[1] - \
-                        vector_intercept_normalized[1] * vector_heading_normalized[0]
-        if cross_product < 0:
-            intercept_angle = -intercept_angle
-        print(f"intercept position:{intercept_position}")
+        def compute_intercept_angle(vector_intercept,orientation):
+            """below is calculating angle need to turn"""
+            vector_intercept_normalized = vector_intercept/np.linalg.norm(vector_intercept)
+            amplitude_orientation = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
+            vector_heading_normalized = [orientation[0]/amplitude_orientation, orientation[3]/amplitude_orientation]
+            dot_product = np.dot(vector_intercept_normalized, vector_heading_normalized)
+            intercept_angle = np.rad2deg(np.arccos(dot_product))
+            cross_product = vector_intercept_normalized[0] * vector_heading_normalized[1] - \
+                            vector_intercept_normalized[1] * vector_heading_normalized[0]
+            if cross_product < 0:
+                intercept_angle = -intercept_angle
+            # print(f"intercept position:{intercept_position}")
+            return intercept_angle
+
+        avoid_objects = [self.striker_position]
+        vector_intercept = self.calculate_navigation_vector(robot_position, intercept_position, avoid_objects)
+        intercept_angle = compute_intercept_angle(vector_intercept,orientation)
+
         return intercept_angle,distance
 
     def ball_clear_judge(self,football_position,intercepter_position,tolerance_angle,torlerance_distance):
@@ -1284,7 +1321,23 @@ class Nao_Defender(Robot):
             new_intercept_position = new_intercept_position_r
         # print(f"mate{self.mate_position[0:2]}")
         # print(new_intercept_position_r)
-        wait_angle, wait_distance = self.angleCalculaor(new_intercept_position, robot_position, orientation)
+        avoid_objects = [self.striker_position,self.mate_position]
+        wait_vector = self.calculate_navigation_vector(robot_position,new_intercept_position,avoid_objects)
+        def compute_wait_angle(vector_intercept,orientation):
+            """below is calculating angle need to turn"""
+            vector_intercept_normalized = vector_intercept/np.linalg.norm(vector_intercept)
+            amplitude_orientation = np.sqrt(orientation[0] ** 2 + orientation[3] ** 2)
+            vector_heading_normalized = [orientation[0]/amplitude_orientation, orientation[3]/amplitude_orientation]
+            dot_product = np.dot(vector_intercept_normalized, vector_heading_normalized)
+            intercept_angle = np.rad2deg(np.arccos(dot_product))
+            cross_product = vector_intercept_normalized[0] * vector_heading_normalized[1] - \
+                            vector_intercept_normalized[1] * vector_heading_normalized[0]
+            if cross_product < 0:
+                intercept_angle = -intercept_angle
+            # print(f"intercept position:{intercept_position}")
+            return intercept_angle
+        wait_angle = compute_wait_angle(wait_vector,orientation)
+        wait_distance = np.linalg.norm(new_intercept_position - robot_position[0:2])
         return wait_angle, wait_distance
 
     def standupIfnecessary(self):
@@ -1381,8 +1434,10 @@ class Nao_Defender(Robot):
         if robot_position is None or robot_orientation is None or football_position is None:
             print("robot_position or robot_orientation or football_position is None!")
             return
+
         intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, self.goal_position,robot_orientation)
         intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, self.goal_position,self.mate_orientation)
+
         angle2mate, distance2mate = self.angleCalculaor(self.mate_position, robot_position, robot_orientation)
         angle, distance2ball = self.angleCalculaor(football_position, robot_position, robot_orientation)
         angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)

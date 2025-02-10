@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c2094a66-a1de-420e-b3da-53270d53cee3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking/NAO_Supervisor_Tracking.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking/NAO_Supervisor_Tracking.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/Nao_defender/Nao_defender.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Nao_defender/Nao_defender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worlds/.test_world.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/.test_world.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worlds/.test_world.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/.test_world.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/worlds/test_world.wbt" beforeDir="false" afterPath="$PROJECT_DIR$/worlds/test_world.wbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/Nao_defender/改进表.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Nao_defender/改进表.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +118,8 @@
       <workItem from="1739032917355" duration="96000" />
       <workItem from="1739119783488" duration="3119000" />
       <workItem from="1739136281643" duration="3127000" />
+      <workItem from="1739217695816" duration="765000" />
+      <workItem from="1739220484665" duration="5967000" />
     </task>
     <servers />
   </component>
@@ -130,6 +129,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Nao_test_keeperAndDefender$NAO_Supervisor_Tracking.coverage" NAME="NAO_Supervisor_Tracking Coverage Results" MODIFIED="1738707721450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/NAO_Supervisor_Tracking" />
     <SUITE FILE_PATH="coverage/Nao_test_keeperAndDefender$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1739120667183" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
-    <SUITE FILE_PATH="coverage/Nao_defender_py$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1739141700772" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
+    <SUITE FILE_PATH="coverage/Nao_defender_py$Nao_defender.coverage" NAME="Nao_defender Coverage Results" MODIFIED="1739228257699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers/Nao_defender" />
   </component>
 </project>
