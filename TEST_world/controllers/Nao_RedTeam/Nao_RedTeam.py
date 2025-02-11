@@ -1,0 +1,1 @@
+"""Nao_RedTeam controller."""
