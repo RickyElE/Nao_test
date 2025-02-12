@@ -1126,7 +1126,7 @@ class Nao_Defender(Robot):
         vel = self.gyro.getValues()
         # print('angular velocity: [ x y ] = [%f %f]' % (vel[0], vel[1]))
         # print(vel[0], vel[1])
-        all_in_balance = np.round(float(vel[0]),1) == 0.0 and np.round(float(vel[1]),1) == 0.0
+        all_in_balance = np.round(float(vel[0]),2) == 0.0 and np.round(float(vel[1]),2) == 0.0
 
         print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
@@ -1223,10 +1223,10 @@ class Nao_Defender(Robot):
         # 合力 = 吸引力 + 总斥力
         navigation_vector = force_attract + total_repulse_force
         navigation_vector = navigation_vector / (np.linalg.norm(navigation_vector) + 1e-6)  # 归一化
-        print(f"navigation_vector:{navigation_vector}")
+        # print(f"navigation_vector:{navigation_vector}")
         return navigation_vector
 
-    def intercept_solving(self, football_position, robot_position, goal_position, orientation):
+    def intercept_solving(self, football_position, robot_position, goal_position, orientation,avoid_objects):
         """calculate the vector football to goal, and the distance between robot and best intercept position"""
         """用向量的方法求球到球门的连线的法线方向，然后求出机器人到这个连线的垂点的直线距离，返回这个距离和连线的指向"""
         """判断这个拦截点是否已经超过自己的防守深度了，超了那就往球指向门的向量上，球前方确定距离的点位赶路"""
@@ -1281,7 +1281,6 @@ class Nao_Defender(Robot):
             # print(f"intercept position:{intercept_position}")
             return intercept_angle
 
-        avoid_objects = [self.striker_position]
         vector_intercept = self.calculate_navigation_vector(robot_position, intercept_position, avoid_objects)
         intercept_angle = compute_intercept_angle(vector_intercept,orientation)
 
@@ -1307,7 +1306,7 @@ class Nao_Defender(Robot):
     def vice_solving(self,robot_position, orientation):
         """将待命位置放在主防守者后侧方"""
         """calculate the waiting point"""
-        if "red" in self.myName:
+        if "Red" in self.myName:
             vice_position_x = 0.7
         else:
             vice_position_x = -0.7
@@ -1320,7 +1319,7 @@ class Nao_Defender(Robot):
         else:
             new_intercept_position = new_intercept_position_r
         # print(f"mate{self.mate_position[0:2]}")
-        # print(new_intercept_position_r)
+        # print(new_intercept_position)
         avoid_objects = [self.striker_position,self.mate_position]
         wait_vector = self.calculate_navigation_vector(robot_position,new_intercept_position,avoid_objects)
         def compute_wait_angle(vector_intercept,orientation):
@@ -1435,14 +1434,20 @@ class Nao_Defender(Robot):
             print("robot_position or robot_orientation or football_position is None!")
             return
 
-        intercept_angle, intercept_distance = self.intercept_solving(football_position, robot_position, self.goal_position,robot_orientation)
-        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position, self.mate_position, self.goal_position,self.mate_orientation)
+        avoid_objects_me = [self.striker_position,self.mate_position]
+        intercept_angle, intercept_distance = self.intercept_solving(football_position,\
+                            robot_position, self.goal_position,robot_orientation,avoid_objects_me)
+        avoid_objects_mate = [self.striker_position, robot_position]
+        intercept_angle_mate, intercept_distance_mate = self.intercept_solving(football_position,\
+                           self.mate_position, self.goal_position,self.mate_orientation,avoid_objects_mate)
 
         angle2mate, distance2mate = self.angleCalculaor(self.mate_position, robot_position, robot_orientation)
         angle, distance2ball = self.angleCalculaor(football_position, robot_position, robot_orientation)
         angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)
         angle_oppo_striker,distance2oppo_striker = self.angleCalculaor(self.oppo_striker_position, robot_position, robot_orientation)
 
+        # print(f"intercept_distance: {intercept_distance}")
+        # print(f"intercept_distance_mate:{intercept_distance_mate}")
         """initialize joints"""
         if self.df_stage == DEFENDER_STAGE.INITIAL:
             if self.standupIfnecessary():
@@ -1720,9 +1725,13 @@ class Nao_Defender(Robot):
             print("VICE DEFEND")
             # print(f"intercept distance: {intercept_distance}")
             wait_circle = 0.4
-            if distance2mate > alert_range_mate+0.2 or football_position[0] > self.mate_position[0] or intercept_distance < intercept_distance_mate:
-                # print("to intercept")
-                self.df_stage = DEFENDER_STAGE.INTERCEPT
+            if distance2mate > alert_range_mate+0.2 or intercept_distance < intercept_distance_mate:
+                if "Red" in self.myName and football_position[0] > self.mate_position[0] :
+                    # print("to intercept")
+                    self.df_stage = DEFENDER_STAGE.INTERCEPT
+                elif "Blue" in self.myName and football_position[0] < self.mate_position[0] :
+                    # print("to intercept")
+                    self.df_stage = DEFENDER_STAGE.INTERCEPT
                 return
             elif distance2ball <= limitationofdistance+0.03 and self.ball_clear_judge(football_position,self.oppo_striker_position,30,1):
                 print("STRIKER HENSHIN!!!!")
@@ -1730,41 +1739,45 @@ class Nao_Defender(Robot):
 
             wait_angle, wait_distance = self.vice_solving(robot_position, robot_orientation)
             if self.heading is True:
-                if 15.0 <= wait_angle <= 180.0 and wait_distance >= limitationofdistance:
-                    print("r")
+                print("Heading True")
+                if 22.0 <= wait_angle <= 180.0 and wait_distance >= limitationofdistance:
+                    # print("r")
                     if self.is_balanced():
                         self.startMotion(self.turnright40)
                     return
-                elif -180.0 <= wait_angle <= -15.0 and wait_distance >= limitationofdistance:
-                    print("l")
+                elif -180.0 <= wait_angle <= -22.0 and wait_distance >= limitationofdistance:
+                    # print("l")
                     if self.is_balanced():
                         self.startMotion(self.turnleft40)
                     return
                 elif wait_distance >= limitationofdistance:
-                    print("go")
+                    # print("go")
                     if self.is_balanced():
                       self.startMotion(self.forwards)
                     return
                 elif limitationofdistance2 < wait_distance <= limitationofdistance:
-                    print("go close")
+                    # print("go close")
                     if self.is_balanced():
                         self.startMotion(self.forwards)
                     return
                 else:
-                    print("stay")
+                    # print("stay")
                     self.heading = False
                     return
             else:
+                print("Heading False")
                 if wait_distance >= wait_circle:
-                    print("change back")
+                    # print("go to wait point")
                     self.heading = True
                     return
                 elif 21.0 <= angle <= 180.0:
-                    print("turn right")
-                    self.startMotion(self.turnright40)
+                    # print("turn right")
+                    if self.is_balanced():
+                        self.startMotion(self.turnright40)
                 elif -180.0 <= angle <= -21.0:
-                    print("turn left")
-                    self.startMotion(self.turnleft40)
+                    # print("turn left")
+                    if self.is_balanced():
+                        self.startMotion(self.turnleft40)
                 elif self.is_balanced():
                     self.df_stage = DEFENDER_STAGE.INTERCEPT
                 return
