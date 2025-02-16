@@ -1128,7 +1128,7 @@ class Nao_Defender(Robot):
         # print(vel[0], vel[1])
         all_in_balance = np.round(float(vel[0]),2) == 0.0 and np.round(float(vel[1]),2) == 0.0
 
-        print(f"all_in_balance: {all_in_balance}")
+        # print(f"all_in_balance: {all_in_balance}")
         return all_in_balance
 
     def position_refresh(self):
@@ -1189,7 +1189,7 @@ class Nao_Defender(Robot):
                 position[0] = -1.3
         return position
 
-    def calculate_navigation_vector(self,defender_pos, intercept_pos, avoid_objects, avoid_radius=0.8):
+    def calculate_navigation_vector(self,defender_pos, intercept_pos, avoid_objects, avoid_radius=1):
         """
         计算带避让功能的导航向量
 
@@ -1197,7 +1197,7 @@ class Nao_Defender(Robot):
         repulse_factor = 2
 
         # 计算吸引力（指向拦截点）
-        vector_to_intercept = intercept_pos - defender_pos[0:2]
+        vector_to_intercept = intercept_pos[0:2] - defender_pos[0:2]
         distance_to_intercept = np.linalg.norm(vector_to_intercept)
         force_attract = vector_to_intercept / (distance_to_intercept + 1e-6)  # 避免除零
 
@@ -1205,12 +1205,12 @@ class Nao_Defender(Robot):
         total_repulse_force = np.array([0.0, 0.0])
 
         def compute_repulsive_force(obstacle_pos):
-            vector_to_obstacle = defender_pos[0:2] - obstacle_pos[0:2]
+            vector_to_obstacle = obstacle_pos[0:2] - defender_pos[0:2]
             distance_to_obstacle = np.linalg.norm(vector_to_obstacle)
 
             if distance_to_obstacle < avoid_radius:
                 # 斥力 = repulse_factor * log(1 + (R - d) / R)，避免剧烈跳变
-                repulse_strength = repulse_factor * np.log(1 + (avoid_radius - distance_to_obstacle) / avoid_radius)
+                repulse_strength = -repulse_factor * np.log(1 + (avoid_radius - distance_to_obstacle) / avoid_radius)
                 force = repulse_strength * (vector_to_obstacle / distance_to_obstacle)
             else:
                 force = np.array([0.0, 0.0])  # 超过避让范围不施加力
@@ -1219,7 +1219,6 @@ class Nao_Defender(Robot):
 
         for obstacle in avoid_objects:
             total_repulse_force += compute_repulsive_force(obstacle[0:2])
-
         # 合力 = 吸引力 + 总斥力
         navigation_vector = force_attract + total_repulse_force
         navigation_vector = navigation_vector / (np.linalg.norm(navigation_vector) + 1e-6)  # 归一化
@@ -1250,22 +1249,12 @@ class Nao_Defender(Robot):
 
         """calculate the intercept point, to see if it is too late to intercept"""
         """if impossible,choose the point at the front of the ball to intercept"""
-        intercept_distance = 0.6
+        intercept_distance = 0.7
         amplitude_vector_ball2goal = np.linalg.norm(vector_ball2goal)
         vector_ball2goal_normalized = vector_ball2goal/amplitude_vector_ball2goal
 
         vector_ball2intercept = intercept_position - football_position[0:2]
         dot_product = np.dot(vector_ball2goal_normalized, vector_ball2intercept)
-        if dot_product <=0.8:
-            new_intercept_position = football_position + np.append(intercept_distance*vector_ball2goal_normalized,0)
-                #penalty zone check and correct
-            # 检查点是否在禁区内
-            new_intercept_position = self.over_range_detect(new_intercept_position)
-            # print(new_intercept_position)
-            # print(football_position)
-            angle, distance = self.angleCalculaor(new_intercept_position, robot_position, orientation)
-
-            return angle,distance
 
         def compute_intercept_angle(vector_intercept,orientation):
             """below is calculating angle need to turn"""
@@ -1280,6 +1269,18 @@ class Nao_Defender(Robot):
                 intercept_angle = -intercept_angle
             # print(f"intercept position:{intercept_position}")
             return intercept_angle
+        if dot_product <=0.8:
+            print("be passed")
+            new_intercept_position = football_position + np.append(intercept_distance*vector_ball2goal_normalized,0)
+                #penalty zone check and correct
+            # 检查点是否在禁区内
+            new_intercept_position = self.over_range_detect(new_intercept_position)
+            distance = np.linalg.norm(new_intercept_position - robot_position)
+            # print(new_intercept_position)
+            # print(football_position)
+            vector_new = self.calculate_navigation_vector(robot_position, new_intercept_position, avoid_objects)
+            angle = compute_intercept_angle(vector_new, orientation)
+            return angle,distance
 
         vector_intercept = self.calculate_navigation_vector(robot_position, intercept_position, avoid_objects)
         intercept_angle = compute_intercept_angle(vector_intercept,orientation)
@@ -1434,7 +1435,7 @@ class Nao_Defender(Robot):
             print("robot_position or robot_orientation or football_position is None!")
             return
 
-        avoid_objects_me = [self.striker_position,self.mate_position]
+        avoid_objects_me = [self.striker_position,self.mate_position,football_position]
         intercept_angle, intercept_distance = self.intercept_solving(football_position,\
                             robot_position, self.goal_position,robot_orientation,avoid_objects_me)
         avoid_objects_mate = [self.striker_position, robot_position]
@@ -1446,7 +1447,8 @@ class Nao_Defender(Robot):
         angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)
         angle_oppo_striker,distance2oppo_striker = self.angleCalculaor(self.oppo_striker_position, robot_position, robot_orientation)
 
-        # print(f"intercept_distance: {intercept_distance}")
+        print(f"intercept_angle: {intercept_angle}")
+        print(f"intercept_distance: {intercept_distance}")
         # print(f"intercept_distance_mate:{intercept_distance_mate}")
         """initialize joints"""
         if self.df_stage == DEFENDER_STAGE.INITIAL:
@@ -1511,6 +1513,17 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.df_stage = DEFENDER_STAGE.STAND_UP
                 return
+            if distance2mate < alert_range_mate:
+                if "Red" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                        return
+                elif "Blue" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                        return
+
+                '''turn to intercept direction'''
             print("DEFENDER INTERCEPT")
             # print("intercept_angle, intercept_distance: ", intercept_angle, intercept_distance)
             if intercept_distance <= limitationofdistance:
@@ -1522,35 +1535,40 @@ class Nao_Defender(Robot):
             else:
                 self.df_stage = DEFENDER_STAGE.APPROCH
                 return
-
-            # logic to change to vice defender
-        if distance2mate < alert_range_mate:
-            if "Red" in self.myName:
-                if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
-                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
-            elif "Blue" in self.myName:
-                if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
-                    self.df_stage = DEFENDER_STAGE.VICE_DEFEND
-
-            '''turn to intercept direction'''
-        if self.df_stage == DEFENDER_STAGE.ADJUSTING_ANGLE:
+        elif self.df_stage == DEFENDER_STAGE.ADJUSTING_ANGLE:
             if self.standupIfnecessary():
                 self.previous_stage = self.df_stage
                 self.set_stage(STAND_UP.INITIAL)
                 self.df_stage = DEFENDER_STAGE.STAND_UP
                 return
+            if distance2mate < alert_range_mate:
+                if "Red" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                    return
+                elif "Blue" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                    return
+
+                '''turn to intercept direction'''
             print("DEFENDER ADJUSTING_ANGLE")
+            if intercept_distance <= limitationofdistance:
+                self.df_stage = DEFENDER_STAGE.APPROCH
+                return
             if np.round(np.abs(intercept_angle),1) >= 20.0:
                 if ((180.0 >= intercept_angle >= 20.0)
                         or (180.0 >= intercept_angle >= 20.0 and self.isTurningRight is None)
                         or self.isTurningRight):
-                    self.startMotion(self.turnright40)
-                    self.isTurningRight = True
+                    if self.is_balanced():
+                        self.startMotion(self.turnright40)
+                        self.isTurningRight = True
                 if ((-180.0 <= intercept_angle <= -20.0)
                         or (-180.0 <= intercept_angle <= -20.0 and self.isTurningRight is None)
                         or not self.isTurningRight):
-                    self.startMotion(self.turnleft40)
-                    self.isTurningRight = False
+                    if self.is_balanced():
+                        self.startMotion(self.turnleft40)
+                        self.isTurningRight = False
                 # print(f"{self.isTurningRight}")
                 # print(f"intercept_angle: {intercept_angle}")
             if np.abs(intercept_angle) <= 21.0:
@@ -1568,30 +1586,43 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.df_stage = DEFENDER_STAGE.STAND_UP
                 return
+            if distance2mate < alert_range_mate:
+                if "Red" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] < self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                    return
+                elif "Blue" in self.myName:
+                    if intercept_distance > intercept_distance_mate and football_position[0] > self.mate_position[0]:
+                        self.df_stage = DEFENDER_STAGE.VICE_DEFEND
+                    return
+
+                '''turn to intercept direction'''
             print("DEFENDER APPROCH")
             # print(f"intercept_distance is {intercept_distance}")
             # print(f"intercept angle is {intercept_angle}")
             if intercept_distance >= limitationofdistance:
-                if ((90.0 >= intercept_angle >= 15.0)
-                        or (90.0 >= intercept_angle >= 15.0 and self.isTurningRight is None)
+                if ((90.0 >= intercept_angle >= 25.0)
+                        or (90.0 >= intercept_angle >= 25.0 and self.isTurningRight is None)
                         or self.isTurningRight):
-                    self.startMotion(self.turnright40)
-                    self.isTurningRight = True
-                if ((-90.0 <= intercept_angle <= -15.0)
-                        or (-90.0 <= intercept_angle <= -15.0 and self.isTurningRight is None)
+                    if self.is_balanced():
+                        self.startMotion(self.turnright40)
+                        self.isTurningRight = True
+                if ((-90.0 <= intercept_angle <= -25.0)
+                        or (-90.0 <= intercept_angle <= -25.0 and self.isTurningRight is None)
                         or not self.isTurningRight):
-                    self.startMotion(self.turnleft40)
-                    self.isTurningRight = False
-                if 180.0 >= intercept_angle >= 21.0 or -21.0 >= intercept_angle >= -180.0:
+                    if self.is_balanced():
+                        self.startMotion(self.turnleft40)
+                        self.isTurningRight = False
+                if 180.0 >= intercept_angle >= 25.0 or -25.0 >= intercept_angle >= -180.0:
                     if self.is_balanced():
                         self.df_stage = DEFENDER_STAGE.ADJUSTING_ANGLE
                     return
                 else:
                     self.startMotion(self.forwards)
                     return
-            elif limitationofdistance2 < intercept_distance <= limitationofdistance :
-                self.startMotion(self.forwards)
-                return
+            # elif limitationofdistance2 < intercept_distance <= limitationofdistance :
+            #     self.startMotion(self.forwards)
+            #     return
             else:
                 # self.stopMotion()
                 if self.is_balanced():
@@ -1766,18 +1797,21 @@ class Nao_Defender(Robot):
                     return
             else:
                 print("Heading False")
+                print(f"angle:{angle}")
                 if wait_distance >= wait_circle:
                     # print("go to wait point")
                     self.heading = True
                     return
-                elif 21.0 <= angle <= 180.0:
+                elif 22.0 <= angle <= 180.0:
                     # print("turn right")
                     if self.is_balanced():
                         self.startMotion(self.turnright40)
-                elif -180.0 <= angle <= -21.0:
+                        return
+                elif -180.0 <= angle <= -22.0:
                     # print("turn left")
                     if self.is_balanced():
                         self.startMotion(self.turnleft40)
+                        return
                 elif self.is_balanced():
                     self.df_stage = DEFENDER_STAGE.INTERCEPT
                 return
