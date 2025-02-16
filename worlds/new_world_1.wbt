@@ -1,0 +1,99 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/robotstadium/protos/RobotstadiumSoccerField.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/robotstadium/protos/RobotstadiumGoal.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/softbank/nao/protos/Nao.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/balls/protos/RobocupSoccerBall.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.23121356652235414 0.23863400363035916 -0.9431829615548399 1.5976866470827058
+  position -1.0331602377255098 6.859854442612578 3.3231966110883238
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RobotstadiumSoccerField {
+}
+DEF Soccerball RobocupSoccerBall {
+}
+DEF RedTeam_DefenderRight Nao {
+  translation 2.25 1.5 0.334
+  rotation 0 0 1 3.141592653589793
+  name "RedTeam_DefenderRight"
+  controller "NAO_RedTeamDefenderRight"
+  channel 1
+}
+DEF RedTeam_DefenderLeft Nao {
+  translation 2.25 -1.5 0.334
+  rotation 0 0 1 3.141592653589793
+  name "RedTeam_DefenderLeft"
+  customColor [
+    1 0 0
+  ]
+  controller "NAO_RedTeamDefenderLeft"
+  channel 1
+}
+DEF RedTeam_Goalkeeper Nao {
+  translation 4.25 0 0.334
+  rotation 0 0 1 3.141592653589793
+  name "RedTeam_Goalkeeper"
+  controller "NAO_Goalkeeper"
+  channel 1
+}
+DEF RedTeam_Striker Nao {
+  translation 0.8 0 0.334
+  rotation 0 0 1 3.141592653589793
+  name "RedTeam_Striker"
+  controller "NAO_RedTeamStriker"
+  channel 1
+}
+DEF BlueTeam_DefenderLeft Nao {
+  translation -2.25 1.5 0.334
+  name "BlueTeam_DefenderLeft"
+  customColor [
+    0 0 1
+  ]
+  controller "Nao_defender"
+  channel 1
+}
+DEF BlueTeam_DefenderRight Nao {
+  translation -2.25 -1.5 0.334
+  name "BlueTeam_DefenderRight"
+  customColor [
+    0 0 1
+  ]
+  controller "Nao_defender"
+  channel 1
+}
+DEF STADIUMGOAL_BLUE RobotstadiumGoal {
+  translation -4.5 0 0
+  rotation 0 0 1 3.141592653589793
+  name "robotstadium goal(1)"
+}
+DEF STADIUMGOAL_RED RobotstadiumGoal {
+  translation 4.5 0 0
+}
+DEF BlueTeam_Goalkeeper Nao {
+  translation -4.25 0 0.334
+  name "BlueTeam_Goalkeeper"
+  customColor [
+    0 0 1
+  ]
+  controller "NAO_Goalkeeper"
+  channel 1
+}
+DEF BlueTeam_Striker Nao {
+  translation -0.8 0 0.334
+  name "BlueTeam_Striker"
+  customColor [
+    0 0 1
+  ]
+  controller "NAO_BlueTeamStriker_Supervisor"
+  supervisor TRUE
+  channel 1
+}
