@@ -1,7 +1,7 @@
 import math
 import typing
 
-from controller import Supervisor, Motion, motion
+from controller import Supervisor, Motion
 import numpy as np
 from enum import Enum,auto,unique
 import json
@@ -9,19 +9,7 @@ import os
 import logging.config
 from pathlib import Path
 
-# cur_dir = Path(__file__).resolve().parents[2]
-#
-# #initial logging
-# config_path = cur_dir / 'libraries' /'logging.conf'
-#
-# log_path = cur_dir / "log"
-# log_path.mkdir(parents=True, exist_ok=True)
-# # logger.info(log_path)
-#
-# # #set two handlers
-# log_file_name= log_path / "{}.log".format(Path(__file__).stem)
-# logging.config.fileConfig(config_path, defaults={'logfilename': str(log_file_name)})
-# logger = logging.getLogger()
+
 
 @unique
 class KICK_STAGE(Enum):
