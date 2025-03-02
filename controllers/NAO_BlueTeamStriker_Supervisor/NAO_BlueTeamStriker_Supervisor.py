@@ -89,6 +89,31 @@ class BACK_MIDDLE(Enum):
     FINISH = auto()
     END = auto()
 
+class KalmanFilter:
+    def __init__(self, dt, u_noise, z_noise):
+        self.dt = dt
+        self.A = np.array([[1, dt], [0, 1]])
+        self.B = np.array([[0.5 * dt**2],[dt]])
+        self.H = np.array([[1, 0]])
+        self.Q = np.array([[u_noise, 0], [0, u_noise]])
+        self.R = np.array([[z_noise]])
+        self.P = np.eye(2) * 1
+        self.x = np.zeros((2, 1))
+
+    def predict(self, u=0):
+        self.x = np.dot(self.A, self.x) + np.dot(self.B, u)
+        self.P = np.dot(self.A, np.dot(self.P, self.A.T)) + self.Q
+        return self.x
+
+    def update(self, z):
+        y = z - np.dot(self.H, self.x)
+        S = np.dot(self.H, np.dot(self.P, self.H.T)) + self.R
+        K = np.dot(self.P, np.dot(self.H.T, np.linalg.inv(S)))
+
+        self.x += np.dot(K, y)
+        self.P = np.dot(np.eye(2) - np.dot(K, self.H), self.P)
+        return self.x
+
 class NAO_Supervisor_Tracking(Supervisor):
     PHALANX_MAX = 8
     kick_stage = KICK_STAGE.INITIAL
@@ -109,6 +134,7 @@ class NAO_Supervisor_Tracking(Supervisor):
         self.StandUpFromFront = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromFront.motion'))
         self.StandUpFromBack = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromBack.motion'))
         self.ReturnFromSide = Motion(os.path.join(pre_pre_folder_path,'libraries/ReturnFromSide.motion'))
+        self.forwards50 = Motion(os.path.join(pre_pre_folder_path, 'libraries/Forwards50.motion'))
 
     def startMotion(self, motion):
         # interrupt current motion
@@ -464,6 +490,14 @@ class NAO_Supervisor_Tracking(Supervisor):
         self.__pre_dribble_stage = DRIBBLE.INITIAL
         self.__side_count = 0
         self.__temp_angle = 0
+
+        self.__obstacle_avoid_times = 0
+
+        self.__dt = self.timeStep / 1000.0
+        self.__kf_x = [KalmanFilter(self.__dt, u_noise=0.1, z_noise=0.1) for _ in range(3)]
+        self.__kf_y = [KalmanFilter(self.__dt, u_noise=0.1, z_noise=0.1) for _ in range(3)]
+        self.__predicted_position = []
+
 
     def refresh_position(self):
         for i in self.__node_sheet.keys():
@@ -991,16 +1025,80 @@ class NAO_Supervisor_Tracking(Supervisor):
         else:
             return False
 
+    def calculate_navigation_vector(self, striker_pos, object_pos, avoid_objects, avoid_radius=0.8):
+        """
+        计算带避让功能的导航向量
+
+        Copy from the Defender of Zhijian Huang
+        Update by Zhihong Xu
+        """
+        repulse_factor = 15
+        K_att = 1
+        # 计算吸引力（指向拦截点）
+        vector_to_intercept = object_pos[0:2] - striker_pos[0:2]
+        distance_to_intercept = np.linalg.norm(vector_to_intercept)
+        # force_attract = K_att * vector_to_intercept / (distance_to_intercept + 1e-6)  # 避免除零
+        force_attract = K_att * vector_to_intercept
+
+        # 计算斥力（避让所有障碍物）
+        total_repulse_force = np.array([0.0, 0.0])
+
+        def compute_repulsive_force(obstacle_pos):
+            vector_to_obstacle = striker_pos[0:2] - obstacle_pos[0:2]
+            distance_to_obstacle = np.linalg.norm(vector_to_obstacle)
+
+            if distance_to_obstacle < avoid_radius:
+                # 斥力 = repulse_factor * log(1 + (R - d) / R)，避免剧烈跳变
+                repulse_strength = repulse_factor * (avoid_radius - distance_to_obstacle) * vector_to_obstacle/(distance_to_obstacle)
+                # repulse_strength = repulse_factor * np.log(1 + (avoid_radius - distance_to_obstacle) / avoid_radius)
+                # force = repulse_strength * (vector_to_obstacle / distance_to_obstacle)
+                force = repulse_strength
+            else:
+                force = np.array([0.0, 0.0])  # 超过避让范围不施加力
+
+            return force
+
+        for obstacle in avoid_objects:
+            total_repulse_force += compute_repulsive_force(obstacle[0:2])
+
+        # 合力 = 吸引力 + 总斥力
+        navigation_vector = force_attract + total_repulse_force
+        navigation_vector = navigation_vector / (np.linalg.norm(navigation_vector) + 1e-6)  # 归一化
+        # print(f"navigation_vector:{navigation_vector}")
+        return navigation_vector
+
+    def obstacle_avoidance_angleCalculator(self, object_vector, subject_orientation):
+        vector_normalized = object_vector / np.linalg.norm(object_vector)
+        amplitude_orientation = np.sqrt(subject_orientation[0] ** 2 + subject_orientation[3] ** 2)
+        vector_heading_normalized = [subject_orientation[0] / amplitude_orientation, subject_orientation[3] / amplitude_orientation]
+        dot_product = np.dot(vector_normalized, vector_heading_normalized)
+        dot_product = np.clip(dot_product, -1.0, 1.0)
+        target_angle = np.rad2deg(np.arccos(dot_product))
+        cross_product = vector_normalized[0] * vector_heading_normalized[0] - \
+                        vector_normalized[1] * vector_heading_normalized[1]
+        if cross_product < 0:
+            target_angle = -target_angle
+
+        return target_angle
+
     def dribble2stadium(self):
         pass
         robot_position = self.__shared_info['striker_blue']['position']
         robot_orientation = self.__shared_info['striker_blue']['orientation']
         football_position = self.__shared_info['football']['position']
         stadium_position = self.__shared_info['stadiumgoal_red']['position']
+        obstacle_position = [self.__shared_info['striker_red']['position'],
+                             self.__shared_info['RedTeam_DefenderLeft']['position'],
+                             self.__shared_info['RedTeam_DefenderRight']['position']]
         angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
         angbetball, disbetball= self.angleCalculaor(football_position, robot_position, robot_orientation)
+        # angBetOpStr, distBetOpStr = self.angleCalculaor(opstr_position, robot_position, robot_orientation)
+        # angBetOpDefLeft, distBetOpDefLeft = self.angleCalculaor(opdeleft_position, robot_position, robot_orientation)
+        # angBetOpDefRight, distBetOpDefRight = self.angleCalculaor(opderight_position, robot_position, robot_orientation)
+
         print(f"angbetsta is {angbetsta}, distbetsta is {distbetsta}")
         print(f"angbetball is {angbetball}, disbetball is {disbetball}")
+
 
 
         if self.dribbling_status == DRIBBLE.INITIAL:
@@ -1122,23 +1220,52 @@ class NAO_Supervisor_Tracking(Supervisor):
                     self.dribbling_status = DRIBBLE.BALLFINDING
                     return
                 else:
-                    if np.abs(angbetball) > 15:
+                    if np.abs(angbetball) <= 15:
+                        object_vector = self.calculate_navigation_vector(np.array(robot_position),
+                                                                         np.array(stadium_position),
+                                                                         np.array(obstacle_position), 1)
+                        target_angle = self.obstacle_avoidance_angleCalculator(object_vector, robot_orientation)
+                        oppo_angle = oppo_dist = []
+                        for i in obstacle_position:
+                            angle, dist = self.angleCalculaor(i, robot_position, robot_orientation)
+                            oppo_angle.append(angle)
+                            oppo_dist.append(dist)
+
+                        min_oppo_dist = np.min(oppo_dist)
+                        min_oppo_angle = oppo_angle[oppo_dist.index(min_oppo_dist)]
+                        if target_angle > 90:
+                            target_angle = 90
+                        if target_angle < -90:
+                            target_angle = -90
+                        print(f"object_vector: {object_vector}")
+                        print(f"target_angle: {target_angle}")
+                        print(f"min_oppo_angle: {min_oppo_angle}, min_oppo_dist: {min_oppo_dist}")
+                        if (np.abs(target_angle) <= 45 or (min_oppo_angle > 5 and min_oppo_dist > 2)) and self.is_balanced():
+                            self.startMotion(self.forwards)
+                            return
+                        else:
+                            if -90 <= target_angle < -45 and self.currentlyPlaying.isOver() and self.is_balanced():
+                                self.startMotion(self.turnright40)
+                                return
+                            elif 90 >= target_angle > 45 and self.currentlyPlaying.isOver() and self.is_balanced():
+                                self.startMotion(self.turnleft40)
+                                return
+                    else:
                         if 180.0 >= angbetball > 15.0 and self.currentlyPlaying.isOver() and self.is_balanced():
                             self.startMotion(self.sidestepleft)
                         elif -180 <= angbetball < -15.0 and self.currentlyPlaying.isOver() and self.is_balanced():
                             self.startMotion(self.sidestepright)
                         # self.dribbling_status = DRIBBLE.BALLFINDING
                         return
-                    else:
-                        if np.abs(angbetsta) > 5:
-                            pass
-                            if angbetsta < -5 and self.currentlyPlaying.isOver() and self.is_balanced():
-                                self.startMotion(self.turnright40)
-                            elif angbetsta > 5 and self.currentlyPlaying.isOver() and self.is_balanced():
-                                self.startMotion(self.turnleft40)
-                        else:
-                            self.startMotion(self.forwards)
-                        return
+                        # if np.abs(angbetsta) > 5:
+                        #     pass
+                        #     if angbetsta < -5 and self.currentlyPlaying.isOver() and self.is_balanced():
+                        #         self.startMotion(self.turnright40)
+                        #     elif angbetsta > 5 and self.currentlyPlaying.isOver() and self.is_balanced():
+                        #         self.startMotion(self.turnleft40)
+                        # else:
+                        #     self.startMotion(self.forwards)
+                        # return
         elif self.dribbling_status == DRIBBLE.CHECK_SHOOT:
             print("DRIBBLING CHECK_SHOOT")
             if 15 <= angbetball <= 20:
@@ -1221,12 +1348,12 @@ class NAO_Supervisor_Tracking(Supervisor):
                 return
         elif self.b2mp_stage == BACK_MIDDLE.ANGLE_ADJUSTING:
             print("Back to middlepoint ANGLE_ADJUSTING!")
-            if 180.0 >= self.__temp_angle > 15.0:
+            if 180.0 >= self.__temp_angle > 30.0:
                 self.startMotion(self.turnright40)
-            elif -15.0 >= self.__temp_angle > -180.0:
+            elif -30.0 >= self.__temp_angle > -180.0:
                 self.startMotion(self.turnleft40)
 
-            if np.abs(angle) <= 15.0:
+            if np.abs(angle) <= 30.0:
                 self.stopMotion()
                 self.b2mp_stage = BACK_MIDDLE.MOVING
                 return
@@ -1239,7 +1366,7 @@ class NAO_Supervisor_Tracking(Supervisor):
             # print(self.b2mp_stage)
             if np.round(distance, bitsOfRound) >= 0.2:
                 # print("Distance is over 0.2!")
-                if 180.0 >= angle > 15.0 or -15.0 > angle >= -180.0:
+                if 180.0 >= angle > 30.0 or -30.0 > angle >= -180.0:
                     self.__temp_angle = angle
                     self.b2mp_stage = BACK_MIDDLE.ANGLE_ADJUSTING
                     return
@@ -1389,10 +1516,35 @@ class NAO_Supervisor_Tracking(Supervisor):
         robot_orientation = self.__shared_info['striker_blue']['orientation']
         football_position = self.__shared_info['football']['position']
         stadium_position = self.__shared_info['stadiumgoal_red']['position']
+        obstacle_position = [self.__shared_info['striker_red']['position'],
+                             self.__shared_info['RedTeam_DefenderLeft']['position'],
+                             self.__shared_info['RedTeam_DefenderRight']['position']]
         angbetsta, distbetsta = self.angleCalculaor(stadium_position, robot_position, robot_orientation)
         angbetball, disbetball = self.angleCalculaor(football_position, robot_position, robot_orientation)
+        # vector = np.array(robot_position[0:2]) - np.array(football_position[0:2])
         print(f"angbetsta is {angbetsta}, distbetsta is {distbetsta}")
         print(f"angbetball is {angbetball}, disbetball is {disbetball}")
+        print(f"obstacle is {obstacle_position}")
+
+
+        for i, opponent in enumerate(obstacle_position):
+            z_x, z_y = opponent[0], opponent[1]
+            predicted_x = self.__kf_x[i].predict()[0, 0]
+            predicted_y = self.__kf_y[i].predict()[0, 0]
+
+            self.__kf_x[i].update(np.array([z_x]))
+            self.__kf_y[i].update(np.array([z_y]))
+
+            self.__predicted_position.append(np.array([predicted_x, predicted_y]))
+
+        object_vector = self.calculate_navigation_vector(np.array(robot_position), np.array(stadium_position),
+                                                         np.array(obstacle_position), 1.6)
+        target_angle = self.obstacle_avoidance_angleCalculator(object_vector, robot_orientation)
+        print(f"object_vector is {object_vector}")
+        print(f"target_angle is {target_angle}")
+        leftus = self.us[0].getValue()
+        rightus = self.us[1].getValue()
+        print(f"leftus is {leftus}, rightus is {rightus}")
 
 has_turned = False
 NaoSupervisor = NAO_Supervisor_Tracking()
@@ -1421,8 +1573,8 @@ while NaoSupervisor.step(NaoSupervisor.timeStep) != -1:
 
         NaoSupervisor.refresh_position()
         # # print(NaoSupervisor.getTime())
-        # # NaoSupervisor.test_module()
-        NaoSupervisor.run()
+        # NaoSupervisor.test_module()
+        # NaoSupervisor.run()
         # if not NaoSupervisor.standupIfnecessary():
         #     if NaoSupervisor.dribble2stadium():
         #         if NaoSupervisor.kick_ball():

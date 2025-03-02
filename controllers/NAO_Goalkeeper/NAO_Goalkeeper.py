@@ -361,8 +361,14 @@ class Nao_Goalkeeper(Robot):
         self.__robot_position = None
         self.__football_position = None
         self.__robot_orientation = None
-        self.__stadiumgoal_red_position = None
-        self.__stadiumgoal_red_orientation = None
+        self.__mate_stadium_position = None
+        self.__mate_stadium_orientation = None
+        self.__mate_defender_left_position = None
+        self.__mate_defender_right_position = None
+        self.__mate_striker_position = None
+        self.__mate_defender_left_orientation = None
+        self.__mate_defender_right_orientation = None
+        self.__mate_striker_orientation = None
 
         self.__has_turn2correct_direction = False
         self.hustle_status = HUSTLE.INITIAL
@@ -376,6 +382,16 @@ class Nao_Goalkeeper(Robot):
         self.__goalkeeper_name = self.getName()
         self.__goalkeeper_list = ["RedTeam_GoalKeeper", "BlueTeam_GoalKeeper"]
         self.__count_time = 0
+
+        self.__redteam_goal_area = [[3.9, 4.5],
+                                    [-1.05, 1.05]]
+
+        self.__blueteam_goal_area = [[-3.9, -4.5],
+                                     [-1.05, 1.05]]
+
+        self.__ball_position_history = []
+        self.__max_position_history  = 5
+
 
         """Previous Stage"""
         self.__pre_kick_stage = KICK_STAGE.INITIAL
@@ -699,27 +715,55 @@ class Nao_Goalkeeper(Robot):
         if self.receiver.getQueueLength() > 0:
             data = self.receiver.getString()
             shared_info = json.loads(data)
-            robot_position = robot_orientation = None
+            robot_position = robot_orientation = mate_defender_left_position = mate_defender_right_position\
+            = mate_striker_position\
+            = mate_defender_left_orientation\
+            = mate_defender_right_orientation\
+            = mate_striker_orientation       \
+            = mate_stadium_position          \
+            = mate_stadium_orientation = None
             if self.__goalkeeper_name == GOAL_KEEPER_ROLE.REDTEAM_GOALKEEPER.value:
                 robot_position = np.float64(shared_info["goalkeeper_red"]["position"])
                 robot_orientation = np.float64(shared_info["goalkeeper_red"]["orientation"])
+                mate_defender_left_position      = np.float64(shared_info["RedTeam_DefenderLeft"]["position"])
+                mate_defender_right_position     = np.float64(shared_info["RedTeam_DefenderRight"]["position"])
+                mate_striker_position            = np.float64(shared_info["striker_red"]["position"])
+                mate_defender_left_orientation   = np.float64(shared_info["RedTeam_DefenderLeft"]["orientation"])
+                mate_defender_right_orientation  = np.float64(shared_info["RedTeam_DefenderRight"]["orientation"])
+                mate_striker_orientation         = np.float64(shared_info["striker_red"]["orientation"])
+                mate_stadium_position            = np.float64(shared_info["stadiumgoal_red"]["position"])
+                mate_stadium_orientation         = np.float64(shared_info["stadiumgoal_red"]["orientation"])
             elif self.__goalkeeper_name == GOAL_KEEPER_ROLE.BLUETEAM_GOALKEEPER.value:
                 robot_position = np.float64(shared_info["goalkeeper_blue"]["position"])
                 robot_orientation = np.float64(shared_info["goalkeeper_blue"]["orientation"])
+                mate_defender_left_position      = np.float64(shared_info["BlueTeam_DefenderLeft"]["position"])
+                mate_defender_right_position     = np.float64(shared_info["BlueTeam_DefenderRight"]["position"])
+                mate_striker_position            = np.float64(shared_info["striker_blue"]["position"])
+                mate_defender_left_orientation   = np.float64(shared_info["BlueTeam_DefenderLeft"]["orientation"])
+                mate_defender_right_orientation  = np.float64(shared_info["BlueTeam_DefenderRight"]["orientation"])
+                mate_striker_orientation         = np.float64(shared_info["striker_blue"]["orientation"])
+                mate_stadium_position            = np.float64(shared_info["stadiumgoal_blue"]["position"])
+                mate_stadium_orientation         = np.float64(shared_info["stadiumgoal_blue"]["orientation"])
             else:
                 print("Unknown goalkeeper")
 
             football_position = np.float64(shared_info["football"]["position"])
 
-            stadiumgoal_red_position = np.float64(shared_info["stadiumgoal_red"]["position"])
-            stadiumgoal_red_orientation = np.float64(shared_info["stadiumgoal_red"]["orientation"])
-
             self.receiver.nextPacket()
             self.__robot_position = robot_position
             self.__robot_orientation = robot_orientation
             self.__football_position = football_position
-            self.__stadiumgoal_red_position = stadiumgoal_red_position
-            self.__stadiumgoal_red_orientation = stadiumgoal_red_orientation
+            self.__mate_defender_left_position      = mate_defender_left_position
+            self.__mate_defender_right_position     = mate_defender_right_position
+            self.__mate_striker_position            = mate_striker_position
+            self.__mate_defender_left_orientation   = mate_defender_left_orientation
+            self.__mate_defender_right_orientation  = mate_defender_right_orientation
+            self.__mate_striker_orientation         = mate_striker_orientation
+            self.__mate_stadium_position            = mate_stadium_position
+            self.__mate_stadium_orientation         = mate_stadium_orientation
+            self.__ball_position_history.append(self.__football_position)
+            if len(self.__ball_position_history) > self.__max_position_history:
+                self.__ball_position_history.pop(0)
             return True
             # return robot_position, robot_orientation, football_position
         else:
@@ -727,7 +771,60 @@ class Nao_Goalkeeper(Robot):
             self.__robot_position = None
             self.__robot_orientation = None
             self.__football_position = None
+            self.__mate_defender_left_position  = None
+            self.__mate_defender_right_position = None
+            self.__mate_striker_position        = None
+            self.__mate_defender_left_orientation = None
+            self.__mate_defender_right_orientation = None
+            self.__mate_striker_orientation = None
             return False
+
+    def __check_teammate_near_goal_area(self):
+        '''
+            This function will check the positions of each teammate.
+            If they are in the goal area,
+            the function will calculate the minimization of distance between goalkeeper and other teammates.
+            Then return the nearest teammate position.
+            Else, return None.
+        '''
+        position = {"mate_left_defender"    :  self.__mate_defender_left_position,
+                    "mate_right_defender"   :  self.__mate_defender_right_position,
+                    "mate_striker"          :  self.__mate_striker_position}
+        def check_min_dist(position):
+            dist = []
+            for key,value in position.items():
+                _, distance = self.angleCalculaor(value, self.__robot_position, self.__robot_orientation)
+                dist.append(distance)
+            if len(dist) == 0:
+                return None
+            min_dist = min(dist)
+            pointer = dist.index(min_dist)
+            key = list(position.keys())[pointer]
+            value = position[key]
+            return value
+        def is_in_goal_area(position, goal_area):
+            x, y = position
+            x_min, x_max = goal_area[0]
+            y_min, y_max = goal_area[1]
+            return x_min <= x <= x_max and y_min <= y <= y_max
+        need2consider = {}
+        for key, value in position.items():
+            print(f"value: {value[0:2]}")
+            if self.__goalkeeper_name == self.__goalkeeper_list[1]:
+                if is_in_goal_area(value[0:2], self.__blueteam_goal_area):
+                    need2consider[key] = value
+                else:
+                    continue
+            else:
+                if is_in_goal_area(value[0:2], self.__redteam_goal_area):
+                    need2consider[key] = value
+                else:
+                    continue
+        if need2consider:
+            return check_min_dist(need2consider)
+        else:
+            return None
+
 
     # Calculate the angle
     def angleCalculaor(self, football_position, robot_position, orientation = None):
@@ -757,6 +854,19 @@ class Nao_Goalkeeper(Robot):
                 and np.round(self.__robot_position[1],2) >= - (1.05 + 0.25)
                 and np.round(self.__robot_position[0],2) <= 3.90 + limitationofdistance
                 and np.round(self.__robot_position[0],2) >= 3.90 - limitationofdistance):
+            return True
+        else:
+            return False
+
+    def __ball_has_moved(self):
+        if len(self.__ball_position_history) < 2:
+            return False
+        position_changes = [
+            np.linalg.norm(np.array(self.__ball_position_history[i]) - np.array(self.__ball_position_history[i - 1]))
+            for i in range(1, len(self.__ball_position_history))
+        ]
+        max_change = max(position_changes)
+        if max_change > 0.05:
             return True
         else:
             return False
@@ -903,6 +1013,7 @@ class Nao_Goalkeeper(Robot):
             front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,self.__robot_orientation)
             print("front_angle:", front_angle)
             print("front_distance:", front_distance)
+            lim_pos = self.__check_teammate_near_goal_area()
             if (np.round(np.abs(front_angle),1) >= 15.0
                     # and self.previous_stage != DEFEND_STAGE.BOUNDARY_ADJUST
             ):
@@ -927,93 +1038,45 @@ class Nao_Goalkeeper(Robot):
                 self.gk_stage = DEFEND_STAGE.X_AXIS_ADJUST
                 return
 
-            if (not (self.__temp_angle >= 15.0 and self.__robot_position[1] >= -1.05)
-                    and not (self.__temp_angle <= -15.0 and self.__robot_position[1] <= 1.05)):
-                # self.stopMotion()
-                # if (np.abs(self.__temp_angle) >= 15.0
-                #         and (robot_position[1] <= -1.05 or robot_position[1] >= 1.05)):
-                #     self.previous_stage = self.gk_stage
-                #     self.gk_stage = DEFEND_STAGE.BOUNDARY_ADJUST
-                #     return
-                # else:
+            if lim_pos is None:
+                if (not (self.__temp_angle >= 15.0 and self.__robot_position[1] >= -1.05)
+                        and not (self.__temp_angle <= -15.0 and self.__robot_position[1] <= 1.05)
+                ):
                     self.previous_stage = self.gk_stage
                     self.gk_stage = DEFEND_STAGE.FINISH
                     return
-            # elif (self.previous_stage == DEFEND_STAGE.BOUNDARY_ADJUST and
-            #              (robot_position[1] <= -1.05 or robot_position[1] >= 1.05 or np.abs(self.__temp_angle) <= 15.0)):
-            #     self.previous_stage = self.gk_stage
-            #     self.gk_stage = DEFEND_STAGE.FINISH
-            #     return
+                else:
+                    return
             else:
-                return
-        # elif self.gk_stage == DEFEND_STAGE.BACK_TO_REGISTERED:
-        #     print("DEFEND_STAGE BACK_TO_REGISTERED")
-        #     regis_angle, regis_distance = self.angleCalculaor([3.9, 0.0, 0.0], self.__robot_position,self.__robot_orientation)
-        #     print("regis_angle:", regis_angle)
-        #     print("regis_distance:", regis_distance)
-        #     if np.abs(regis_angle) <= 15.0:
-        #         self.startMotion(self.forwards)
-        #         if (1.05 >= self.__robot_position[0] >= -1.05 and 3.90 + 0.5 >=
-        #                 self.__robot_position[1] >= 3.90 - 0.5) or np.abs(regis_distance) <= 0.2:
-        #             self.previous_stage = self.gk_stage
-        #             self.gk_stage = DEFEND_STAGE.INITIAL
-        #             # self.__has_turn2correct_direction = True
-        #             return
-        #         else:
-        #             return
-        #     else:
-        #     # if not (np.abs(regis_angle) <= 15.0 or np.isclose(np.abs(regis_distance),0.2,1e-1)):
-        #         if 180.0 >= regis_angle > 15.0:
-        #             self.startMotion(self.turnleft40)
-        #         elif -15.0 > regis_angle >= -180.0:
-        #             self.startMotion(self.turnright40)
-        #         return
+                ang2Teammate, dist2Teammate = self.angleCalculaor(lim_pos, self.__robot_position, self.__robot_orientation)
+                if (ang2Teammate/np.abs(ang2Teammate)) * (self.__temp_angle/np.abs(self.__temp_angle)) > 0:
+                    if np.round(np.abs(dist2Teammate),1) <= 0.5:
+                        self.previous_stage = self.gk_stage
+                        self.gk_stage = DEFEND_STAGE.FINISH
+                        return
+                    else:
+                        return
+                else:
+                    if (not (self.__temp_angle >= 15.0 and self.__robot_position[1] >= -1.05)
+                            and not (self.__temp_angle <= -15.0 and self.__robot_position[1] <= 1.05)
+                    ):
+                        self.previous_stage = self.gk_stage
+                        self.gk_stage = DEFEND_STAGE.FINISH
+                        return
+                    else:
+                        return
 
-        # elif self.gk_stage == DEFEND_STAGE.HUSTLE:
-        #     print("DEFEND_STAGE HUSTLE")
-        #     self.hustle()
-        #     if self.hustle_status == HUSTLE.END:
-        #         self.hustle_status = HUSTLE.INITIAL
-        #         self.gk_stage = DEFEND_STAGE.END
-        #         return
-        #     else:
-        #         return
-        # elif self.gk_stage == DEFEND_STAGE.BOUNDARY_ADJUST:
-        #     print("DEFEND BOUNDARY_ADJUST")
-        #     if ((4.555 > football_position[0] >= 3.950 and 3.000 >= football_position[1] > 1.2)
-        #         or (-3.950 > football_position[0] >=- 4.555 and -3.000 >= football_position[1] > -1.2)):
-        #         return
-        #     front_angle, front_distance = self.angleCalculaor([0.0, robot_position[1], 0.0], robot_position,
-        #                                                       robot_orientation)
-        #     if self.__temp_position[1] <= -1.05 or self.__temp_position[1] >= 1.05 or np.abs(front_angle) < 90.0:
-        #         if self.__temp_position[1] <= -1.05:
-        #             self.startMotion(self.turnleft40)
-        #
-        #         elif self.__temp_position[1] >= 1.05:
-        #             self.startMotion(self.turnright40)
-        #
-        #     if np.abs(front_angle) >= 90.0:
-        #         if self.__temp_angle >= 15.0:
-        #             self.startMotion(self.sidestepleft)
-        #
-        #         elif self.__temp_angle <= -15.0:
-        #             self.startMotion(self.sidestepright)
-        #         self.__temp_angle, judge_distance = self.angleCalculaor(football_position, robot_position,
-        #                                                                       robot_orientation)
-        #         print(f"temp_angle: {self.__temp_angle}, temp_position: {self.__temp_position}")
-        #         print(f"front_angle: {front_angle}, front_distance: {front_distance}")
-        #         if np.abs(self.__temp_angle) < 15.0:
-        #             self.previous_stage = self.gk_stage
-        #             self.gk_stage = DEFEND_STAGE.FINISH
-        #             return
-        #         else:
-        #             return
-        #     else:
-        #         return
         elif self.gk_stage == DEFEND_STAGE.X_AXIS_ADJUST:
             print("DEFEND X_AXIS_ADJUST")
             front_angle, front_distance = self.angleCalculaor([0.0, self.__robot_position[1], 0.0], self.__robot_position,self.__robot_orientation)
             print("front_distance:", np.round(np.round(front_distance,bitsOfRound),2))
+            if (np.round(np.abs(front_angle),1) >= 15.0
+            ):
+                print("Need to adjust front_angle!")
+                self.stopMotion()
+                self.previous_stage = self.gk_stage
+                self.gk_stage = DEFEND_STAGE.ADJUSTING_ANGLE
+                return
             if np.round(np.round(front_distance,bitsOfRound),1) > 3.90 + limitationofdistance:
                 print("Is adjusting forwards!")
                 self.startMotion(self.forwards)
@@ -1028,12 +1091,15 @@ class Nao_Goalkeeper(Robot):
                 # or self.countOfXAxisRetryTime > self.maxRetryTimes
             ):
                 # self.stopMotion()
-                if self.previous_stage == DEFEND_STAGE.PREPARE:
-                    self.previous_stage = self.gk_stage
-                    self.gk_stage = DEFEND_STAGE.PREPARE
-                else:
-                    self.previous_stage = self.gk_stage
-                    self.gk_stage = DEFEND_STAGE.FINISH
+                temp = self.previous_stage
+                self.previous_stage = self.gk_stage
+                self.gk_stage = temp
+                # if self.previous_stage == DEFEND_STAGE.PREPARE:
+                #     self.previous_stage = self.gk_stage
+                #     self.gk_stage = DEFEND_STAGE.PREPARE
+                # else:
+                #     self.previous_stage = self.gk_stage
+                #     self.gk_stage = DEFEND_STAGE.FINISH
                 return
             else:
                 return
@@ -1052,17 +1118,18 @@ class Nao_Goalkeeper(Robot):
             return
         elif self.gk_stage == DEFEND_STAGE.END:
             print("DEFEND END")
-            if (self.is_balanced()):
+            def restart():
                 if (
                         (angle > 15.0 and np.round(self.__robot_position[1], bitsOfRound) < -1.05)
                         or (angle < -15.0 and np.round(self.__robot_position[1], bitsOfRound) > 1.05)
                         or ( 1.05 >= np.round(self.__robot_position[1],bitsOfRound) >= -1.05 and (angle > 15.0 or angle < -15.0))
                         and ((self.__goalkeeper_name == GOAL_KEEPER_ROLE.REDTEAM_GOALKEEPER.value and self.__football_position[0] >= 0)
                              or (self.__goalkeeper_name == GOAL_KEEPER_ROLE.BLUETEAM_GOALKEEPER.value and self.__football_position[0] <= 0))
-                ):
-                # if not (np.round(np.abs(angle), 1) <= 15.0
-                #      # and (-1.05 <= np.round(self.__robot_position[1], bitsOfRound) <= 1.05)
-                #         and self.__football_position[0] > 0):
+                )and self.__ball_has_moved():
+                    return True
+                else:
+                    return False
+            if self.is_balanced() and restart():
                     self.previous_stage = self.gk_stage
                     self.gk_stage = DEFEND_STAGE.INITIAL
                     # self.__has_turn2correct_direction = False
@@ -1346,13 +1413,11 @@ class Nao_Goalkeeper(Robot):
         if angle is None or distance is None:
             print("angle is None or distance is None!")
             return
-        angbetballstadium, distbetballstadium = self.angleCalculaor(self.__football_position, self.__stadiumgoal_red_position,
-                                              self.__stadiumgoal_red_orientation)
+        angbetballstadium, distbetballstadium = self.angleCalculaor(self.__football_position, self.__mate_stadium_position,
+                                              self.__mate_stadium_orientation)
         if angbetballstadium is None and distbetballstadium is None:
             print("angle is None or distance is None!")
             return
-        # if (3.90 - self.__football_position[0]) > 0.40:
-        #     return
         if self.hustle_status == HUSTLE.INITIAL:
             print("Hustle initiated!")
             # self.setMotorPosition('LShoulderPitch', 1.49)
@@ -1464,6 +1529,33 @@ class Nao_Goalkeeper(Robot):
         else:
             print("Unknown Hustle status!")
 
+    def __check_ball_has_passed_teammate(self):
+        position = {"mate_left_defender": self.__mate_defender_left_position,
+                    "mate_right_defender": self.__mate_defender_right_position,
+                    "mate_striker": self.__mate_striker_position}
+        orientation = {"mate_left_defender": self.__mate_defender_left_orientation,
+                       "mate_right_defender": self.__mate_defender_right_orientation,
+                       "mate_striker": self.__mate_striker_orientation}
+        ang = []
+        dist = []
+        has_passed = 0
+        for key, value in position.items():
+            # print(f"{key}: {value}")
+            # print(f"{key}: {orientation[key]}")
+            angle, distance = self.angleCalculaor(self.__football_position, position[key], orientation[key])
+            print(f"{key}: {angle}, {distance}")
+            ang.append(angle)
+            dist.append(distance)
+        print(f"the angle of ball between to each robot is {ang}")
+        for value in ang:
+            if value >= 90 or value <= -90:
+                has_passed += 1
+
+        if has_passed == 3:
+            return True
+        else:
+            return False
+
     def run(self):
         if self.run_stage == GOAL_KEEPER.INITIAL:
             print("Run Initial!")
@@ -1483,19 +1575,22 @@ class Nao_Goalkeeper(Robot):
             return
         elif self.run_stage == GOAL_KEEPER.DEFEND:
             print("Run Defend!")
+            result = self.__check_ball_has_passed_teammate()
             if self.standupIfnecessary():
                 self.set_stage(STAND_UP.INITIAL)
                 self.set_stage(GOAL_KEEPER.STAND_UP)
                 return
             elif ((self.__goalkeeper_name == GOAL_KEEPER_ROLE.REDTEAM_GOALKEEPER.value
-                  and (3.90 - self.__football_position[0]) <= 0.5)
+                  and (3.90 - self.__football_position[0]) <= 0.5
+                  and result)
                 or (self.__goalkeeper_name == GOAL_KEEPER_ROLE.BLUETEAM_GOALKEEPER.value
-                  and (-3.90 - self.__football_position[0]) >= -0.5)):
+                  and (-3.90 - self.__football_position[0]) >= -0.5)
+                  and result):
                 self.set_stage(GOAL_KEEPER.HUSTLE)
                 return
             else:
                 self.defendingBall()
-                return
+
         elif self.run_stage == GOAL_KEEPER.HUSTLE:
             print("Run Hustle!")
             self.hustle()
@@ -1546,11 +1641,21 @@ class Nao_Goalkeeper(Robot):
         else:
             print("Unknown run stage!")
 
+    def test_module(self):
+        pos = self.__check_teammate_near_goal_area()
+        print(f"pos = {pos}")
+        result = self.__ball_has_moved()
+        print(f"result = {result}")
+        result = self.__check_ball_has_passed_teammate()
+        print(f"result = {result}")
+        angle, distance = self.angleCalculaor(self.__football_position, self.__mate_defender_left_position, self.__mate_defender_left_orientation)
+        print(f"angle = {angle}")
 goal_keeper = Nao_Goalkeeper()
 while goal_keeper.step(goal_keeper.timeStep) != -1:
     pass
     if goal_keeper.position_refresh():
         goal_keeper.run()
+        # goal_keeper.test_module()
 
     # goal_keeper.startMotion(goal_keeper.StandUpFromBack)
     # # # goal_keeper.hustle()
