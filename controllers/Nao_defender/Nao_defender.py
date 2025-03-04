@@ -67,17 +67,21 @@ class Nao_Goalkeeper(Robot):
     kick_stage = KICK_STAGE.INITIAL
 
     def loadMotionFiles(self):
-        '''
-        This Function mainly loads the motion files from libraries
-        '''
-        self.forwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Forwards.motion')
-        self.backwards = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Backwards.motion')
-        self.shoot = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/Shoot.motion')
-        self.turnleft40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnLeft40.motion')
-        self.turnright40 = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/TurnRight40.motion')
-        self.sidestepleft = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepLeft.motion')
-        self.sidestepright = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/SideStepRight.motion')
-        self.KICK = Motion('F:/Mrobotic/TDP/Nao_test_keeperAndDefender/libraries/KICK.motion')
+        current_path = os.path.abspath(__file__)
+        current_folder_path = os.path.dirname(current_path)
+        pre_folder_path = os.path.dirname(current_folder_path)
+        pre_pre_folder_path = os.path.dirname(pre_folder_path)
+        self.forwards = Motion(os.path.join(pre_pre_folder_path,'libraries/Forwards.motion'))
+        self.backwards = Motion(os.path.join(pre_pre_folder_path,'libraries/Backwards.motion'))
+        self.shoot = Motion(os.path.join(pre_pre_folder_path,'libraries/Shoot.motion'))
+        self.turnleft40 = Motion(os.path.join(pre_pre_folder_path,'libraries/TurnLeft40.motion'))
+        self.turnright40 = Motion(os.path.join(pre_pre_folder_path,'libraries/TurnRight40.motion'))
+        self.sidestepleft = Motion(os.path.join(pre_pre_folder_path,'libraries/SideStepLeft.motion'))
+        self.sidestepright = Motion(os.path.join(pre_pre_folder_path,'libraries/SideStepRight.motion'))
+        self.KICK = Motion(os.path.join(pre_pre_folder_path,'libraries/KICK.motion'))
+        self.StandUpFromFront = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromFront.motion'))
+        self.StandUpFromBack = Motion(os.path.join(pre_pre_folder_path,'libraries/StandUpFromBack.motion'))
+        self.ReturnFromSide = Motion(os.path.join(pre_pre_folder_path,'libraries/ReturnFromSide.motion'))
 
     def startMotion(self, motion):
         # interrupt current motion
