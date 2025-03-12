@@ -415,6 +415,7 @@ class Nao_Defender(Robot):
             print(f"Stage {stage} not supported")
             return
         if type(stage) in [MOTION_PLAY, KICK_STAGE, STAND_UP, DEFENDER_STAGE]:
+            print(f"Changing {type(stage).__name__.lower()}_stage to {stage}")
             setattr(self, f"{type(stage).__name__.lower()}_stage", stage)
         else:
             print(f"Stage {stage} not supported")
@@ -433,6 +434,10 @@ class Nao_Defender(Robot):
         if self.receiver.getQueueLength() > 0:
             self.data = self.receiver.getString()
             shared_info = json.loads(self.data)
+
+            self.robot_position = np.float64(shared_info[self.myName]["position"])
+            self.robot_orientation = np.float64(shared_info[self.myName]["orientation"])
+            self.football_position = np.float64(shared_info["football"]["position"])
 
             robot_position = np.float64(shared_info[self.myName]["position"])
             robot_orientation = np.float64(shared_info[self.myName]["orientation"])
@@ -894,28 +899,28 @@ class Nao_Defender(Robot):
 
     def is_standup(self):
         pass
-        if self.__standup_stage == STAND_UP.INITIAL:
+        if self.stand_up_stage == STAND_UP.INITIAL:
             # print("Stand-Up INITIAL")
-            self.__standup_stage = STAND_UP.PREPARE
+            self.stand_up_stage = STAND_UP.PREPARE
             return
-        elif self.__standup_stage == STAND_UP.PREPARE:
+        elif self.stand_up_stage == STAND_UP.PREPARE:
             # print("Stand-Up PREPARE")
-            self.__standup_stage = STAND_UP.FROM_BACK
+            self.stand_up_stage = STAND_UP.FROM_BACK
             return
-        elif self.__standup_stage == STAND_UP.FROM_FRONT:
+        elif self.stand_up_stage == STAND_UP.FROM_FRONT:
             # print("Stand-Up From FRONT")
             return
-        elif self.__standup_stage == STAND_UP.FROM_BACK:
+        elif self.stand_up_stage == STAND_UP.FROM_BACK:
             # print("Stand-Up From BACK")
             self.startMotion(self.StandUpFromBack)
             if self.standupIfnecessary():
-                self.__standup_stage = STAND_UP.FINISH
+                self.stand_up_stage = STAND_UP.FINISH
             return
-        elif self.__standup_stage == STAND_UP.FINISH:
+        elif self.stand_up_stage == STAND_UP.FINISH:
             # print("Stand-Up FINISH")
-            self.__standup_stage = STAND_UP.END
+            self.stand_up_stage = STAND_UP.END
             return
-        elif self.__standup_stage == STAND_UP.END:
+        elif self.stand_up_stage == STAND_UP.END:
             print("Stand-Up END")
             return
         else:
@@ -924,6 +929,8 @@ class Nao_Defender(Robot):
     def face_and_go(self,robot_position,target_position,orientation, avoid_objects, angle_tor = 20, go = True):
         """turn to target, and (optional) move forward"""
         """calculate first"""
+        if avoid_objects is None:
+            avoid_objects = [[3000000,30000000,0]]
         navigation_vector = self.calculate_navigation_vector(robot_position,target_position,avoid_objects)
         angle = self.compute_intercept_angle(navigation_vector, orientation)
         """then move"""
@@ -1012,10 +1019,9 @@ class Nao_Defender(Robot):
         bitsOfRound = 2
         """get this robot position,direction, and football position"""
         """in every time step"""
-        robot_position, robot_orientation, football_position = self.position_refresh()
-        if robot_position is None or robot_orientation is None or football_position is None:
-            print("robot_position or robot_orientation or football_position is None!")
-            return
+        robot_position = self.robot_position
+        robot_orientation = self.robot_orientation
+        football_position = self.football_position
 
         avoid_objects_me = [self.striker_position,self.mate_position]
         intercept_angle, intercept_distance = self.intercept_solving(football_position,\
@@ -1427,7 +1433,7 @@ class Nao_Defender(Robot):
         elif self.df_stage == DEFENDER_STAGE.STAND_UP:
             print("Stand Up!")
             self.is_standup()
-            if self.__standup_stage == STAND_UP.END and self.is_balanced():
+            if self.stand_up_stage == STAND_UP.END and self.is_balanced():
                 self.df_stage = self.previous_stage
             return
         else:
@@ -1446,10 +1452,9 @@ class Nao_Defender(Robot):
 
         """get this robot position,direction, and football position"""
         """in every time step"""
-        robot_position, robot_orientation, football_position = self.position_refresh()
-        if robot_position is None or robot_orientation is None or football_position is None:
-            print("robot_position or robot_orientation or football_position is None!")
-            return
+        robot_position = self.robot_position
+        robot_orientation = self.robot_orientation
+        football_position = self.football_position
 
         avoid_objects_me = [self.striker_position,self.mate_position]
 
@@ -1469,7 +1474,7 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            print("DEFEND INITIAL")
+            print("K2OPPO INITIAL")
             self.setMotorPosition('LShoulderPitch', 1.2)
             self.setMotorPosition('RShoulderPitch', 1.2)
             self.setMotorPosition('LShoulderRoll', 0.000000086)
@@ -1520,7 +1525,7 @@ class Nao_Defender(Robot):
 
             """ decide to turn or directly to intercept"""
         elif self.k2o_stage == K2OPPO_STAGE.ANALYSE:
-            print("ANALYSE")
+            print("K2OPPO ANALYSE")
             if self.standupIfnecessary():
                 self.previous_stage = self.k2o_stage
                 self.set_stage(STAND_UP.INITIAL)
@@ -1540,7 +1545,7 @@ class Nao_Defender(Robot):
             self.k2o_stage = K2OPPO_STAGE.WAIT
             return
         elif self.k2o_stage == K2OPPO_STAGE.WAIT:
-            print("DEFENDER WAITING")
+            print("K2OPPO WAITING")
             if self.standupIfnecessary():
                 self.previous_stage = self.k2o_stage
                 self.set_stage(STAND_UP.INITIAL)
@@ -1571,7 +1576,7 @@ class Nao_Defender(Robot):
                 return
 
                 '''turn to intercept direction'''
-            print("DEFENDER APPROCH")
+            print("K2OPPO APPROCH")
             if distance2ball > limitationofdistance:
                 self.face_and_go(robot_position,football_position,robot_orientation,avoid_objects_me,25)
             else:
@@ -1586,7 +1591,7 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            print("ADJUST_ANGLE")
+            print("K2OPPO_ANGLE")
 
             target_position = self.waiting_point*[-1,1]
             if distance2ball > limitationofdistance+0.3:
@@ -1641,7 +1646,7 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            print("DEFENDER POWER_KICK")
+            print("K2OPPO POWER_KICK")
             self.powerful_kick()
             if self.kick_stage == KICK_STAGE.END:
                 self.k2o_stage = K2OPPO_STAGE.FINISH
@@ -1652,20 +1657,18 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            print("DEFENDER KICK 2 OPPO")
+            print("K2OPPO KICK 2 OPPO")
             self.kick_motion()
             if self.kick_stage == KICK_STAGE.END:
                 self.k2o_stage = K2OPPO_STAGE.FINISH
             return
         elif self.k2o_stage == K2OPPO_STAGE.FINISH:
-            # print(f"goal position:{self.goal_position}")
-            # print(f"oppo goal:{self.oppo_goal_position}")
             if self.standupIfnecessary():
                 self.previous_stage = self.k2o_stage
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            print("DEFENDER FINISH")
+            print("K2OPPO FINISH")
             self.k2o_stage = K2OPPO_STAGE.SWITCH
             return
         elif self.k2o_stage == K2OPPO_STAGE.SWITCH:
@@ -1674,13 +1677,13 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2o_stage = K2OPPO_STAGE.STAND_UP
                 return
-            self.defender_role = DEFENDER_ROLE.INTERCEPT
+            self.k2o_stage = K2OPPO_STAGE.ANALYSE
             return
 
         elif self.k2o_stage == K2OPPO_STAGE.STAND_UP:
             print("Stand Up!")
             self.is_standup()
-            if self.__standup_stage == STAND_UP.END and self.is_balanced():
+            if self.stand_up_stage == STAND_UP.END and self.is_balanced():
                 self.df_stage = self.previous_stage
             return
         else:
@@ -1699,10 +1702,9 @@ class Nao_Defender(Robot):
 
         """get this robot position,direction, and football position"""
         """in every time step"""
-        robot_position, robot_orientation, football_position = self.position_refresh()
-        if robot_position is None or robot_orientation is None or football_position is None:
-            print("robot_position or robot_orientation or football_position is None!")
-            return
+        robot_position = self.robot_position
+        robot_orientation = self.robot_orientation
+        football_position = self.football_position
 
         avoid_objects_me = [self.striker_position, self.mate_position]
 
@@ -1715,13 +1717,13 @@ class Nao_Defender(Robot):
                                                                         robot_orientation)
         stand_by_point = np.zeros(2)     #是否改为走到striker前面，反过身来准备将球踢到自己家里？？
         if "Blue" in self.myName:
-            stand_by_point[0] = self.striker_position[0] - 0.5
-        else:
             stand_by_point[0] = self.striker_position[0] + 0.5
-        if robot_position[1] > 0:
-            stand_by_point[1] = self.striker_position[1] + 0.5
         else:
-            stand_by_point[1] = self.striker_position[1] - 0.5
+            stand_by_point[0] = self.striker_position[0] - 0.5
+        if robot_position[1] > 0:
+            stand_by_point[1] = self.striker_position[1] + 0.7
+        else:
+            stand_by_point[1] = self.striker_position[1] - 0.7
         """initialize joints"""
         if self.k2mate_stage == K2MATE_STAGE.INITIAL:
             if self.standupIfnecessary():
@@ -1729,7 +1731,7 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2mate_stage = K2MATE_STAGE.STAND_UP
                 return
-            print("DEFEND INITIAL")
+            print("K2mate INITIAL")
             self.setMotorPosition('LShoulderPitch', 1.2)
             self.setMotorPosition('RShoulderPitch', 1.2)
             self.setMotorPosition('LShoulderRoll', 0.000000086)
@@ -1785,8 +1787,6 @@ class Nao_Defender(Robot):
                 self.set_stage(STAND_UP.INITIAL)
                 self.k2mate_stage = K2MATE_STAGE.STAND_UP
                 return
-
-                return
             self.k2mate_stage = K2MATE_STAGE.STAND_BY
             return
         elif self.k2mate_stage == K2MATE_STAGE.STAND_BY:         #走到striker身后侧面，等球
@@ -1798,11 +1798,11 @@ class Nao_Defender(Robot):
             print("K2MATE GO TO STAND BY")
             _, distance2stand_by = self.angleCalculaor(stand_by_point, robot_position, robot_orientation)
             _, oppo_striker2ball = self.angleCalculaor(football_position, self.oppo_striker_position, robot_orientation)
-            if distance2stand_by > limitationofdistance:
+            if distance2stand_by > limitationofdistance:   #走向stand by point，striker身后
                 self.face_and_go(robot_position, stand_by_point, robot_orientation, avoid_objects_me, 20)
             else:
                 self.face_and_go(robot_position, football_position, robot_orientation,[[300,300,0]],go = False)
-            if oppo_striker2ball > distance2ball:
+            if oppo_striker2ball > distance2ball:    #离球比敌方striker更近就向球走去
                 self.k2mate_stage = K2MATE_STAGE.APPROCH
             return
         elif self.k2mate_stage == K2MATE_STAGE.APPROCH:
@@ -1812,7 +1812,7 @@ class Nao_Defender(Robot):
                 self.k2mate_stage = K2MATE_STAGE.STAND_UP
                 return
             print("K2MATE APPROCH")
-            if distance2ball > limitationofdistance:
+            if distance2ball > limitationofdistance+0.05:
                 self.face_and_go(robot_position, football_position, robot_orientation, avoid_objects_me, 22)
             else:
                 self.k2mate_stage = K2MATE_STAGE.ADJUST_ANGLE
@@ -1852,16 +1852,23 @@ class Nao_Defender(Robot):
                     self.__winding = False
 
             if not self.__winding:
-                if np.abs(angle2target) > 20 or distance2ball > limitationofdistance:
-                    self.face_and_go(robot_position, target_position, robot_orientation, [[300, 300, 0]], go=False)
+                if np.abs(angle2target) > 20 or distance2ball > limitationofdistance + 0.05:
+                    print("未面向目标 或 离球太远")
+                    self.face_and_go(robot_position, target_position, robot_orientation, None, go=True)
+                    return
+                # elif distance2ball > limitationofdistance:
+                #     print("离球太远")
+                #     if self.is_balanced():
+                #         self.startMotion(self.forwards)
+                #     return
                 # 根据 angle 调整站位，使球位于 -15° 角度
                 elif angle > -9:  # 球偏右，需要向左调整
-                    print("球偏右，机器人向左跨步")
-                    self.startMotion(self.sidestepleft)
-                    return
-                elif angle < -16:  # 球偏左，需要向右调整
-                    print("球偏左，机器人向右跨步")
+                    print("球偏右，机器人向右跨步")
                     self.startMotion(self.sidestepright)
+                    return
+                elif angle < -14:  # 球偏左，需要向右调整
+                    print("球偏左，机器人向左跨步")
+                    self.startMotion(self.sidestepleft)
                     return
 
             # 3. 位置调整完成，根据敌人远近判断如何踢球
@@ -1915,67 +1922,80 @@ class Nao_Defender(Robot):
                 self.k2mate_stage = K2MATE_STAGE.STAND_UP
                 return
             print("K2MATE SWITCH")
-            self.defender_role = DEFENDER_ROLE.INTERCEPT
+            self.k2mate_stage = K2MATE_STAGE.ANALYSE
             return
 
         elif self.k2mate_stage == K2MATE_STAGE.STAND_UP:
             print("Stand Up!")
             self.is_standup()
-            if self.__standup_stage == STAND_UP.END and self.is_balanced():
+            if self.stand_up_stage == STAND_UP.END and self.is_balanced():
                 self.df_stage = self.previous_stage
             return
         else:
             print("Unknown stage")
             return False
 
-    def upper_state(self):
-        robot_position, robot_orientation, football_position = self.position_refresh()
-        if robot_position is None or robot_orientation is None or football_position is None:
-            print("robot_position or robot_orientation or football_position is None!")
-            return
+    def role_judge(self):
+        """较高层的角色决策函数，通过球和敌方球员的相对位置来决定干什么"""
+
         def ball_oppo(football_position, robot_position):
+            """judge whether the ball is on oppo field"""
             if football_position[0] * robot_position[0] < 0:
                 return True
             else:
                 return False
 
-        manha_dis2oppo_defender1 = np.array(np.abs(self.oppo_defender_l_position - robot_position))
-        manha_dis2oppo_defender2 = np.array(np.abs(self.oppo_defender_r_position - robot_position))
-        manha_dis2oppo_striker = np.array(np.abs(self.oppo_striker_position - robot_position))
-        angle, distance2ball = self.angleCalculaor(football_position, robot_position, robot_orientation)
-        angle_mate, distance2ball_mate = self.angleCalculaor(football_position, self.mate_position, robot_orientation)
+        manha_dis2oppo_defender1 = np.array(np.abs(self.oppo_defender_l_position - self.robot_position))
+        manha_dis2oppo_defender2 = np.array(np.abs(self.oppo_defender_r_position - self.robot_position))
+        manha_dis2oppo_striker = np.array(np.abs(self.oppo_striker_position - self.robot_position))
+        angle, distance2ball = self.angleCalculaor(self.football_position, self.robot_position, self.robot_orientation)
+        angle_mate, distance2ball_mate = self.angleCalculaor(self.football_position, self.mate_position,
+                                                             self.robot_orientation)
 
-        manha_dis2oppo = np.array([manha_dis2oppo_defender1,manha_dis2oppo_defender2,manha_dis2oppo_striker])
-        oppo_position = np.array([self.oppo_defender_l_position,self.oppo_defender_r_position,self.oppo_striker_position])
+        manha_dis2oppo = np.array([manha_dis2oppo_defender1, manha_dis2oppo_defender2, manha_dis2oppo_striker])
+        oppo_position = np.array(
+            [self.oppo_defender_l_position, self.oppo_defender_r_position, self.oppo_striker_position])
 
         y_lim = 1
-        if np.min(manha_dis2oppo[:,0]) < 1:         #敌在本能寺
-            if np.min(manha_dis2oppo[:,1]) > 2:     #但是在对半边
+        if np.min(manha_dis2oppo[:, 0]) < 1:  # 敌在本能寺
+            if np.min(manha_dis2oppo[:, 1]) > 2:  # 但是在对半边
                 self.defender_role = DEFENDER_ROLE.KICK2OPPO
             else:
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
-        elif np.max(oppo_position[:,1]) < y_lim:           #敌无2,不在我边
-            if ball_oppo(football_position,robot_position):
+        elif np.max(oppo_position[:, 1]) < y_lim:  # 敌无2,不在我边
+            if ball_oppo(self.football_position, self.robot_position):  # 但是球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
-            elif not ball_oppo(football_position,robot_position):
-                if distance2ball < distance2ball_mate:          #离得近的去kick to mate
+            elif not ball_oppo(self.football_position, self.robot_position):
+                if distance2ball < distance2ball_mate:  # 离得近的去kick to mate
                     self.defender_role = DEFENDER_ROLE.KICK2MATE
                 else:
                     self.defender_role = DEFENDER_ROLE.KICK2OPPO
-        elif np.min(oppo_position[:,1]) > -y_lim:                           #敌无3，不在我边
-            if ball_oppo(football_position,robot_position):
+        elif np.min(oppo_position[:, 1]) > -y_lim:  # 敌无3，不在我边
+            if ball_oppo(self.football_position, self.robot_position):  # 但是球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
-            elif not ball_oppo(football_position,robot_position):
-                if distance2ball < distance2ball_mate:          # 离得近的去kick to mate
+            elif not ball_oppo(self.football_position, self.robot_position):
+                if distance2ball < distance2ball_mate:  # 离得近的去kick to mate
                     self.defender_role = DEFENDER_ROLE.KICK2MATE
                 else:
                     self.defender_role = DEFENDER_ROLE.KICK2OPPO
         else:
             "敌在对面散开，不在我边"
-            if ball_oppo(football_position,robot_position):
+            if ball_oppo(self.football_position, self.robot_position):  # 球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
-            elif not ball_oppo(football_position,robot_position):
+            elif not ball_oppo(self.football_position, self.robot_position):
                 "拿着球等"
+
+    def upper_state(self):
+        """get this robot position,direction, and football position"""
+        """in every time step"""
+        robot_position, robot_orientation, football_position = self.position_refresh()
+        if robot_position is None or robot_orientation is None or football_position is None:
+            print("robot_position or robot_orientation or football_position is None!")
+            return
+
+        self.role_judge()
+
+        """角色执行"""
         if self.defender_role == DEFENDER_ROLE.INTERCEPT:
             self.intercepting()
         elif self.defender_role == DEFENDER_ROLE.KICK2MATE:
@@ -1987,6 +2007,6 @@ class Nao_Defender(Robot):
 
 defender = Nao_Defender()
 while defender.step(defender.timeStep) != -1:
-    defender.kick2mate()
+    defender.upper_state()
 
 
