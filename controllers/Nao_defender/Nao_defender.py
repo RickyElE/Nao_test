@@ -85,7 +85,6 @@ class DEFENDER_ROLE(Enum):
     KICK2MATE = auto()  # 传球给队友
     HOLD_BALL = auto()  # 拿着球等
 
-
 class Nao_Defender(Robot):
     PHALANX_MAX = 8
     kick_stage = KICK_STAGE.INITIAL
@@ -404,6 +403,19 @@ class Nao_Defender(Robot):
         self.__side_count = 0
         self.__winding = True
 
+        #init of powerful kick
+        self.pw_kick_stage = 1
+        self.shift_counter = 0
+        self.stability_counter = 0
+        # 調整PID參數
+        self.pid = {
+            'kp': 0.4,  # 增加比例增益
+            'ki': 0.05,  # 保持積分增益
+            'kd': 0.15,  # 增加微分增益
+            'prev_error': 0,
+            'integral': 0
+        }
+
     def set_stage(self, stage=None):
         '''
         This function sets the current stage.
@@ -495,6 +507,371 @@ class Nao_Defender(Robot):
                 output[0] = -1.3
         return output
 
+
+    #中间这些全是powerful kick的（__init__里的别忘了）
+    def pw_prepare_kick(self):
+        """設定初始位置，所有關節同時平順運動"""
+        # 初始化馬達和感測器
+        for name in self.motor_names:
+            if 'Shoulder' in name or 'Elbow' in name:
+                self.motors[name].setVelocity(0.7)
+            else:
+                self.motors[name].setVelocity(0.6)
+        if not hasattr(self, 'prep_counter'):
+            self.prep_counter = 0
+            self.start_positions = {}
+            for name in self.motor_names:
+                self.start_positions[name] = self.get_motor_position(name)
+
+        transition_time = 100
+        progress = min(1.0, self.prep_counter / transition_time)
+        smooth_progress = (1 - np.cos(progress * np.pi)) / 2
+
+        target_positions = {
+            'LHipYawPitch': 0.0,
+            'LHipRoll': 0.1,
+            'LHipPitch': -0.4,
+            'LKneePitch': 0.7,
+            'LAnklePitch': -0.3,
+            'LAnkleRoll': -0.1,
+            'RHipYawPitch': 0.0,
+            'RHipRoll': -0.1,
+            'RHipPitch': -0.4,
+            'RKneePitch': 0.7,
+            'RAnklePitch': -0.3,
+            'RAnkleRoll': 0.1,
+            'LShoulderPitch': 1.57,
+            'LShoulderRoll': 0.3,
+            'LElbowYaw': -1.0,
+            'LElbowRoll': -0.5,
+            'RShoulderPitch': 1.57,
+            'RShoulderRoll': -0.3,
+            'RElbowYaw': 1.0,
+            'RElbowRoll': 0.5
+        }
+
+        for name, target_pos in target_positions.items():
+            if name in self.motors:
+                start_pos = self.start_positions[name]
+                current_pos = start_pos + (target_pos - start_pos) * smooth_progress
+                self.motors[name].setPosition(current_pos)
+
+        self.prep_counter += 1
+        if self.prep_counter > transition_time:
+            self.prep_counter = 0
+            return True
+        return False
+
+    def get_motor_position(self, name):
+        """安全地獲取馬達位置"""
+        if name in self.sensors:
+            return self.sensors[name].getValue()
+        return 0.0
+
+    def get_com_position(self):
+        """計算質心位置"""
+        accel_values = self.accelerometer.getValues()
+        x_pos = accel_values[0]
+        y_pos = accel_values[1]
+        print(f"Accelerometer values: x={x_pos:.3f}, y={y_pos:.3f}", flush=True)
+        return x_pos, y_pos
+
+    def shift_weight_to_left(self):
+
+        if not hasattr(self, 'shift_start_time'):
+            self.shift_start_time = 0
+            print("Starting weight shift", flush=True)
+
+            # 記錄所有關節的初始位置
+            self.initial_positions = {}
+
+            for name in self.motor_names:
+                if name in self.sensors:
+                    self.initial_positions[name] = self.sensors[name].getValue()
+                else:
+                    self.initial_positions[name] = 0.0
+                print(f"Initial position for {name}: {self.initial_positions[name]}", flush=True)
+
+            self.pid['integral'] = 0
+            self.pid['prev_error'] = 0
+
+        self.shift_counter += 1
+        max_shift = 0.7  # 最大移動範圍
+        shift_progress = min(1.0, self.shift_counter / 100.0)
+        current_shift = max_shift * shift_progress
+        print(f"Shift progress: {shift_progress:.2%}, current_shift: {current_shift:.3f}", flush=True)
+
+        # 修改腳部動作，從各自的初始位置開始
+        # HipRoll
+        hip_roll_change = -current_shift  # 目標變化量
+        left_hip_roll_target = self.initial_positions['LHipRoll'] + (hip_roll_change * 1.2)
+        right_hip_roll_target = self.initial_positions['RHipRoll'] + hip_roll_change
+        self.motors['LHipRoll'].setPosition(left_hip_roll_target)
+        self.motors['RHipRoll'].setPosition(right_hip_roll_target)
+
+        # AnkleRoll
+        ankle_roll_change = -current_shift * 0.7
+        left_ankle_roll_target = self.initial_positions['LAnkleRoll'] + (-ankle_roll_change)
+        right_ankle_roll_target = self.initial_positions['RAnkleRoll'] + ankle_roll_change
+        right_hip_roll_target = self.initial_positions['RHipRoll'] + ankle_roll_change
+        self.motors['LAnkleRoll'].setPosition(left_ankle_roll_target)
+        self.motors['RAnkleRoll'].setPosition(right_ankle_roll_target)
+        # self.motors['RHipRoll'].setPosition(right_hip_roll_target*1.5)
+
+        # ShoulderRoll
+        shoulder_roll_change = -current_shift * 0.8
+        left_shoulder_roll_target = self.initial_positions['LShoulderRoll'] + ((shoulder_roll_change) * 1.5)
+        right_shoulder_roll_target = self.initial_positions['RShoulderRoll'] + shoulder_roll_change
+        self.motors['LShoulderRoll'].setPosition(-left_shoulder_roll_target)
+        self.motors['RShoulderRoll'].setPosition(right_shoulder_roll_target)
+
+        # Pitch adjustments
+        pitch_change = 0.05 * shift_progress
+
+        # AnklePitch
+        left_ankle_pitch_target = self.initial_positions['LAnklePitch'] + pitch_change
+        right_ankle_pitch_target = self.initial_positions['RAnklePitch'] + pitch_change
+        self.motors['LAnklePitch'].setPosition(left_ankle_pitch_target)
+        self.motors['RAnklePitch'].setPosition(right_ankle_pitch_target)
+
+        # HipPitch
+        left_hip_pitch_target = self.initial_positions['LHipPitch'] - pitch_change
+        right_hip_pitch_target = self.initial_positions['RHipPitch'] - (pitch_change * 0.3)
+        self.motors['LHipPitch'].setPosition(left_hip_pitch_target)
+        self.motors['RHipPitch'].setPosition(right_hip_pitch_target)
+
+        # Debug output
+        print(f"Current positions - LHipRoll: {left_hip_roll_target:.3f}, RHipRoll: {right_hip_roll_target:.3f}",
+              flush=True)
+
+        # 取得目前的質心位置
+        com_x, com_y = self.get_com_position()
+        print(f"COM position: x={com_x:.3f}, y={com_y:.3f}", flush=True)
+
+        target_x = -0.3
+        target_y = 0.0
+
+        error_x = target_x - com_x
+        error_y = target_y - com_y
+        total_error = np.sqrt(error_x ** 2 + error_y ** 2)
+        print(f"Total error: {total_error:.3f}", flush=True)
+
+        self.pid['integral'] = np.clip(self.pid['integral'] + total_error, -1.0, 1.0)
+        derivative = total_error - self.pid['prev_error']
+
+        control_signal = (
+                0.3 * error_x +
+                self.pid['kp'] * total_error +
+                self.pid['ki'] * self.pid['integral'] +
+                self.pid['kd'] * derivative
+        )
+
+        self.pid['prev_error'] = total_error
+
+        is_stable = abs(error_x) < 0.13 and abs(error_y) < 0.1
+        if is_stable:
+            self.stability_counter += 1
+            print(f"Stability counter: {self.stability_counter}", flush=True)
+        else:
+            self.stability_counter = 0
+
+        if self.stability_counter > 30:
+            print("COM centered on left foot!", flush=True)
+            self.shift_counter = 0
+            self.stability_counter = 0
+            return True
+
+        if self.shift_counter > 150:
+            print("Weight shift timeout - evaluating stability")
+            if abs(com_x) < 0.15:
+                return True
+            self.shift_counter = 0
+
+        return False
+
+    def execute_kick(self):
+        """執行踢球動作"""
+        if not hasattr(self, 'kick_counter'):
+            self.kick_counter = 0
+            self.motors['RHipPitch'].setVelocity(2.0)
+            self.motors['RKneePitch'].setVelocity(3.0)
+            self.motors['RAnklePitch'].setVelocity(2.0)
+            self.motors['LShoulderPitch'].setVelocity(1.5)
+
+            self.motors['RHipPitch'].setPosition(0.4)
+            self.motors['RKneePitch'].setPosition(0)
+            self.motors['RAnklePitch'].setPosition(0)
+            self.motors['LHipYawPitch'].setPosition(-1)
+            self.motors['RKneePitch'].setPosition(1.7)
+            self.motors['RHipYawPitch'].setPosition(0.3)
+            self.motors['RHipRoll'].setPosition(-10)
+            self.motors['RAnkleRoll'].setPosition(0)
+            self.motors['LShoulderPitch'].setPosition(-2.0)
+
+        self.kick_counter += 1
+        if self.kick_counter > 40:
+            self.kick_counter = 0
+            return True
+        return False
+
+    def front_kick(self):
+        """定義前踢動作"""
+        if not hasattr(self, 'front_kick_phase'):
+            self.front_kick_phase = 0
+            self.front_kick_counter = 0
+            # 設定較高的速度以實現快速踢球
+            self.motors['RHipPitch'].setVelocity(10.0)
+            self.motors['LHipYawPitch'].setVelocity(4.0)
+            self.motors['RKneePitch'].setVelocity(1.5)
+            self.motors['RAnklePitch'].setVelocity(12)
+
+        self.front_kick_counter += 1
+
+        if self.front_kick_phase == 0:  # 快速前踢
+            # 髖關節向前甩動
+            self.motors['RHipPitch'].setPosition(-1.2)
+            # 膝蓋快速伸直
+            self.motors['RKneePitch'].setPosition(0.5)
+            # 腳踝配合動作
+            self.motors['RAnklePitch'].setPosition(-0.5)
+            self.motors['LHipYawPitch'].setPosition(3.0)
+            self.motors['LShoulderPitch'].setPosition(0)
+
+            if self.front_kick_counter >= 50:
+                self.front_kick_phase = 1
+                self.front_kick_counter = 0
+
+        elif self.front_kick_phase == 1:  # 收回腿回到初始姿勢
+            print('return')
+            # #降低速度以平穩回歸
+            target_positions = {
+
+                'LHipYawPitch': 0.0,
+                'LHipRoll': 0.1,
+                'LHipPitch': -1.0,
+                'LKneePitch': 0.7,
+                'LAnklePitch': -0.3,
+                'LAnkleRoll': -0.1,
+                'RHipYawPitch': 0.0,
+                'RHipRoll': -0.1,
+                'RHipPitch': -1.0,
+                'RKneePitch': 1.1,
+                'RAnklePitch': -0.3,
+                'RAnkleRoll': 0.1,
+                'LShoulderPitch': 1.57,
+                'LShoulderRoll': 0.3,
+                'LElbowYaw': -1.0,
+                'LElbowRoll': -0.5,
+                'RShoulderPitch': 1.57,
+                'RShoulderRoll': -0.3,
+                'RElbowYaw': 1.0,
+                'RElbowRoll': 0.5
+            }
+
+            velocities = {
+                # 腿部關節更慢
+                'LHipYawPitch': 0.2,
+                'LHipRoll': 0.5,
+                'LHipPitch': 1.0,
+                'LKneePitch': 0.7,
+                'LAnklePitch': 0.5,
+                'LAnkleRoll': 0.5,
+                'RHipYawPitch': 0.5,
+                'RHipRoll': 0.5,
+                'RHipPitch': 1.5,
+                'RKneePitch': 1.5,
+                'RAnklePitch': 0.5,
+                'RAnkleRoll': 0.5,
+                # 手臂關節可以稍快
+                'LShoulderPitch': 0.8,
+                'LShoulderRoll': 0.8,
+                'LElbowYaw': 0.8,
+                'LElbowRoll': 0.8,
+                'RShoulderPitch': 0.8,
+                'RShoulderRoll': 0.8,
+                'RElbowYaw': 0.8,
+                'RElbowRoll': 0.8
+            }
+
+            # 設定速度
+            for name, velocity in velocities.items():
+                if name in self.motors:
+                    self.motors[name].setVelocity(velocity)
+
+            # 設定目標位置
+            for name, target_pos in target_positions.items():
+                if name in self.motors:
+                    self.motors[name].setPosition(target_pos)
+
+            # 如果已經到達位置，進入下一階段
+            if self.front_kick_counter >= 50:
+                self.front_kick_phase = 2
+                self.front_kick_counter = 0
+
+        elif self.front_kick_phase == 2:  # 調整平衡
+            # #微調其他關節以保持平衡
+            self.motors['RKneePitch'].setVelocity(2.0)
+
+            self.motors['LHipPitch'].setVelocity(0.85)
+            self.motors['RHipPitch'].setVelocity(0.85)
+
+            self.motors['RKneePitch'].setPosition(0.7)
+
+            self.motors['LHipPitch'].setPosition(-0.6)
+            self.motors['RHipPitch'].setPosition(-0.6)
+
+            if self.front_kick_counter >= 20:
+                self.front_kick_phase = 0
+                self.front_kick_counter = 0
+                delattr(self, 'front_kick_phase')
+                return True
+
+        return False
+
+    def after_kick(self):
+        '''恢复马达的速度'''
+        transition_time = 100
+        for name in self.motor_names:
+            if 'Shoulder' in name or 'Elbow' in name:
+                self.motors[name].setVelocity(7)
+            else:
+                self.motors[name].setVelocity(5)
+        self.prep_counter += 1
+        if self.prep_counter > transition_time:
+            self.prep_counter = 0
+            return True
+        return False
+
+    def powerful_kick(self):
+        if self.pw_kick_stage == 1:
+            if self.pw_prepare_kick():
+                print("Initial position set.", flush=True)
+                self.pw_kick_stage = 2
+        elif self.pw_kick_stage == 2:
+            print('Stage 2: Weight shifting', flush=True)
+            if self.shift_weight_to_left():
+                print("Weight shifted successfully.", flush=True)
+                self.pw_kick_stage = 3
+        elif self.pw_kick_stage == 3:
+            print('Stage 3: Executing kick', flush=True)
+            if self.execute_kick():
+                print("Kick executed.", flush=True)
+                self.pw_kick_stage = 4
+        elif self.pw_kick_stage == 4:
+            print('Stage 4: Performing front kick', flush=True)
+            if self.front_kick():
+                print("Front kick executed.", flush=True)
+                self.pw_kick_stage = 5  # 完成所有動作
+        elif self.pw_kick_stage == 5:
+            print('Stage 5: initial again', flush=True)
+            if self.after_kick():
+                print("motor speed reseted.", flush=True)
+                self.pw_kick_stage = 6 # 马达速度重设完成
+                return True
+        return False
+    # 中间这些全是powerful kick的（__init__里的别忘了）
+
+
     def prepare_kick(self):
         print("Prepare to kick...", flush=True)
         initial_positions = {
@@ -529,85 +906,6 @@ class Nao_Defender(Robot):
             return True
         else:
             return False
-
-    def powerful_kick(self):
-        if self.kick_stage is KICK_STAGE.INITIAL:
-            print("KICK INITIAL")
-            for name in self.motor_names:
-                if name in self.motors:
-                    self.setMotorPosition(name, 0.0)
-            all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
-            if all_in_end and self.is_balanced():
-                self.kick_stage = KICK_STAGE.PREPARE
-            return
-
-        elif self.kick_stage is KICK_STAGE.PREPARE:
-            print('Stage 0: PREPARE', flush=True)
-            if self.prepare_kick():
-                self.kick_stage = KICK_STAGE.WEIGHT_SHIFT
-            return
-        elif self.kick_stage is KICK_STAGE.WEIGHT_SHIFT:
-            print('Stage 1: Weight shift', flush=True)
-            self.setMotorPosition('LHipRoll', 0.3)  # 8.59
-            self.setMotorPosition('RHipRoll', 0.2)
-            self.setMotorPosition('LAnkleRoll', -0.2)
-            self.setMotorPosition('RAnkleRoll', -0.2)
-
-            if (self.getMoveStage('LHipRoll') is move_status.END and
-                    self.getMoveStage('RHipRoll') is move_status.END and
-                    self.getMoveStage('LAnkleRoll') is move_status.END and
-                    self.getMoveStage('RAnkleRoll') is move_status.END):
-                self.kick_stage = KICK_STAGE.BEND_LEFT_LEG
-            return
-        elif self.kick_stage is KICK_STAGE.BEND_LEFT_LEG:
-            print('Stage 2: bend the left leg', flush=True)
-            self.setMotorPosition('LKneePitch', 2.1)
-            self.setMotorPosition('LHipPitch', 0.17)  # 9.75
-            self.setMotorPosition('LAnklePitch', -1.0)
-            self.setMotorPosition('RShoulderRoll', -0.26)
-            self.setMotorPosition('LShoulderRoll', -0.26)
-
-            if (self.getMoveStage('LKneePitch') is move_status.END and
-                    self.getMoveStage('LHipPitch') is move_status.END and
-                    self.getMoveStage('LAnklePitch') is move_status.END and
-                    self.getMoveStage('RShoulderRoll') is move_status.END and
-                    self.getMoveStage('LShoulderRoll') is move_status.END):
-                self.kick_stage = KICK_STAGE.KICK
-            return
-        elif self.kick_stage is KICK_STAGE.KICK:
-            print('Stage 3: Kick', flush=True)
-            self.setMotorPosition('LHipPitch', -1.22)
-            self.setMotorPosition('LAnklePitch', -0.3)
-            if (self.getMoveStage('LHipPitch') is move_status.END and
-                    self.getMoveStage('LAnklePitch') is move_status.END):
-                self.kick_stage = KICK_STAGE.LEG_IN
-            return
-        elif self.kick_stage is KICK_STAGE.LEG_IN:
-            print('Stage 4: LEG_IN', flush=True)
-            self.setMotorPosition('LKneePitch', -0.09)
-            if (self.getMoveStage('LKneePitch') is move_status.END):
-                self.kick_stage = KICK_STAGE.COMPLETE
-            return
-        elif self.kick_stage is KICK_STAGE.COMPLETE:
-            print('Stage 5: Kick complete', flush=True)
-            for name in self.motor_names:
-                if name in self.motors:
-                    self.setMotorPosition(name, 0.0)
-
-            all_in_end = all(self.getMoveStage(n) is move_status.END for n in self.motor_names)
-            if all_in_end:
-                self.kick_stage = KICK_STAGE.IS_BALANCE
-            return
-        elif self.kick_stage is KICK_STAGE.IS_BALANCE:
-            print('Stage 6: Is balance', flush=True)
-            if self.is_balanced():
-                self.kick_stage = KICK_STAGE.END
-            return
-        elif self.kick_stage is KICK_STAGE.END:
-            print('Stage 7: Kick end', flush=True)
-            return True
-        else:
-            print("KICK STAGE ERROR", flush=True)
 
     def kick_motion(self):
         if self.kick_stage is KICK_STAGE.INITIAL:
@@ -954,43 +1252,35 @@ class Nao_Defender(Robot):
             if self.is_balanced() and go:
                 self.startMotion(self.forwards)
 
-    def counterclockwise_winding(self, distance):
-        if self.currentlyPlaying.isOver() and distance <= 0.2:
+    def counterclockwise_winding(self, distance, angle):
+        if self.is_balanced() and distance <= 0.15:
             self.startMotion(self.backwards)
             return
         else:
-            if isinstance(self.currentlyPlaying, bool):
+            if self.is_balanced() and angle < -22:
                 self.startMotion(self.turnleft40)
-                self.__side_count = 0
                 return
-            else:
-                if self.currentlyPlaying.isOver() and self.__side_count < 2:
-                    self.startMotion(self.sidestepright)
-                    self.__side_count += 1
-                    return
-                if self.currentlyPlaying.isOver() and self.__side_count >= 2:
-                    self.startMotion(self.turnleft40)
-                    self.__side_count = 0
-                    return
+            elif self.is_balanced() and angle > 22:
+                self.startMotion(self.turnright40)
+                return
+            elif self.is_balanced():
+                self.startMotion(self.sidestepright)
+                return
 
-    def clockwise_winding(self, distance):
-        if self.currentlyPlaying.isOver() and distance <= 0.2:
+    def clockwise_winding(self, distance, angle):
+        if self.is_balanced() and distance <= 0.15:
             self.startMotion(self.backwards)
             return
         else:
-            if isinstance(self.currentlyPlaying, bool):
-                self.startMotion(self.turnright40)
-                self.__side_count = 0
+            if self.is_balanced() and angle < -22:
+                self.startMotion(self.turnleft40)
                 return
-            else:
-                if self.currentlyPlaying.isOver() and self.__side_count < 2:
-                    self.startMotion(self.sidestepleft)
-                    self.__side_count += 1
-                    return
-                if self.currentlyPlaying.isOver() and self.__side_count >= 2:
-                    self.startMotion(self.turnright40)
-                    self.__side_count = 0
-                    return
+            elif self.is_balanced() and angle > 22:
+                self.startMotion(self.turnright40)
+                return
+            elif self.is_balanced():
+                self.startMotion(self.sidestepleft)
+                return
 
     def __isonline(self, pos_1, pos_2, object):
         dx = pos_2[0] - pos_1[0]
@@ -1594,7 +1884,7 @@ class Nao_Defender(Robot):
             print("K2OPPO_ANGLE")
 
             target_position = self.waiting_point*[-1,1]
-            if distance2ball > limitationofdistance+0.3:
+            if distance2ball > limitationofdistance+0.5:
                 self.k2o_stage = K2OPPO_STAGE.APPROCH
                 return
             # 计算角度
@@ -1609,9 +1899,9 @@ class Nao_Defender(Robot):
 
                     # 根据机器人相对球的位置选择绕行方向
                     if angbetball > 0:
-                        self.clockwise_winding(distance2ball)  # 顺时针绕球
+                        self.clockwise_winding(distance2ball, angle)  # 顺时针绕球
                     else:
-                        self.counterclockwise_winding(distance2ball)  # 逆时针绕球
+                        self.counterclockwise_winding(distance2ball, angle)  # 逆时针绕球
                     return  # 继续调整
                 else:
                     self.__winding = False
@@ -1622,11 +1912,13 @@ class Nao_Defender(Robot):
                 # 根据 angle 调整站位，使球位于 -15° 角度
                 elif angle > -12:  # 球偏右，需要向左调整
                     print("球偏右，机器人向左跨步")
-                    self.startMotion(self.sidestepleft)
+                    if self.is_balanced():
+                        self.startMotion(self.sidestepleft)
                     return
                 elif angle < -16:  # 球偏左，需要向右调整
                     print("球偏左，机器人向右跨步")
-                    self.startMotion(self.sidestepright)
+                    if self.is_balanced():
+                        self.startMotion(self.sidestepright)
                     return
 
             # 3. 位置调整完成，根据敌人远近判断如何踢球
@@ -1684,7 +1976,7 @@ class Nao_Defender(Robot):
             print("Stand Up!")
             self.is_standup()
             if self.stand_up_stage == STAND_UP.END and self.is_balanced():
-                self.df_stage = self.previous_stage
+                self.k2o_stage = self.previous_stage
             return
         else:
             print("Unknown stage")
@@ -1726,11 +2018,6 @@ class Nao_Defender(Robot):
             stand_by_point[1] = self.striker_position[1] - 0.7
         """initialize joints"""
         if self.k2mate_stage == K2MATE_STAGE.INITIAL:
-            if self.standupIfnecessary():
-                self.previous_stage = self.k2mate_stage
-                self.set_stage(STAND_UP.INITIAL)
-                self.k2mate_stage = K2MATE_STAGE.STAND_UP
-                return
             print("K2mate INITIAL")
             self.setMotorPosition('LShoulderPitch', 1.2)
             self.setMotorPosition('RShoulderPitch', 1.2)
@@ -1812,7 +2099,7 @@ class Nao_Defender(Robot):
                 self.k2mate_stage = K2MATE_STAGE.STAND_UP
                 return
             print("K2MATE APPROCH")
-            if distance2ball > limitationofdistance+0.05:
+            if distance2ball > limitationofdistance+0.02:
                 self.face_and_go(robot_position, football_position, robot_orientation, avoid_objects_me, 22)
             else:
                 self.k2mate_stage = K2MATE_STAGE.ADJUST_ANGLE
@@ -1829,7 +2116,7 @@ class Nao_Defender(Robot):
             print("K2MATE ADJUST_ANGLE")
 
             target_position = np.array(self.mate_position) * [0.8,1,1]
-            if distance2ball > limitationofdistance +0.2:
+            if distance2ball > limitationofdistance +0.5:
                 self.k2mate_stage = K2MATE_STAGE.APPROCH
                 return
             # 计算角度
@@ -1844,31 +2131,27 @@ class Nao_Defender(Robot):
                     print("not in line, circle the ball")
                     # 根据机器人相对球的位置选择绕行方向
                     if angbetball > 0:
-                        self.clockwise_winding(distance2ball)  # 顺时针绕球
+                        self.clockwise_winding(distance2ball,angle)  # 顺时针绕球
                     else:
-                        self.counterclockwise_winding(distance2ball)  # 逆时针绕球
+                        self.counterclockwise_winding(distance2ball,angle)  # 逆时针绕球
                     return  # 继续调整
                 else:
                     self.__winding = False
 
             if not self.__winding:
                 if np.abs(angle2target) > 20 or distance2ball > limitationofdistance + 0.05:
-                    print("未面向目标 或 离球太远")
+                    print("not facing target OR too far form ball")
                     self.face_and_go(robot_position, target_position, robot_orientation, None, go=True)
                     return
-                # elif distance2ball > limitationofdistance:
-                #     print("离球太远")
-                #     if self.is_balanced():
-                #         self.startMotion(self.forwards)
-                #     return
-                # 根据 angle 调整站位，使球位于 -15° 角度
                 elif angle > -9:  # 球偏右，需要向左调整
                     print("球偏右，机器人向右跨步")
-                    self.startMotion(self.sidestepright)
+                    if self.is_balanced():
+                        self.startMotion(self.sidestepright)
                     return
                 elif angle < -14:  # 球偏左，需要向右调整
                     print("球偏左，机器人向左跨步")
-                    self.startMotion(self.sidestepleft)
+                    if self.is_balanced():
+                        self.startMotion(self.sidestepleft)
                     return
 
             # 3. 位置调整完成，根据敌人远近判断如何踢球
@@ -1881,18 +2164,14 @@ class Nao_Defender(Robot):
                 self.k2mate_stage = K2MATE_STAGE.KICK
                 self.__winding = True
             else:
+                self.pw_kick_stage = 1
                 self.k2mate_stage = K2MATE_STAGE.KICK
                 self.__winding = True
 
         elif self.k2mate_stage == K2MATE_STAGE.POWER_KICK:
-            if self.standupIfnecessary():
-                self.previous_stage = self.k2mate_stage
-                self.set_stage(STAND_UP.INITIAL)
-                self.k2mate_stage = K2MATE_STAGE.STAND_UP
-                return
             print("K2MATE POWER_KICK")
-            self.powerful_kick()
-            if self.kick_stage == KICK_STAGE.END:
+            # self.powerful_kick()
+            if self.powerful_kick():
                 self.k2mate_stage = K2MATE_STAGE.FINISH
             return
         elif self.k2mate_stage == K2MATE_STAGE.KICK:
@@ -1929,7 +2208,7 @@ class Nao_Defender(Robot):
             print("Stand Up!")
             self.is_standup()
             if self.stand_up_stage == STAND_UP.END and self.is_balanced():
-                self.df_stage = self.previous_stage
+                self.k2mate_stage = self.previous_stage
             return
         else:
             print("Unknown stage")
@@ -1966,7 +2245,9 @@ class Nao_Defender(Robot):
             if ball_oppo(self.football_position, self.robot_position):  # 但是球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
             elif not ball_oppo(self.football_position, self.robot_position):
-                if distance2ball < distance2ball_mate:  # 离得近的去kick to mate
+                if distance2ball_mate < 1:                        #球送到了，去做vice defender
+                    self.defender_role = DEFENDER_ROLE.INTERCEPT
+                elif self.robot_position[1] < self.mate_position[1] :  # 更接近4的去kick to mate
                     self.defender_role = DEFENDER_ROLE.KICK2MATE
                 else:
                     self.defender_role = DEFENDER_ROLE.KICK2OPPO
@@ -1974,16 +2255,20 @@ class Nao_Defender(Robot):
             if ball_oppo(self.football_position, self.robot_position):  # 但是球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
             elif not ball_oppo(self.football_position, self.robot_position):
-                if distance2ball < distance2ball_mate:  # 离得近的去kick to mate
+                if distance2ball_mate < 1:                        #球送到了，去做vice defender
+                    self.defender_role = DEFENDER_ROLE.INTERCEPT
+                elif self.robot_position[1] > self.mate_position[1]:  # 更接近1的去kick to mate
                     self.defender_role = DEFENDER_ROLE.KICK2MATE
                 else:
                     self.defender_role = DEFENDER_ROLE.KICK2OPPO
         else:
-            "敌在对面散开，不在我边"
+            """敌在对面散开，不在我边"""
             if ball_oppo(self.football_position, self.robot_position):  # 球在对面场
                 self.defender_role = DEFENDER_ROLE.INTERCEPT
             elif not ball_oppo(self.football_position, self.robot_position):
-                "拿着球等"
+                if self.is_balanced():
+                    self.defender_role = DEFENDER_ROLE.HOLD_BALL
+                """拿着球等"""
 
     def upper_state(self):
         """get this robot position,direction, and football position"""
@@ -2002,6 +2287,8 @@ class Nao_Defender(Robot):
             self.kick2mate()
         elif self.defender_role == DEFENDER_ROLE.KICK2OPPO:
             self.kick2oppo()
+        elif self.defender_role == DEFENDER_ROLE.HOLD_BALL:
+            self.intercepting()
         return
 
 
